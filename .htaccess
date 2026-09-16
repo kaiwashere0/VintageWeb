@@ -1,0 +1,32 @@
+# ========================================================
+# cPanel / Apache / LiteSpeed - Node.js Reverse Proxy & Passenger Ayarları
+# ========================================================
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # HTTPS Yönlendirmesi (İsteğe bağlı, SSL varsa aktif olur)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Statik dosyalar doğrudan varsa sunulsun
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -f
+    RewriteRule ^(.*)$ /public/$1 [L]
+
+    # Node.js Port Yönlendirmesi (Reverse Proxy Modu - Port 7635 veya atanan PORT)
+    # Eğer cPanel Application Manager / Passenger kullanmıyorsanız aşağıdaki satırları aktif edebilirsiniz:
+    # RewriteRule ^$ http://127.0.0.1:7635/ [P,L]
+    # RewriteCond %{REQUEST_FILENAME} !-f
+    # RewriteCond %{REQUEST_FILENAME} !-d
+    # RewriteRule ^(.*)$ http://127.0.0.1:7635/$1 [P,L]
+</IfModule>
+
+# Phusion Passenger (cPanel Node.js Selector) Yapılandırması
+<IfModule mod_passenger.c>
+    PassengerAppRoot "."
+    PassengerBaseURI "/"
+    PassengerNodejs "node"
+    PassengerStartupFile "app.js"
+    PassengerAppType node
+    PassengerFriendlyErrorPages on
+</IfModule>

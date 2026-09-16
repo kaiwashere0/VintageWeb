@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#FFFFFF] dark:bg-[#000000] text-[#4A2B1D] dark:text-[#FFFFFF]">
+
+<%- include('partials/head', { 
+  title: 'Vintage Club — Official Website',
+  description: 'Vintage Club was founded in 2024 by nasriemir. Nobility on the roads, power in the convoy.' 
+}) %>
+
+<body class="min-h-full flex flex-col justify-between bg-[#FFFFFF] dark:bg-[#000000] text-[#4A2B1D] dark:text-[#FFFFFF] selection:bg-[#8C5137] selection:text-white transition-colors duration-300">
+
+  <!-- NAVBAR PARTIAL (Essential Links Only) -->
+  <%- include('partials/navbar', { currentPath: '/' }) %>
+
+  <!-- 2. HERO SECTION -->
+  <section class="hero-gradient pt-12 pb-20 sm:pt-16 sm:pb-24 px-4 sm:px-6 lg:px-8 border-b border-[#E1E2E4] dark:border-[#4A2B1D] flex flex-col items-center justify-center text-center">
+    <div class="max-w-4xl mx-auto flex flex-col items-center">
+      
+      <!-- Brand Logo -->
+      <div class="mb-6 sm:mb-8 transition-transform duration-300 hover:scale-105">
+        <img src="/Wintage_Club_Logo_2050.png" alt="Vintage Club Logo" class="h-32 sm:h-40 md:h-44 w-auto object-contain drop-shadow-md mx-auto" />
+      </div>
+
+      <!-- Main Slogan -->
+      <h1 class="font-heading text-3xl sm:text-5xl md:text-6xl font-extrabold text-[#4A2B1D] dark:text-white tracking-tight mb-6 leading-tight max-w-3xl">
+        Nobility on the Roads, Power in the Convoy
+      </h1>
+
+      <p class="text-[#8C5137] dark:text-[#E1E2E4] text-sm sm:text-base md:text-lg max-w-2xl font-normal mb-10 leading-relaxed">
+        Founded in 2024 by <strong class="text-[#4A2B1D] dark:text-white font-semibold">nasriemir.</strong>, Vintage Club is an exclusive driving community of friends connected since 2021, embodying brotherhood, mutual respect, and convoy excellence.
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+        <a href="/apply" class="w-full sm:w-auto px-8 py-3 btn-primary text-xs sm:text-sm font-semibold rounded-lg shadow-sm gap-2">
+          <i class="fa-solid fa-paper-plane text-xs"></i> Join as a Driver
+        </a>
+        <a href="/events" class="w-full sm:w-auto px-8 py-3 btn-secondary text-xs sm:text-sm font-semibold rounded-lg gap-2">
+          <i class="fa-solid fa-calendar-days text-xs"></i> Convoy Schedule
+        </a>
+      </div>
+
+      <!-- Dynamic Live Stats Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 w-full max-w-4xl mt-16">
+        <div class="clean-card p-5 text-center">
+          <div class="text-[#8C5137] dark:text-[#AA6343] mb-1 text-base"><i class="fa-solid fa-users"></i></div>
+          <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-members">0</span>
+          <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-[#E1E2E4] font-semibold mt-1">Active Drivers</span>
+        </div>
+        <div class="clean-card p-5 text-center">
+          <div class="text-[#8C5137] dark:text-[#AA6343] mb-1 text-base"><i class="fa-solid fa-flag-checkered"></i></div>
+          <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-convoys">0</span>
+          <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-[#E1E2E4] font-semibold mt-1">Completed Convoys</span>
+        </div>
+        <div class="clean-card p-5 text-center">
+          <div class="text-[#8C5137] dark:text-[#AA6343] mb-1 text-base"><i class="fa-solid fa-road"></i></div>
+          <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-km">0 KM</span>
+          <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-[#E1E2E4] font-semibold mt-1">Total Distance</span>
+        </div>
+        <div class="clean-card p-5 text-center">
+          <div class="text-[#8C5137] dark:text-[#AA6343] mb-1 text-base"><i class="fa-solid fa-clock-rotate-left"></i></div>
+          <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-founded">2024</span>
+          <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-[#E1E2E4] font-semibold mt-1">Established</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. HERITAGE & PHILOSOPHY SECTION -->
+  <section id="about" class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <div class="text-[#8C5137] dark:text-[#AA6343] text-xs font-bold uppercase tracking-wider mb-2 flex items-center justify-center gap-1.5">
+        <i class="fa-solid fa-building-columns"></i> Heritage & Philosophy
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-[#4A2B1D] dark:text-white tracking-tight mb-4">
+        Disciplined Convoys, Lasting Brotherhood
+      </h2>
+      <p class="text-[#8C5137] dark:text-[#E1E2E4] text-sm sm:text-base leading-relaxed">
+        <strong class="text-[#4A2B1D] dark:text-white">Vintage Club</strong> was founded in 2024 by <strong class="text-[#4A2B1D] dark:text-white font-semibold">nasriemir.</strong> It brings together individuals who have stayed in close communication both virtually and in real life since 2021.
+      </p>
+    </div>
+
+    <!-- Feature Pillars -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div class="clean-card p-6">
+        <div class="w-11 h-11 rounded-xl bg-[#8C5137]/10 border border-[#8C5137]/20 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] text-lg mb-4">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2">Convoy Discipline</h3>
+        <p class="text-xs text-[#8C5137] dark:text-[#E1E2E4] leading-relaxed">
+          Safe following distances, regulated speed limits, and professional convoy control escort management on Simulation servers.
+        </p>
+      </div>
+
+      <div class="clean-card p-6">
+        <div class="w-11 h-11 rounded-xl bg-[#8C5137]/10 border border-[#8C5137]/20 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] text-lg mb-4">
+          <i class="fa-solid fa-handshake-angle"></i>
+        </div>
+        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2">Brotherhood & Family</h3>
+        <p class="text-xs text-[#8C5137] dark:text-[#E1E2E4] leading-relaxed">
+          A mature, respectful environment built on authentic real-life and virtual friendship established since 2021.
+        </p>
+      </div>
+
+      <div class="clean-card p-6">
+        <div class="w-11 h-11 rounded-xl bg-[#8C5137]/10 border border-[#8C5137]/20 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] text-lg mb-4">
+          <i class="fa-solid fa-truck-front"></i>
+        </div>
+        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2">Custom Fleet Identity</h3>
+        <p class="text-xs text-[#8C5137] dark:text-[#E1E2E4] leading-relaxed">
+          Distinctive club styling across Scania, Volvo, Mercedes-Benz, and MAN trucks with unified paint schemes.
+        </p>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <a href="/about" class="inline-flex items-center gap-2 text-xs font-semibold text-[#8C5137] dark:text-[#AA6343] hover:underline">
+        <span>Read the full story & code of conduct</span>
+        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- 4. OUR TEAM SECTION -->
+  <section id="team" class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-[#E1E2E4]/40 dark:bg-[#120B07] border-y border-[#E1E2E4] dark:border-[#4A2B1D]">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <div>
+          <div class="text-[#8C5137] dark:text-[#AA6343] text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <i class="fa-solid fa-user-group"></i> Leadership & Drivers
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-[#4A2B1D] dark:text-white tracking-tight">
+            Our Team • Roster
+          </h2>
+          <p class="text-[#8C5137] dark:text-[#E1E2E4] text-sm mt-1">Vintage Club founders, convoy leaders, and verified drivers.</p>
+        </div>
+        <a href="/team" class="mt-4 md:mt-0 text-xs font-bold text-[#4A2B1D] dark:text-white hover:text-[#8C5137] dark:hover:text-[#AA6343] flex items-center gap-1.5">
+          Full Team Roster <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </a>
+      </div>
+
+      <div id="team-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Backend dynamic items from MongoDB -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. OUR EVENTS SECTION -->
+  <section id="events" class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+      <div>
+        <div class="text-[#8C5137] dark:text-[#AA6343] text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <i class="fa-solid fa-calendar-check"></i> Convoy Operations
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-[#4A2B1D] dark:text-white tracking-tight">
+          Our Events • Schedule
+        </h2>
+        <p class="text-[#8C5137] dark:text-[#E1E2E4] text-sm mt-1">Upcoming official convoys and partner events on TruckersMP.</p>
+      </div>
+      <a href="/events" class="mt-4 md:mt-0 text-xs font-bold text-[#4A2B1D] dark:text-white hover:text-[#8C5137] dark:hover:text-[#AA6343] flex items-center gap-1.5">
+        View All Events <i class="fa-solid fa-arrow-right text-[10px]"></i>
+      </a>
+    </div>
+
+    <div id="events-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Backend dynamic items from MongoDB -->
+    </div>
+  </section>
+
+  <!-- 6. GALLERY SECTION -->
+  <section id="gallery" class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-[#E1E2E4]/40 dark:bg-[#120B07] border-t border-[#E1E2E4] dark:border-[#4A2B1D]">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <div>
+          <div class="text-[#8C5137] dark:text-[#AA6343] text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <i class="fa-solid fa-images"></i> Media Archive
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-[#4A2B1D] dark:text-white tracking-tight">
+            Gallery • Moments
+          </h2>
+          <p class="text-[#8C5137] dark:text-[#E1E2E4] text-sm mt-1">Photography from our scenic convoys and truck showcases.</p>
+        </div>
+        <a href="/gallery" class="mt-4 md:mt-0 text-xs font-bold text-[#4A2B1D] dark:text-white hover:text-[#8C5137] dark:hover:text-[#AA6343] flex items-center gap-1.5">
+          View Full Gallery <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </a>
+      </div>
+
+      <div id="gallery-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Backend dynamic items from MongoDB -->
+      </div>
+    </div>
+  </section>
+
+  </section>
+
+  <!-- FOOTER PARTIAL -->
+  <%- include('partials/footer') %>
+
+  <!-- SCRIPTS PARTIAL -->
+  <%- include('partials/scripts') %>
+
+</body>
+
+</html>

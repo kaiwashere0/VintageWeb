@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#FFFFFF] dark:bg-[#000000] text-[#4A2B1D] dark:text-[#FFFFFF]">
+
+<%- include('partials/head', { 
+  title: 'About Us & Heritage — Vintage Club',
+  description: 'Vintage Club was founded in 2024 by nasriemir. History, vision, and core principles.' 
+}) %>
+
+<body class="min-h-full flex flex-col justify-between bg-[#FFFFFF] dark:bg-[#000000] text-[#4A2B1D] dark:text-[#FFFFFF] selection:bg-[#8C5137] selection:text-white transition-colors duration-300">
+
+  <!-- NAVBAR PARTIAL -->
+  <%- include('partials/navbar', { currentPath: '/about' }) %>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-grow py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <div class="text-[#8C5137] dark:text-[#AA6343] text-xs font-bold uppercase tracking-wider mb-2 flex items-center justify-center gap-1.5">
+        <i class="fa-solid fa-scroll"></i> History & Core Values
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold font-heading text-[#4A2B1D] dark:text-white tracking-tight">
+        About Us & Vision
+      </h1>
+      <p class="text-[#8C5137] dark:text-[#E1E2E4] text-sm sm:text-base mt-4">
+        Founded in 2024 by <strong class="text-[#4A2B1D] dark:text-white">nasriemir.</strong> — uniting Euro Truck Simulator 2 & TruckersMP enthusiasts who have shared genuine camaraderie since 2021.
+      </p>
+    </div>
+
+    <!-- Main Story Card -->
+    <div class="clean-card p-8 sm:p-10 mb-12 bg-white dark:bg-[#18100B] border-[#E1E2E4] dark:border-[#4A2B1D]">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 border border-[#8C5137]/20 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] text-lg">
+          <i class="fa-solid fa-feather-pointed"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold font-heading text-[#4A2B1D] dark:text-white">Our Story & Identity</h2>
+          <p class="text-xs text-[#8C5137] dark:text-[#E1E2E4]">Written by the founders of Vintage Club</p>
+        </div>
+      </div>
+      
+      <div class="space-y-4 text-sm leading-relaxed text-[#4A2B1D]/90 dark:text-[#E1E2E4]">
+        <p>
+          <strong class="text-[#4A2B1D] dark:text-white font-semibold">Vintage Club</strong> was officially founded in <strong>2024</strong> by <strong>nasriemir.</strong> It is composed of a passionate team of individuals who have been in close communication and companionship both in the virtual world and in real life since <strong>2021</strong>.
+        </p>
+        <p>
+          The bonds within the group embody timeless concepts such as <strong>brotherhood and family</strong>. The club was established with the distinct aim of sharing unforgettable moments, having great fun together, and fostering strong, enduring relationships.
+        </p>
+        <p>
+          Whether cruising along scenic European highways or organizing complex multi-company joint convoys, our core motto remains the same: <em>Nobility on the Roads, Power in the Convoy.</em>
+        </p>
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-[#E1E2E4] dark:border-[#4A2B1D] flex flex-wrap items-center justify-between gap-4 text-xs">
+        <div class="flex items-center gap-2 text-[#8C5137] dark:text-[#E1E2E4]">
+          <i class="fa-solid fa-user-shield text-[#8C5137] dark:text-[#AA6343]"></i>
+          <span>Founder: <strong class="text-[#4A2B1D] dark:text-white">nasriemir.</strong></span>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="https://truckersmp.com/vtc/80136" target="_blank" rel="noopener" class="text-[#8C5137] dark:text-[#AA6343] hover:underline flex items-center gap-1 font-semibold">
+            TruckersMP #80136 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+          </a>
+          <span class="text-[#E1E2E4] dark:text-[#4A2B1D]">•</span>
+          <a href="https://discord.com/invite/vintageclub" target="_blank" rel="noopener" class="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 font-semibold">
+            Discord <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+          </a>
+          <a href="https://www.instagram.com/vintageclubofficiall?stkn=MXNmcnY5cDYweTJ6cQ%3D%3D&utm_source=qr" target="_blank" rel="noopener" class="text-pink-600 dark:text-pink-400 hover:underline flex items-center gap-1 font-semibold">
+            Instagram <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+          </a>
+          <span class="text-[#E1E2E4] dark:text-[#4A2B1D]">•</span>
+          <a href="https://www.youtube.com/@VntgClub" target="_blank" rel="noopener" class="text-red-600 dark:text-red-400 hover:underline flex items-center gap-1 font-semibold">
+            YouTube <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Pillars Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+      <div class="clean-card p-6">
+        <div class="w-12 h-12 rounded-xl bg-[#8C5137]/10 border border-[#8C5137]/20 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] text-xl mb-4">
+          <i class="fa-solid fa-landmark"></i>
+        </div>
+        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2">Our Purpose</h3>
+        <p class="text-xs text-[#8C5137] dark:text-[#E1E2E4] leading-relaxed">
+          To conduct high-standard virtual convoys in an organized, respectful, and disciplined environment.
+        </p>
+      </div>
+
+      <div class="clean-card p-6">
+        <div class="w-12 h-12 rounded-xl bg-[#8C5137]/10 border border-[#8C5137]/20 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] text-xl mb-4">
+          <i class="fa-solid fa-handshake"></i>
+        </div>
+        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2">Unity & Family</h3>
+        <p class="text-xs text-[#8C5137] dark:text-[#E1E2E4] leading-relaxed">
+          A genuine brotherhood connecting mature drivers across the world both in-game and in real life.
+        </p>
+      </div>
+
+      <div class="clean-card p-6">
+        <div class="w-12 h-12 rounded-xl bg-[#8C5137]/10 border border-[#8C5137]/20 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] text-xl mb-4">
+          <i class="fa-solid fa-road"></i>
+        </div>
+        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2">Convoy Order</h3>
+        <p class="text-xs text-[#8C5137] dark:text-[#E1E2E4] leading-relaxed">
+          Strict radio protocol, designated speed limits, and expert convoy control (CC) routing.
+        </p>
+      </div>
+    </div>
+
+    <!-- Club Rules -->
+    <div class="clean-card p-8 bg-white dark:bg-[#18100B] border-[#E1E2E4] dark:border-[#4A2B1D]">
+      <h2 class="text-xl font-bold font-heading text-[#4A2B1D] dark:text-white mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-scale-balanced text-[#8C5137] dark:text-[#AA6343]"></i> Club Code of Conduct
+      </h2>
+      <ul class="space-y-3.5 text-xs sm:text-sm text-[#4A2B1D]/90 dark:text-[#E1E2E4]">
+        <li class="flex items-start gap-3">
+          <i class="fa-solid fa-circle-check text-[#8C5137] dark:text-[#AA6343] mt-1"></i>
+          <span>Full compliance with official TruckersMP rules and traffic regulations is mandatory at all times.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <i class="fa-solid fa-circle-check text-[#8C5137] dark:text-[#AA6343] mt-1"></i>
+          <span>Safe following distance must be maintained in all convoys; sudden reckless maneuvers are strictly prohibited.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <i class="fa-solid fa-circle-check text-[#8C5137] dark:text-[#AA6343] mt-1"></i>
+          <span>Discord radio discipline, friendly communication, and respect for all members and staff are required.</span>
+        </li>
+      </ul>
+    </div>
+  </main>
+
+  <!-- FOOTER PARTIAL -->
+  <%- include('partials/footer') %>
+
+  <!-- SCRIPTS PARTIAL -->
+  <%- include('partials/scripts') %>
+
+</body>
+</html>

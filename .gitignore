@@ -1,0 +1,41 @@
+
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+*.pem
+
+# Dependencies
+node_modules/
+package-lock.json.backup
+
+# Logs & System
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+
+# Local data files
+subscribers.json
+
+# Agents & IDE
+AGENT.md
+CLAUDE.md
+.agent-mem/
+.brainsync/
+.cursorrules
+.clineRules
+.agent/
+.agents/
+.cursor/
+.windsurfrules
+.gemini/
+.cline/
+.vscode/
+
+
+
+# Auto-generated agent rules (personalized per developer)
+.brainsync/agent-rules.md
