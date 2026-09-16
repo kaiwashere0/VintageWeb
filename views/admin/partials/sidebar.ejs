@@ -20,14 +20,14 @@
       </button>
     </div>
 
-    <!-- Super Admin Access Status Pill -->
-    <div class="px-4 py-3 mx-3 my-3 rounded-xl bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/20 text-amber-700 dark:text-amber-400 flex items-center gap-2.5">
-      <div class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
+    <!-- Admin Status Pill -->
+    <div class="px-4 py-2.5 mx-3 my-3 rounded-xl bg-[#8C5137]/10 dark:bg-[#8C5137]/15 border border-[#8C5137]/20 text-[#4A2B1D] dark:text-[#E1E2E4] flex items-center gap-2.5">
+      <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
       <div class="flex-1 min-w-0">
-        <span class="block text-[11px] font-bold uppercase tracking-wider truncate">Süper Kullanıcı Aktif</span>
-        <span class="block text-[9px] opacity-80 truncate">Tam Sistem & DB Yetkisi</span>
+        <span class="block text-[11px] font-bold uppercase tracking-wider truncate">Yönetim Oturumu</span>
+        <span class="block text-[9px] opacity-75 truncate">Yetkili İşlemleri</span>
       </div>
-      <i class="fa-solid fa-crown text-xs"></i>
+      <i class="fa-solid fa-shield-halved text-xs text-[#8C5137] dark:text-[#AA6343]"></i>
     </div>
 
     <!-- Navigation Items -->
@@ -92,7 +92,7 @@
             <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Yetkili' %>
           </span>
           <span class="block text-[10px] text-[#8C5137] dark:text-[#AA6343] font-medium truncate">
-            <%= (typeof user !== 'undefined' && user?.role) ? user.role : 'Super Admin' %>
+            Yönetici
           </span>
         </div>
       </div>

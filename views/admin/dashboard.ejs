@@ -74,18 +74,18 @@
       <div class="relative overflow-hidden clean-card p-6 sm:p-8 bg-gradient-to-r from-[#4A2B1D] to-[#8C5137] text-white border-0 shadow-xl">
         <div class="relative z-10 max-w-2xl">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm text-[11px] font-bold uppercase tracking-wider mb-3">
-            <i class="fa-solid fa-shield-halved"></i> Süper Kullanıcı Erişimi
+            <i class="fa-solid fa-shield-halved"></i> Yönetim Erişimi
           </div>
           <h2 class="text-2xl sm:text-3xl font-extrabold font-heading tracking-tight mb-2">
-            Hoş Geldiniz, <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Vintage Leader' %>!
+            Hoş Geldiniz, <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Yetkili' %>!
           </h2>
           <p class="text-xs sm:text-sm text-white/85 leading-relaxed">
-            Vintage Club yönetim paneline başarıyla giriş yaptınız. Süper kullanıcı kimliğiniz doğrulandı; veritabanı, sürücü başvuruları ve sistem operasyonlarını bu ekrandan yönetebilirsiniz.
+            Vintage Club yönetim paneline başarıyla giriş yaptınız. Sürücü başvuruları, etkinlikler ve sistem operasyonlarını bu ekrandan yönetebilirsiniz.
           </p>
         </div>
         <!-- Decorative Ambient Icon -->
         <div class="absolute -right-8 -bottom-8 opacity-10 text-white text-[160px] pointer-events-none select-none">
-          <i class="fa-solid fa-crown"></i>
+          <i class="fa-solid fa-shield-halved"></i>
         </div>
       </div>
 
@@ -228,34 +228,34 @@
         <!-- Right: Security & Super Admin Verification Box -->
         <div class="space-y-6">
           
-          <!-- Super Admin Status Card -->
-          <div class="clean-card p-6 bg-white dark:bg-[#120B07] border-amber-500/30">
+          <!-- Session Status Card -->
+          <div class="clean-card p-6 bg-white dark:bg-[#120B07] border-[#E1E2E4] dark:border-[#4A2B1D]">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg">
-                <i class="fa-solid fa-fingerprint"></i>
+              <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 text-[#8C5137] dark:text-[#AA6343] flex items-center justify-center text-lg">
+                <i class="fa-solid fa-user-shield"></i>
               </div>
               <div>
-                <h4 class="font-heading font-bold text-sm text-[#4A2B1D] dark:text-white">Kimlik Doğrulama</h4>
-                <span class="text-[10px] text-amber-600 dark:text-amber-400 font-semibold uppercase tracking-wider">Süper Yetkili Doğrulandı</span>
+                <h4 class="font-heading font-bold text-sm text-[#4A2B1D] dark:text-white">Oturum Bilgisi</h4>
+                <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold uppercase tracking-wider">Yetkili Doğrulandı</span>
               </div>
             </div>
             <div class="space-y-2.5 text-xs text-[#8C5137] dark:text-[#E1E2E4] pt-2 border-t border-[#E1E2E4] dark:border-[#4A2B1D]">
               <div class="flex items-center justify-between">
-                <span class="opacity-70">Discord Kullanıcısı:</span>
-                <span class="font-bold text-[#4A2B1D] dark:text-white"><%= (typeof user !== 'undefined') ? (user?.globalName || user?.username) : 'Admin' %></span>
+                <span class="opacity-70">Discord:</span>
+                <span class="font-bold text-[#4A2B1D] dark:text-white"><%= (typeof user !== 'undefined') ? (user?.globalName || user?.username) : 'Yetkili' %></span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="opacity-70">Discord ID:</span>
-                <span class="font-mono text-[11px] text-[#AA6343]"><%= (typeof user !== 'undefined') ? (user?.discordId || user?.id) : 'Tanımlandı' %></span>
+                <span class="opacity-70">Kullanıcı Adı:</span>
+                <span class="font-mono text-[11px] text-[#AA6343]">@<%= (typeof user !== 'undefined') ? user?.username : 'kullanici' %></span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="opacity-70">Kaynak Kontrol:</span>
-                <span class="font-mono text-[10px] bg-[#E1E2E4] dark:bg-[#20130C] px-2 py-0.5 rounded font-semibold">.env:SUPER_ADMIN_IDS</span>
+                <span class="opacity-70">Erişim Durumu:</span>
+                <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">Aktif Yönetici</span>
               </div>
               <div class="flex items-center justify-between">
                 <span class="opacity-70">Veritabanı:</span>
                 <span class="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                  <i class="fa-solid fa-circle-check text-[10px]"></i> MongoDB Bağlı
+                  <i class="fa-solid fa-circle-check text-[10px]"></i> Bağlı
                 </span>
               </div>
             </div>

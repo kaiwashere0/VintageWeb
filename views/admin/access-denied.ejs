@@ -26,7 +26,7 @@
     </h2>
 
     <p class="text-xs sm:text-sm text-[#8C5137] dark:text-[#E1E2E4] leading-relaxed mb-6">
-      Bu alana yalnızca <strong class="text-[#4A2B1D] dark:text-white">Süper Kullanıcı (Super Admin)</strong> yetkisine sahip Discord hesapları erişebilir.
+      Bu alana yalnızca <strong class="text-[#4A2B1D] dark:text-white">Vintage Club Yönetim Ekibi</strong> erişebilir. Hesabınızın bu panel için yetkisi bulunmamaktadır.
     </p>
 
     <% if (typeof user !== 'undefined' && user) { %>
@@ -36,12 +36,8 @@
           <span class="font-bold text-[#4A2B1D] dark:text-white"><%= user.globalName || user.username %></span>
         </div>
         <div class="flex items-center justify-between">
-          <span class="text-[#8C5137] dark:text-[#E1E2E4]/70">Discord ID:</span>
-          <span class="font-mono text-[11px] text-[#AA6343]"><%= user.discordId || user.id %></span>
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="text-[#8C5137] dark:text-[#E1E2E4]/70">Mevcut Rol:</span>
-          <span class="font-semibold text-rose-500"><%= user.role || 'Standart Kullanıcı' %></span>
+          <span class="text-[#8C5137] dark:text-[#E1E2E4]/70">Discord:</span>
+          <span class="font-mono text-[11px] text-[#AA6343]">@<%= user.username %></span>
         </div>
       </div>
     <% } %>
@@ -59,3 +55,4 @@
 
 </body>
 </html>
+
