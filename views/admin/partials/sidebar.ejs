@@ -1,0 +1,108 @@
+<!-- ADMIN SIDEBAR (Responsive & Themed with Vintage Aesthetics) -->
+<aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-[#120B07] border-r border-[#E1E2E4] dark:border-[#4A2B1D] flex flex-col justify-between transition-transform duration-300 -translate-x-full lg:translate-x-0 shadow-xl lg:shadow-none">
+  
+  <div>
+    <!-- Brand Header -->
+    <div class="p-5 border-b border-[#E1E2E4] dark:border-[#4A2B1D] flex items-center justify-between">
+      <a href="/admin" class="flex items-center gap-3 group">
+        <img src="/Wintage_Club_Logo_2050.png" alt="Vintage Club" class="h-9 w-auto object-contain transition-transform group-hover:scale-105" />
+        <div>
+          <span class="block font-heading font-extrabold text-sm text-[#4A2B1D] dark:text-white tracking-tight">
+            Vintage Club
+          </span>
+          <span class="text-[10px] uppercase font-bold tracking-widest text-[#8C5137] dark:text-[#AA6343]">
+            Yetkili Paneli
+          </span>
+        </div>
+      </a>
+      <button id="close-admin-sidebar-btn" type="button" class="lg:hidden w-8 h-8 rounded-lg bg-[#E1E2E4]/60 dark:bg-[#20130C] text-[#8C5137] dark:text-[#E1E2E4] flex items-center justify-center" aria-label="Menüyü Kapat">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Super Admin Access Status Pill -->
+    <div class="px-4 py-3 mx-3 my-3 rounded-xl bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/20 text-amber-700 dark:text-amber-400 flex items-center gap-2.5">
+      <div class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
+      <div class="flex-1 min-w-0">
+        <span class="block text-[11px] font-bold uppercase tracking-wider truncate">Süper Kullanıcı Aktif</span>
+        <span class="block text-[9px] opacity-80 truncate">Tam Sistem & DB Yetkisi</span>
+      </div>
+      <i class="fa-solid fa-crown text-xs"></i>
+    </div>
+
+    <!-- Navigation Items -->
+    <nav class="p-3 space-y-1">
+      <a href="/admin/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all <%= (typeof currentPath !== 'undefined' && currentPath === '/admin/dashboard') ? 'bg-[#8C5137] text-white shadow-sm' : 'text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white' %>">
+        <i class="fa-solid fa-chart-pie text-sm w-4"></i>
+        <span>Genel Bakış</span>
+      </a>
+
+      <a href="/admin/applications" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all <%= (typeof currentPath !== 'undefined' && currentPath === '/admin/applications') ? 'bg-[#8C5137] text-white shadow-sm' : 'text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white' %>">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-file-signature text-sm w-4"></i>
+          <span>Sürücü Başvuruları</span>
+        </div>
+        <% if (typeof stats !== 'undefined' && stats.applicationsCount > 0) { %>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#AA6343] text-white font-bold"><%= stats.applicationsCount %></span>
+        <% } %>
+      </a>
+
+      <a href="/team" target="_blank" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white transition-all">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-id-badge text-sm w-4"></i>
+          <span>Sürücü & Kadro</span>
+        </div>
+        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60"></i>
+      </a>
+
+      <a href="/events" target="_blank" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white transition-all">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-truck-moving text-sm w-4"></i>
+          <span>Konvoy Etkinlikleri</span>
+        </div>
+        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60"></i>
+      </a>
+
+      <a href="/gallery" target="_blank" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white transition-all">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-photo-film text-sm w-4"></i>
+          <span>Medya Galerisi</span>
+        </div>
+        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60"></i>
+      </a>
+
+      <div class="pt-3 pb-1">
+        <div class="border-t border-[#E1E2E4] dark:border-[#4A2B1D]"></div>
+      </div>
+
+      <a href="/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white transition-all">
+        <i class="fa-solid fa-globe text-sm w-4"></i>
+        <span>Web Sitesine Dön</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Bottom User Profile Card -->
+  <div class="p-3 border-t border-[#E1E2E4] dark:border-[#4A2B1D]">
+    <div class="p-3 rounded-2xl bg-[#E1E2E4]/40 dark:bg-[#1A100A] border border-[#E1E2E4] dark:border-[#4A2B1D]/60 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <img src="<%= (typeof user !== 'undefined' && user?.avatarUrl) ? user.avatarUrl : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80' %>" alt="<%= (typeof user !== 'undefined' && user?.username) ? user.username : 'User' %>" class="w-8 h-8 rounded-full object-cover border border-[#8C5137]/40 flex-shrink-0" />
+        <div class="min-w-0">
+          <span class="block text-xs font-bold text-[#4A2B1D] dark:text-white truncate">
+            <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Yetkili' %>
+          </span>
+          <span class="block text-[10px] text-[#8C5137] dark:text-[#AA6343] font-medium truncate">
+            <%= (typeof user !== 'undefined' && user?.role) ? user.role : 'Super Admin' %>
+          </span>
+        </div>
+      </div>
+      <a href="/auth/logout" class="w-7 h-7 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center justify-center transition-colors flex-shrink-0" title="Güvenli Çıkış">
+        <i class="fa-solid fa-right-from-bracket text-xs"></i>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<!-- Sidebar Overlay for Mobile -->
+<div id="admin-sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-xs lg:hidden"></div>

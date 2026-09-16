@@ -2,6 +2,15 @@ import express from 'express';
 import DatabaseService from '../database/index.js';
 import crypto from 'crypto';
 
+export function isSuperAdmin(discordId) {
+  if (!discordId) return false;
+  const superIds = (process.env.SUPER_ADMIN_IDS || process.env.SUPER_ADMIN_ID || '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+  return superIds.includes(String(discordId).trim());
+}
+
 export function createAuthRouter() {
   const router = express.Router();
 
@@ -11,6 +20,11 @@ export function createAuthRouter() {
 
   // 1. Initiate Real Discord OAuth2 Flow
   router.get('/discord', (req, res) => {
+    // Save target redirect URL (e.g. /admin)
+    if (req.query.redirect) {
+      req.session.returnTo = req.query.redirect;
+    }
+
     // Generate secure state for CSRF protection
     const state = crypto.randomBytes(16).toString('hex');
     req.session.oauthState = state;
@@ -23,20 +37,24 @@ export function createAuthRouter() {
     }
 
     // Interactive Demo Login Fallback (Only active when .env credentials are not yet configured)
+    const mockId = req.query.mockId || '1549774808945008673';
+    const isSuper = isSuperAdmin(mockId);
     const demoProfile = {
-      id: req.query.mockId || '84920491029410294',
-      username: req.query.mockUsername || 'VintageDriver',
-      global_name: req.query.mockName || 'Vintage Driver',
+      id: mockId,
+      username: req.query.mockUsername || 'VintageAdmin',
+      global_name: req.query.mockName || 'Vintage Admin',
       discriminator: '0',
       avatar: '',
-      email: 'driver@vintageclub.com'
+      email: 'admin@vintageclub.com'
     };
 
-    DatabaseService.findOrCreateUser(demoProfile)
+    DatabaseService.findOrCreateUser(demoProfile, isSuper)
       .then(user => {
         req.session.user = user;
         req.session.save(() => {
-          res.redirect('/?auth=success&provider=discord_sandbox');
+          const dest = req.session.returnTo || '/?auth=success&provider=discord_sandbox';
+          delete req.session.returnTo;
+          res.redirect(dest);
         });
       })
       .catch(err => {
@@ -101,8 +119,11 @@ export function createAuthRouter() {
         return res.redirect('/?auth=user_fetch_error');
       }
 
+      // Check Super Admin Status against .env
+      const isSuper = isSuperAdmin(discordUser.id);
+
       // Save / Update User in Database
-      const user = await DatabaseService.findOrCreateUser(discordUser);
+      const user = await DatabaseService.findOrCreateUser(discordUser, isSuper);
 
       // Save user in session
       req.session.user = user;
@@ -112,8 +133,11 @@ export function createAuthRouter() {
           console.error('\x1b[31m✖\x1b[0m \x1b[1m[Session]\x1b[0m Oturum kayıt hatası:', err);
           return res.redirect('/?auth=session_error');
         }
-        console.log(`\x1b[32m✔\x1b[0m \x1b[1m[Discord Login]\x1b[0m \x1b[36m${user.globalName || user.username}\x1b[0m (@${user.username}) giriş yaptı.`);
-        res.redirect('/?auth=success');
+        console.log(`\x1b[32m✔\x1b[0m \x1b[1m[Discord Login]\x1b[0m \x1b[36m${user.globalName || user.username}\x1b[0m (@${user.username}) ${isSuper ? '\x1b[33m[SÜPER YÖNETİCİ]\x1b[0m' : ''} giriş yaptı.`);
+        
+        const destination = req.session.returnTo || (isSuper ? '/admin' : '/?auth=success');
+        delete req.session.returnTo;
+        res.redirect(destination);
       });
 
     } catch (err) {
@@ -152,3 +176,4 @@ export function createAuthRouter() {
 }
 
 export default createAuthRouter;
+

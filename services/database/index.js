@@ -13,6 +13,18 @@ export class DatabaseService {
   static async init() {
     await connectToDatabase();
     await this.seedInitialData();
+    await this.clearGalleryAndRoster();
+  }
+
+  static async clearGalleryAndRoster() {
+    try {
+      // Clear legacy dummy/mock gallery and members
+      await Member.deleteMany({});
+      await Gallery.deleteMany({});
+      console.log('\x1b[32m✔\x1b[0m \x1b[1m[MongoDB]\x1b[0m Galeri ve Roster veritabanı temizlendi.');
+    } catch (err) {
+      console.error('[DatabaseService] clearGalleryAndRoster error:', err.message);
+    }
   }
 
   static async seedInitialData() {
@@ -39,7 +51,7 @@ export class DatabaseService {
           },
           systemNotice: "Vintage Club 2026 Season Driver Recruitment is Active."
         });
-        console.log('\x1b[32m✔\x1b[0m \x1b[1m[MongoDB]\x1b[0m Varsayılan VTC ayarları ve verileri hazırlandı.');
+        console.log('\x1b[32m✔\x1b[0m \x1b[1m[MongoDB]\x1b[0m Varsayılan VTC ayarları hazırlandı.');
       }
     } catch (err) {
       console.error('\x1b[31m✖\x1b[0m \x1b[1m[MongoDB]\x1b[0m Seed hatası:', err.message);
@@ -188,7 +200,7 @@ export class DatabaseService {
   }
 
   // --- Users (Discord OAuth) ---
-  static async findOrCreateUser(discordProfile) {
+  static async findOrCreateUser(discordProfile, isSuper = false) {
     try {
       const { id, username, global_name, discriminator, avatar, email } = discordProfile;
       const avatarUrl = avatar
@@ -205,6 +217,8 @@ export class DatabaseService {
           avatar: avatar || '',
           avatarUrl,
           email: email || '',
+          role: isSuper ? 'Super Admin' : 'Member',
+          isSuperAdmin: isSuper,
           lastLogin: new Date()
         });
       } else {
@@ -213,10 +227,19 @@ export class DatabaseService {
         user.avatar = avatar || user.avatar;
         user.avatarUrl = avatarUrl;
         if (email) user.email = email;
+        if (isSuper) {
+          user.role = 'Super Admin';
+          user.isSuperAdmin = true;
+        }
         user.lastLogin = new Date();
         await user.save();
       }
-      return user.toObject();
+      const userObj = user.toObject();
+      if (isSuper) {
+        userObj.isSuperAdmin = true;
+        userObj.role = 'Super Admin';
+      }
+      return userObj;
     } catch (err) {
       console.error('[DatabaseService] findOrCreateUser error:', err.message);
       throw err;
@@ -235,3 +258,4 @@ export class DatabaseService {
 DatabaseService.init().catch(err => console.error('[DatabaseService] Init error:', err.message));
 
 export default DatabaseService;
+

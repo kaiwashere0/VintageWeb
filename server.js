@@ -9,7 +9,8 @@ dotenv.config();
 
 import DatabaseService from './services/database/index.js';
 import { createApiRouter } from './services/api/routes.js';
-import { createAuthRouter } from './services/auth/index.js';
+import { createAuthRouter, isSuperAdmin } from './services/auth/index.js';
+import { createAdminRouter } from './services/admin/routes.js';
 import DiscordBotService from './services/discord-bot/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -49,6 +50,13 @@ app.use(session({
 
 // Expose currentUser and currentPath globally to all EJS templates
 app.use((req, res, next) => {
+  if (req.session?.user) {
+    const isSuper = isSuperAdmin(req.session.user.discordId);
+    if (isSuper) {
+      req.session.user.isSuperAdmin = true;
+      req.session.user.role = 'Super Admin';
+    }
+  }
   res.locals.user = req.session?.user || null;
   next();
 });
@@ -62,8 +70,10 @@ app.use(express.static(path.join(__dirname, 'public'), {
 
 // Microservice Routers
 app.use('/auth', createAuthRouter());
+app.use('/admin', createAdminRouter());
 app.use('/api/v1', createApiRouter());
 app.use('/api', createApiRouter()); // Backward compatibility
+
 
 // EJS Template Engine Setup
 app.set('view engine', 'ejs');
