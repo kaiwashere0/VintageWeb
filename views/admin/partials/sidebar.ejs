@@ -11,11 +11,11 @@
             Vintage Club
           </span>
           <span class="text-[10px] uppercase font-bold tracking-widest text-[#8C5137] dark:text-[#AA6343]">
-            Yetkili Paneli
+            Admin Portal
           </span>
         </div>
       </a>
-      <button id="close-admin-sidebar-btn" type="button" class="lg:hidden w-8 h-8 rounded-lg bg-[#E1E2E4]/60 dark:bg-[#20130C] text-[#8C5137] dark:text-[#E1E2E4] flex items-center justify-center" aria-label="Menüyü Kapat">
+      <button id="close-admin-sidebar-btn" type="button" class="lg:hidden w-8 h-8 rounded-lg bg-[#E1E2E4]/60 dark:bg-[#20130C] text-[#8C5137] dark:text-[#E1E2E4] flex items-center justify-center" aria-label="Close Menu">
         <i class="fa-solid fa-xmark text-sm"></i>
       </button>
     </div>
@@ -24,8 +24,8 @@
     <div class="px-4 py-2.5 mx-3 my-3 rounded-xl bg-[#8C5137]/10 dark:bg-[#8C5137]/15 border border-[#8C5137]/20 text-[#4A2B1D] dark:text-[#E1E2E4] flex items-center gap-2.5">
       <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
       <div class="flex-1 min-w-0">
-        <span class="block text-[11px] font-bold uppercase tracking-wider truncate">Yönetim Oturumu</span>
-        <span class="block text-[9px] opacity-75 truncate">Yetkili İşlemleri</span>
+        <span class="block text-[11px] font-bold uppercase tracking-wider truncate">Admin Session</span>
+        <span class="block text-[9px] opacity-75 truncate">Authorized Operations</span>
       </div>
       <i class="fa-solid fa-shield-halved text-xs text-[#8C5137] dark:text-[#AA6343]"></i>
     </div>
@@ -34,13 +34,13 @@
     <nav class="p-3 space-y-1">
       <a href="/admin/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all <%= (typeof currentPath !== 'undefined' && currentPath === '/admin/dashboard') ? 'bg-[#8C5137] text-white shadow-sm' : 'text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white' %>">
         <i class="fa-solid fa-chart-pie text-sm w-4"></i>
-        <span>Genel Bakış</span>
+        <span>Dashboard</span>
       </a>
 
       <a href="/admin/applications" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all <%= (typeof currentPath !== 'undefined' && currentPath === '/admin/applications') ? 'bg-[#8C5137] text-white shadow-sm' : 'text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white' %>">
         <div class="flex items-center gap-3">
           <i class="fa-solid fa-file-signature text-sm w-4"></i>
-          <span>Sürücü Başvuruları</span>
+          <span>Driver Applications</span>
         </div>
         <% if (typeof stats !== 'undefined' && stats.applicationsCount > 0) { %>
           <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#AA6343] text-white font-bold"><%= stats.applicationsCount %></span>
@@ -50,7 +50,7 @@
       <a href="/team" target="_blank" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white transition-all">
         <div class="flex items-center gap-3">
           <i class="fa-solid fa-id-badge text-sm w-4"></i>
-          <span>Sürücü & Kadro</span>
+          <span>Team & Drivers</span>
         </div>
         <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60"></i>
       </a>
@@ -58,7 +58,7 @@
       <a href="/events" target="_blank" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white transition-all">
         <div class="flex items-center gap-3">
           <i class="fa-solid fa-truck-moving text-sm w-4"></i>
-          <span>Konvoy Etkinlikleri</span>
+          <span>Convoy Events</span>
         </div>
         <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60"></i>
       </a>
@@ -66,7 +66,7 @@
       <a href="/gallery" target="_blank" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white transition-all">
         <div class="flex items-center gap-3">
           <i class="fa-solid fa-photo-film text-sm w-4"></i>
-          <span>Medya Galerisi</span>
+          <span>Media Gallery</span>
         </div>
         <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60"></i>
       </a>
@@ -77,7 +77,7 @@
 
       <a href="/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white transition-all">
         <i class="fa-solid fa-globe text-sm w-4"></i>
-        <span>Web Sitesine Dön</span>
+        <span>Back to Website</span>
       </a>
     </nav>
   </div>
@@ -89,14 +89,14 @@
         <img src="<%= (typeof user !== 'undefined' && user?.avatarUrl) ? user.avatarUrl : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80' %>" alt="<%= (typeof user !== 'undefined' && user?.username) ? user.username : 'User' %>" class="w-8 h-8 rounded-full object-cover border border-[#8C5137]/40 flex-shrink-0" />
         <div class="min-w-0">
           <span class="block text-xs font-bold text-[#4A2B1D] dark:text-white truncate">
-            <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Yetkili' %>
+            <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Admin' %>
           </span>
           <span class="block text-[10px] text-[#8C5137] dark:text-[#AA6343] font-medium truncate">
-            Yönetici
+            Administrator
           </span>
         </div>
       </div>
-      <a href="/auth/logout" class="w-7 h-7 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center justify-center transition-colors flex-shrink-0" title="Güvenli Çıkış">
+      <a href="/auth/logout" class="w-7 h-7 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center justify-center transition-colors flex-shrink-0" title="Log Out">
         <i class="fa-solid fa-right-from-bracket text-xs"></i>
       </a>
     </div>
@@ -106,3 +106,4 @@
 
 <!-- Sidebar Overlay for Mobile -->
 <div id="admin-sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-xs lg:hidden"></div>
+

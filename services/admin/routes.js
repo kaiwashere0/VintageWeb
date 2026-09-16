@@ -20,7 +20,7 @@ export function requireAdmin(req, res, next) {
 
   // Not authorized
   return res.status(403).render('admin/access-denied', {
-    title: 'Yetkisiz Erişim — Vintage Club',
+    title: 'Access Denied — Vintage Club',
     currentPath: '/admin',
     user
   });
@@ -47,7 +47,7 @@ export function createAdminRouter() {
       const recentUsers = await User.find().sort({ lastLogin: -1 }).limit(6).lean();
 
       res.render('admin/dashboard', {
-        title: 'Yetkili Paneli — Vintage Club',
+        title: 'Admin Portal — Vintage Club',
         currentPath: '/admin/dashboard',
         user: req.session.user,
         stats: {
@@ -62,7 +62,7 @@ export function createAdminRouter() {
       });
     } catch (err) {
       console.error('[AdminRouter] Dashboard error:', err);
-      res.status(500).send('Yetkili paneli yüklenirken bir hata oluştu.');
+      res.status(500).send('An error occurred while loading the admin portal.');
     }
   });
 
@@ -70,7 +70,7 @@ export function createAdminRouter() {
   router.get('/applications', async (req, res) => {
     const applications = await DatabaseService.getApplications();
     res.render('admin/dashboard', {
-      title: 'Başvurular — Yetkili Paneli',
+      title: 'Driver Applications — Admin Portal',
       currentPath: '/admin/applications',
       user: req.session.user,
       stats: {

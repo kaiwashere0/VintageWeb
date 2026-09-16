@@ -21,7 +21,7 @@ export function createApiRouter() {
     });
   });
 
-  // 1. Sistem ve Site Modu Endpoints
+  // 1. System and Site Mode Endpoints
   router.get('/system/mode', async (req, res) => {
     try {
       const settings = await DatabaseService.getSettings();
@@ -29,9 +29,9 @@ export function createApiRouter() {
         success: true,
         siteMode: settings.siteMode || 3,
         modes: {
-          1: "Yakında Açılıyoruz (Coming Soon)",
-          2: "Bu Websitesi Geliştirilmektedir (Under Construction)",
-          3: "Site Tam Aktif (Full Active VTC Portal)"
+          1: "Coming Soon",
+          2: "Under Construction",
+          3: "Full Active VTC Portal"
         },
         settings
       });
@@ -45,10 +45,10 @@ export function createApiRouter() {
       const { mode } = req.body;
       const parsedMode = parseInt(mode, 10);
       if (![1, 2, 3].includes(parsedMode)) {
-        return res.status(400).json({ success: false, message: "Geçersiz mod! 1, 2 veya 3 seçiniz." });
+        return res.status(400).json({ success: false, message: "Invalid mode! Select 1, 2, or 3." });
       }
       const newMode = await DatabaseService.setSiteMode(parsedMode);
-      res.json({ success: true, message: `Site modu ${newMode} olarak güncellendi.`, siteMode: newMode });
+      res.json({ success: true, message: `Site mode updated to ${newMode}.`, siteMode: newMode });
     } catch (err) {
       res.status(500).json({ success: false, error: err.message });
     }
@@ -120,7 +120,7 @@ export function createApiRouter() {
       const events = await DatabaseService.getEvents();
       const event = events.find(e => e.id === req.params.id);
       if (!event) {
-        return res.status(404).json({ success: false, message: 'Etkinlik bulunamadı.' });
+        return res.status(404).json({ success: false, message: 'Event not found.' });
       }
       res.json({ success: true, data: event });
     } catch (err) {
@@ -226,7 +226,7 @@ export function createApiRouter() {
         subscribers: subscribers.map(s => ({ email: s.email, createdAt: s.createdAt }))
       });
     } catch (err) {
-      res.status(500).json({ success: false, message: 'Aboneler alınamadı.' });
+      res.status(500).json({ success: false, message: 'Could not fetch subscribers.' });
     }
   });
 

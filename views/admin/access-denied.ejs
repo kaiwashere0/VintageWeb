@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yetkisiz Erişim — Vintage Club</title>
+  <title>Access Denied — Vintage Club</title>
   <link rel="icon" type="image/png" href="/Wintage_Club_Logo_2050.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="/output.css">
@@ -22,17 +22,17 @@
     </div>
 
     <h2 class="font-heading font-extrabold text-2xl text-[#4A2B1D] dark:text-white tracking-tight mb-2">
-      Yetkisiz Erişim (403)
+      Access Denied (403)
     </h2>
 
     <p class="text-xs sm:text-sm text-[#8C5137] dark:text-[#E1E2E4] leading-relaxed mb-6">
-      Bu alana yalnızca <strong class="text-[#4A2B1D] dark:text-white">Vintage Club Yönetim Ekibi</strong> erişebilir. Hesabınızın bu panel için yetkisi bulunmamaktadır.
+      This area is restricted to authorized <strong class="text-[#4A2B1D] dark:text-white">Vintage Club Management</strong>. Your account does not have permission to access this portal.
     </p>
 
     <% if (typeof user !== 'undefined' && user) { %>
       <div class="p-3.5 rounded-2xl bg-[#E1E2E4]/50 dark:bg-[#1A100A] border border-[#E1E2E4] dark:border-[#4A2B1D] text-left mb-6 text-xs space-y-1.5">
         <div class="flex items-center justify-between">
-          <span class="text-[#8C5137] dark:text-[#E1E2E4]/70">Bağlı Hesap:</span>
+          <span class="text-[#8C5137] dark:text-[#E1E2E4]/70">Connected Account:</span>
           <span class="font-bold text-[#4A2B1D] dark:text-white"><%= user.globalName || user.username %></span>
         </div>
         <div class="flex items-center justify-between">
@@ -44,10 +44,10 @@
 
     <div class="flex flex-col sm:flex-row items-center gap-3">
       <a href="/" class="w-full py-2.5 btn-primary text-xs font-semibold rounded-xl text-center">
-        Ana Sayfaya Dön
+        Return Home
       </a>
       <a href="/auth/logout" class="w-full py-2.5 btn-secondary text-xs font-semibold rounded-xl text-center text-rose-600 dark:text-rose-400">
-        Farklı Hesapla Giriş
+        Switch Account
       </a>
     </div>
 

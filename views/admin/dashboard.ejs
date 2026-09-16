@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title || 'Yetkili Paneli — Vintage Club' %></title>
+  <title><%= title || 'Admin Portal — Vintage Club' %></title>
   <link rel="icon" type="image/png" href="/Wintage_Club_Logo_2050.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="/output.css">
@@ -30,28 +30,28 @@
       
       <!-- Left: Mobile Toggle & Breadcrumb -->
       <div class="flex items-center gap-3">
-        <button id="open-admin-sidebar-btn" type="button" class="lg:hidden w-9 h-9 rounded-xl bg-[#E1E2E4]/60 dark:bg-[#20130C] text-[#8C5137] dark:text-[#E1E2E4] flex items-center justify-center cursor-pointer" aria-label="Menüyü Aç">
+        <button id="open-admin-sidebar-btn" type="button" class="lg:hidden w-9 h-9 rounded-xl bg-[#E1E2E4]/60 dark:bg-[#20130C] text-[#8C5137] dark:text-[#E1E2E4] flex items-center justify-center cursor-pointer" aria-label="Open Menu">
           <i class="fa-solid fa-bars-staggered text-sm"></i>
         </button>
         <div>
           <h1 class="font-heading font-extrabold text-base sm:text-lg text-[#4A2B1D] dark:text-white tracking-tight flex items-center gap-2">
-            <span>Yetkili Paneli</span>
-            <span class="text-xs text-[#8C5137] dark:text-[#AA6343] font-normal">/ Genel Bakış</span>
+            <span>Admin Portal</span>
+            <span class="text-xs text-[#8C5137] dark:text-[#AA6343] font-normal">/ Overview</span>
           </h1>
         </div>
       </div>
 
-      <!-- Right: Super Admin Badge & Theme Toggle -->
+      <!-- Right: Live Status Badge & Theme Toggle -->
       <div class="flex items-center gap-3">
         
         <!-- Live System Status Badge -->
         <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>Sistem Aktif</span>
+          <span>System Online</span>
         </div>
 
         <!-- Theme Toggle -->
-        <button type="button" class="theme-toggle-btn w-9 h-9 rounded-xl border border-[#E1E2E4] dark:border-[#4A2B1D] bg-white dark:bg-[#18100B] text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] transition-colors flex items-center justify-center cursor-pointer" title="Tema Değiştir">
+        <button type="button" class="theme-toggle-btn w-9 h-9 rounded-xl border border-[#E1E2E4] dark:border-[#4A2B1D] bg-white dark:bg-[#18100B] text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] transition-colors flex items-center justify-center cursor-pointer" title="Toggle Theme">
           <i class="fa-solid fa-moon dark:hidden text-xs"></i>
           <i class="fa-solid fa-sun hidden dark:block text-[#AA6343] text-xs"></i>
         </button>
@@ -60,7 +60,7 @@
         <div class="flex items-center gap-2 pl-2 border-l border-[#E1E2E4] dark:border-[#4A2B1D]">
           <img src="<%= (typeof user !== 'undefined' && user?.avatarUrl) ? user.avatarUrl : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80' %>" class="w-8 h-8 rounded-full object-cover border border-[#8C5137]/50" />
           <span class="hidden md:inline text-xs font-bold text-[#4A2B1D] dark:text-white max-w-[120px] truncate">
-            <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Yetkili' %>
+            <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Admin' %>
           </span>
         </div>
 
@@ -74,13 +74,13 @@
       <div class="relative overflow-hidden clean-card p-6 sm:p-8 bg-gradient-to-r from-[#4A2B1D] to-[#8C5137] text-white border-0 shadow-xl">
         <div class="relative z-10 max-w-2xl">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm text-[11px] font-bold uppercase tracking-wider mb-3">
-            <i class="fa-solid fa-shield-halved"></i> Yönetim Erişimi
+            <i class="fa-solid fa-shield-halved"></i> Management Portal
           </div>
           <h2 class="text-2xl sm:text-3xl font-extrabold font-heading tracking-tight mb-2">
-            Hoş Geldiniz, <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Yetkili' %>!
+            Welcome, <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Administrator' %>!
           </h2>
           <p class="text-xs sm:text-sm text-white/85 leading-relaxed">
-            Vintage Club yönetim paneline başarıyla giriş yaptınız. Sürücü başvuruları, etkinlikler ve sistem operasyonlarını bu ekrandan yönetebilirsiniz.
+            You are signed in to the Vintage Club Administration Portal. Manage driver applications, events, and system operations from this dashboard.
           </p>
         </div>
         <!-- Decorative Ambient Icon -->
@@ -95,7 +95,7 @@
         <!-- Metric 1: Applications -->
         <div class="clean-card p-6 bg-white dark:bg-[#120B07] hover-lift hover-glow">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">Sürücü Başvuruları</span>
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">Applications</span>
             <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343]">
               <i class="fa-solid fa-file-signature text-base"></i>
             </div>
@@ -105,7 +105,7 @@
               <%= (typeof stats !== 'undefined') ? stats.applicationsCount : 0 %>
             </span>
             <a href="/admin/applications" class="text-xs font-semibold text-[#8C5137] dark:text-[#AA6343] hover:underline">
-              Görüntüle &rarr;
+              View All &rarr;
             </a>
           </div>
         </div>
@@ -113,7 +113,7 @@
         <!-- Metric 2: Events -->
         <div class="clean-card p-6 bg-white dark:bg-[#120B07] hover-lift hover-glow">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">Konvoylar & Etkinlik</span>
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">Convoys & Events</span>
             <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343]">
               <i class="fa-solid fa-truck-moving text-base"></i>
             </div>
@@ -123,7 +123,7 @@
               <%= (typeof stats !== 'undefined') ? stats.eventsCount : 0 %>
             </span>
             <a href="/events" target="_blank" class="text-xs font-semibold text-[#8C5137] dark:text-[#AA6343] hover:underline">
-              Canlı Sayfa &rarr;
+              Live Page &rarr;
             </a>
           </div>
         </div>
@@ -131,7 +131,7 @@
         <!-- Metric 3: Members -->
         <div class="clean-card p-6 bg-white dark:bg-[#120B07] hover-lift hover-glow">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">Kayıtlı Sürücüler</span>
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">Registered Drivers</span>
             <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343]">
               <i class="fa-solid fa-id-badge text-base"></i>
             </div>
@@ -140,14 +140,14 @@
             <span class="text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white">
               <%= (typeof stats !== 'undefined') ? stats.membersCount : 0 %>
             </span>
-            <span class="text-[11px] text-[#8C5137] dark:text-[#E1E2E4]/70">Veritabanı</span>
+            <span class="text-[11px] text-[#8C5137] dark:text-[#E1E2E4]/70">Database</span>
           </div>
         </div>
 
         <!-- Metric 4: OAuth Users -->
         <div class="clean-card p-6 bg-white dark:bg-[#120B07] hover-lift hover-glow">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">Discord Oturumu</span>
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">Discord Session</span>
             <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-500">
               <i class="fa-brands fa-discord text-base"></i>
             </div>
@@ -156,7 +156,7 @@
             <span class="text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white">
               <%= (typeof stats !== 'undefined') ? stats.usersCount : 1 %>
             </span>
-            <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">OAuth2 Aktif</span>
+            <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">OAuth2 Active</span>
           </div>
         </div>
 
@@ -170,12 +170,12 @@
           <div class="flex items-center justify-between mb-6 pb-4 border-b border-[#E1E2E4] dark:border-[#4A2B1D]">
             <div>
               <h3 class="font-heading font-bold text-base text-[#4A2B1D] dark:text-white">
-                Son Sürücü Başvuruları
+                Recent Driver Applications
               </h3>
-              <p class="text-xs text-[#8C5137] dark:text-[#E1E2E4]/80">Site üzerinden gelen en yeni katılım formları</p>
+              <p class="text-xs text-[#8C5137] dark:text-[#E1E2E4]/80">Latest applications submitted through the website</p>
             </div>
             <a href="/admin/applications" class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] hover:underline">
-              Tümünü Gör
+              View All
             </a>
           </div>
 
@@ -184,11 +184,11 @@
               <table class="w-full text-left text-xs">
                 <thead>
                   <tr class="border-b border-[#E1E2E4] dark:border-[#4A2B1D] text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">
-                    <th class="py-2.5 px-3">Sürücü Adı</th>
+                    <th class="py-2.5 px-3">Driver Name</th>
                     <th class="py-2.5 px-3">Discord</th>
-                    <th class="py-2.5 px-3">TMP Profili</th>
-                    <th class="py-2.5 px-3">Durum</th>
-                    <th class="py-2.5 px-3">Tarih</th>
+                    <th class="py-2.5 px-3">TMP Profile</th>
+                    <th class="py-2.5 px-3">Status</th>
+                    <th class="py-2.5 px-3">Date</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-[#E1E2E4] dark:divide-[#4A2B1D]/40">
@@ -203,11 +203,11 @@
                       </td>
                       <td class="py-3 px-3">
                         <span class="px-2 py-0.5 rounded-full text-[10px] font-bold <%= app.status === 'approved' ? 'bg-emerald-500/10 text-emerald-600' : (app.status === 'rejected' ? 'bg-rose-500/10 text-rose-600' : 'bg-amber-500/10 text-amber-600') %>">
-                          <%= app.status === 'approved' ? 'Onaylandı' : (app.status === 'rejected' ? 'Reddedildi' : 'Beklemede') %>
+                          <%= app.status === 'approved' ? 'Approved' : (app.status === 'rejected' ? 'Rejected' : 'Pending') %>
                         </span>
                       </td>
                       <td class="py-3 px-3 text-[#8C5137] dark:text-[#E1E2E4]/70 text-[11px]">
-                        <%= app.createdAt ? new Date(app.createdAt).toLocaleDateString('tr-TR') : 'Bugün' %>
+                        <%= app.createdAt ? new Date(app.createdAt).toLocaleDateString('en-US') : 'Today' %>
                       </td>
                     </tr>
                   <% }) %>
@@ -219,13 +219,13 @@
               <div class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-[#E1E2E4]/50 dark:bg-[#1A100A] flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] text-xl">
                 <i class="fa-solid fa-inbox"></i>
               </div>
-              <p class="text-xs font-semibold">Henüz yeni başvuru kaydı bulunmuyor.</p>
-              <p class="text-[11px] mt-1">Sürücüler başvuru yaptığında burada listelenecektir.</p>
+              <p class="text-xs font-semibold">No driver applications received yet.</p>
+              <p class="text-[11px] mt-1">Submitted applications will be listed here automatically.</p>
             </div>
           <% } %>
         </div>
 
-        <!-- Right: Security & Super Admin Verification Box -->
+        <!-- Right: Security & Session Status Box -->
         <div class="space-y-6">
           
           <!-- Session Status Card -->
@@ -235,27 +235,27 @@
                 <i class="fa-solid fa-user-shield"></i>
               </div>
               <div>
-                <h4 class="font-heading font-bold text-sm text-[#4A2B1D] dark:text-white">Oturum Bilgisi</h4>
-                <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold uppercase tracking-wider">Yetkili Doğrulandı</span>
+                <h4 class="font-heading font-bold text-sm text-[#4A2B1D] dark:text-white">Session Information</h4>
+                <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold uppercase tracking-wider">Authorized</span>
               </div>
             </div>
             <div class="space-y-2.5 text-xs text-[#8C5137] dark:text-[#E1E2E4] pt-2 border-t border-[#E1E2E4] dark:border-[#4A2B1D]">
               <div class="flex items-center justify-between">
-                <span class="opacity-70">Discord:</span>
-                <span class="font-bold text-[#4A2B1D] dark:text-white"><%= (typeof user !== 'undefined') ? (user?.globalName || user?.username) : 'Yetkili' %></span>
+                <span class="opacity-70">Discord Name:</span>
+                <span class="font-bold text-[#4A2B1D] dark:text-white"><%= (typeof user !== 'undefined') ? (user?.globalName || user?.username) : 'Admin' %></span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="opacity-70">Kullanıcı Adı:</span>
-                <span class="font-mono text-[11px] text-[#AA6343]">@<%= (typeof user !== 'undefined') ? user?.username : 'kullanici' %></span>
+                <span class="opacity-70">Username:</span>
+                <span class="font-mono text-[11px] text-[#AA6343]">@<%= (typeof user !== 'undefined') ? user?.username : 'user' %></span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="opacity-70">Erişim Durumu:</span>
-                <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">Aktif Yönetici</span>
+                <span class="opacity-70">Access Status:</span>
+                <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">Active Administrator</span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="opacity-70">Veritabanı:</span>
+                <span class="opacity-70">Database:</span>
                 <span class="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                  <i class="fa-solid fa-circle-check text-[10px]"></i> Bağlı
+                  <i class="fa-solid fa-circle-check text-[10px]"></i> Connected
                 </span>
               </div>
             </div>
@@ -264,19 +264,19 @@
           <!-- Quick System Links -->
           <div class="clean-card p-6 bg-white dark:bg-[#120B07]">
             <h4 class="font-heading font-bold text-sm text-[#4A2B1D] dark:text-white mb-3">
-              Hızlı İşlemler
+              Quick Operations
             </h4>
             <div class="space-y-2">
               <a href="/apply" target="_blank" class="flex items-center justify-between p-2.5 rounded-xl bg-[#E1E2E4]/40 dark:bg-[#1A100A] hover:bg-[#E1E2E4] dark:hover:bg-[#20130C] text-xs font-semibold text-[#4A2B1D] dark:text-white transition-colors">
-                <span class="flex items-center gap-2"><i class="fa-solid fa-paper-plane text-[#8C5137]"></i> Başvuru Formunu Test Et</span>
+                <span class="flex items-center gap-2"><i class="fa-solid fa-paper-plane text-[#8C5137]"></i> Test Driver Form</span>
                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60"></i>
               </a>
               <a href="/events" target="_blank" class="flex items-center justify-between p-2.5 rounded-xl bg-[#E1E2E4]/40 dark:bg-[#1A100A] hover:bg-[#E1E2E4] dark:hover:bg-[#20130C] text-xs font-semibold text-[#4A2B1D] dark:text-white transition-colors">
-                <span class="flex items-center gap-2"><i class="fa-solid fa-calendar-days text-[#8C5137]"></i> Konvoy Takvimini İncele</span>
+                <span class="flex items-center gap-2"><i class="fa-solid fa-calendar-days text-[#8C5137]"></i> Convoy Schedule</span>
                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60"></i>
               </a>
               <a href="/" target="_blank" class="flex items-center justify-between p-2.5 rounded-xl bg-[#E1E2E4]/40 dark:bg-[#1A100A] hover:bg-[#E1E2E4] dark:hover:bg-[#20130C] text-xs font-semibold text-[#4A2B1D] dark:text-white transition-colors">
-                <span class="flex items-center gap-2"><i class="fa-solid fa-globe text-[#8C5137]"></i> Ana Sayfayı Aç</span>
+                <span class="flex items-center gap-2"><i class="fa-solid fa-globe text-[#8C5137]"></i> Open Homepage</span>
                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60"></i>
               </a>
             </div>
@@ -329,3 +329,4 @@
 
 </body>
 </html>
+
