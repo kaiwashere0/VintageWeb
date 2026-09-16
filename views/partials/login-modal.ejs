@@ -1,14 +1,14 @@
 <!-- AUTH & LOGIN MODAL (Discord OAuth & Future Integrations) -->
 <div id="auth-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   
-  <div class="modal-dialog-card relative w-full max-w-md bg-white dark:bg-[#120B07] border border-[#E1E2E4] dark:border-[#4A2B1D] rounded-3xl shadow-2xl p-6 sm:p-8 overflow-hidden">
+  <div class="modal-dialog-card relative w-full max-w-md bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] rounded-3xl shadow-2xl p-6 sm:p-8 overflow-hidden">
     
     <!-- Ambient Warm Glow Background Decoration -->
-    <div class="absolute -top-24 -right-24 w-48 h-48 bg-[#8C5137]/20 dark:bg-[#8C5137]/15 rounded-full blur-3xl pointer-events-none animate-pulse-gentle"></div>
-    <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-[#AA6343]/20 dark:bg-[#AA6343]/15 rounded-full blur-3xl pointer-events-none animate-pulse-gentle" style="animation-delay: 1.5s;"></div>
+    <div class="absolute -top-24 -right-24 w-48 h-48 bg-[#8C5137]/20 dark:bg-[#9E5838]/20 rounded-full blur-3xl pointer-events-none animate-pulse-gentle"></div>
+    <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-[#AA6343]/20 dark:bg-[#D48D66]/15 rounded-full blur-3xl pointer-events-none animate-pulse-gentle" style="animation-delay: 1.5s;"></div>
 
     <!-- Close Button -->
-    <button id="close-auth-modal-btn" type="button" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#E1E2E4]/60 dark:bg-[#20130C] text-[#8C5137] dark:text-[#E1E2E4] hover:text-[#4A2B1D] dark:hover:text-white hover:bg-[#E1E2E4] dark:hover:bg-[#301C12] transition-all hover:rotate-90 duration-200 flex items-center justify-center cursor-pointer" aria-label="Close">
+    <button id="close-auth-modal-btn" type="button" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#E1E2E4]/60 dark:bg-[#202430] text-[#8C5137] dark:text-slate-300 hover:text-[#4A2B1D] dark:hover:text-white hover:bg-[#E1E2E4] dark:hover:bg-[#2B3142] transition-all hover:rotate-90 duration-200 flex items-center justify-center cursor-pointer" aria-label="Close">
       <i class="fa-solid fa-xmark text-sm"></i>
     </button>
 
@@ -20,7 +20,7 @@
       <h3 id="modal-title" class="font-heading text-xl sm:text-2xl font-bold text-[#4A2B1D] dark:text-white tracking-tight">
         Sign in to Vintage Club
       </h3>
-      <p class="mt-1.5 text-xs sm:text-sm text-[#8C5137] dark:text-[#E1E2E4]/80 leading-relaxed max-w-xs mx-auto">
+      <p class="mt-1.5 text-xs sm:text-sm text-[#8C5137] dark:text-slate-400 leading-relaxed max-w-xs mx-auto">
         Sign in to participate in convoy events and access your driver portal.
       </p>
     </div>
@@ -46,29 +46,29 @@
       </a>
 
       <!-- Secondary: Steam Login (Upcoming) -->
-      <div class="flex items-center justify-between w-full px-4 py-3.5 rounded-2xl bg-[#E1E2E4]/40 dark:bg-[#1A100A] border border-[#E1E2E4] dark:border-[#4A2B1D] text-[#8C5137] dark:text-[#E1E2E4]/60 opacity-80 cursor-not-allowed">
+      <div class="flex items-center justify-between w-full px-4 py-3.5 rounded-2xl bg-[#E1E2E4]/40 dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] text-[#8C5137] dark:text-slate-400 opacity-80 cursor-not-allowed">
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-xl bg-[#8C5137]/10 dark:bg-[#4A2B1D]/40 flex items-center justify-center text-sm text-[#8C5137] dark:text-[#AA6343]">
+          <div class="w-8 h-8 rounded-xl bg-[#8C5137]/10 dark:bg-[#262A36] flex items-center justify-center text-sm text-[#8C5137] dark:text-[#D48D66]">
             <i class="fa-brands fa-steam"></i>
           </div>
           <div class="text-left">
             <span class="block text-xs font-semibold text-[#4A2B1D] dark:text-white/80">Sign in with Steam</span>
-            <span class="block text-[10px] text-[#8C5137] dark:text-[#E1E2E4]/60">TruckersMP synchronization</span>
+            <span class="block text-[10px] text-[#8C5137] dark:text-slate-500">TruckersMP synchronization</span>
           </div>
         </div>
-        <span class="text-[10px] font-semibold uppercase tracking-wider bg-[#8C5137]/10 text-[#8C5137] dark:text-[#AA6343] px-2 py-0.5 rounded-full">Soon</span>
+        <span class="text-[10px] font-semibold uppercase tracking-wider bg-[#8C5137]/10 text-[#8C5137] dark:text-[#D48D66] px-2 py-0.5 rounded-full">Soon</span>
       </div>
 
     </div>
 
     <!-- Security & Terms Footer -->
-    <div class="pt-4 border-t border-[#E1E2E4] dark:border-[#4A2B1D]/60 text-center">
-      <p class="text-[11px] text-[#8C5137] dark:text-[#E1E2E4]/70 leading-relaxed mb-3">
+    <div class="pt-4 border-t border-[#E1E2E4] dark:border-[#262A36] text-center">
+      <p class="text-[11px] text-[#8C5137] dark:text-slate-400 leading-relaxed mb-3">
         By signing in, you agree to the Vintage Club Community Guidelines and Terms.
       </p>
       <div class="flex items-center justify-center gap-1 text-[11px]">
-        <span class="text-[#8C5137] dark:text-[#E1E2E4]/80">Not a driver yet?</span>
-        <a href="/apply" class="text-[#4A2B1D] dark:text-[#AA6343] font-bold hover:underline transition-colors">
+        <span class="text-[#8C5137] dark:text-slate-400">Not a driver yet?</span>
+        <a href="/apply" class="text-[#4A2B1D] dark:text-[#D48D66] font-bold hover:underline transition-colors">
           Join Us
         </a>
       </div>

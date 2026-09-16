@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#FFFFFF] dark:bg-[#000000] text-[#4A2B1D] dark:text-[#FFFFFF]">
+<html lang="en" class="h-full bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#F9FAFB]">
 
 <head>
   <meta charset="UTF-8">
@@ -17,7 +17,7 @@
   </script>
 </head>
 
-<body class="min-h-full bg-[#FFFFFF] dark:bg-[#000000] text-[#4A2B1D] dark:text-[#FFFFFF] flex">
+<body class="min-h-full bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#F9FAFB] flex">
 
   <!-- ADMIN SIDEBAR -->
   <%- include('partials/sidebar') %>
@@ -26,17 +26,17 @@
   <div class="flex-1 lg:pl-64 flex flex-col min-h-screen">
     
     <!-- TOP NAVIGATION BAR -->
-    <header class="sticky top-0 z-30 bg-white/80 dark:bg-[#120B07]/80 backdrop-blur-md border-b border-[#E1E2E4] dark:border-[#4A2B1D] px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between transition-all duration-300">
+    <header class="sticky top-0 z-30 bg-white/85 dark:bg-[#0C0D11]/85 backdrop-blur-md border-b border-[#E1E2E4] dark:border-[#262A36] px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between transition-all duration-300">
       
       <!-- Left: Mobile Toggle & Breadcrumb -->
       <div class="flex items-center gap-3">
-        <button id="open-admin-sidebar-btn" type="button" class="lg:hidden w-9 h-9 rounded-xl bg-[#E1E2E4]/60 dark:bg-[#20130C] text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4] dark:hover:bg-[#301C12] transition-colors flex items-center justify-center cursor-pointer" aria-label="Open Menu">
+        <button id="open-admin-sidebar-btn" type="button" class="lg:hidden w-9 h-9 rounded-xl bg-[#E1E2E4]/60 dark:bg-[#181B24] text-[#8C5137] dark:text-slate-300 hover:bg-[#E1E2E4] dark:hover:bg-[#202430] transition-colors flex items-center justify-center cursor-pointer" aria-label="Open Menu">
           <i class="fa-solid fa-bars-staggered text-sm"></i>
         </button>
         <div>
-          <h1 class="font-heading font-extrabold text-base sm:text-lg text-[#4A2B1D] dark:text-white tracking-tight flex items-center gap-2">
+          <h1 class="font-heading font-extrabold text-base sm:text-lg text-[#4A2B1D] dark:text-[#F9FAFB] tracking-tight flex items-center gap-2">
             <span>Admin Portal</span>
-            <span class="text-xs text-[#8C5137] dark:text-[#AA6343] font-normal">/ Overview</span>
+            <span class="text-xs text-[#8C5137] dark:text-[#D48D66] font-normal">/ Overview</span>
           </h1>
         </div>
       </div>
@@ -45,15 +45,15 @@
       <div class="flex items-center gap-3">
         
         <!-- Theme Toggle -->
-        <button type="button" class="theme-toggle-btn w-9 h-9 rounded-xl border border-[#E1E2E4] dark:border-[#4A2B1D] bg-white dark:bg-[#18100B] text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:scale-105 active:scale-95 transition-all flex items-center justify-center cursor-pointer" title="Toggle Theme">
+        <button type="button" class="theme-toggle-btn w-9 h-9 rounded-xl border border-[#E1E2E4] dark:border-[#262A36] bg-white dark:bg-[#181B24] text-[#8C5137] dark:text-slate-300 hover:bg-[#E1E2E4]/50 dark:hover:bg-[#202430] hover:scale-105 active:scale-95 transition-all flex items-center justify-center cursor-pointer" title="Toggle Theme">
           <i class="fa-solid fa-moon dark:hidden text-xs"></i>
-          <i class="fa-solid fa-sun hidden dark:block text-[#AA6343] text-xs"></i>
+          <i class="fa-solid fa-sun hidden dark:block text-[#D48D66] text-xs"></i>
         </button>
 
         <!-- User Quick Profile Button -->
-        <div class="flex items-center gap-2 pl-2 border-l border-[#E1E2E4] dark:border-[#4A2B1D]">
+        <div class="flex items-center gap-2 pl-2 border-l border-[#E1E2E4] dark:border-[#262A36]">
           <img src="<%= (typeof user !== 'undefined' && user?.avatarUrl) ? user.avatarUrl : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80' %>" class="w-8 h-8 rounded-full object-cover border border-[#8C5137]/50 shadow-xs transition-transform hover:scale-110" />
-          <span class="hidden md:inline text-xs font-bold text-[#4A2B1D] dark:text-white max-w-[120px] truncate">
+          <span class="hidden md:inline text-xs font-bold text-[#4A2B1D] dark:text-[#F9FAFB] max-w-[120px] truncate">
             <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Admin' %>
           </span>
         </div>
@@ -65,7 +65,7 @@
     <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl w-full mx-auto">
 
       <!-- WELCOME HERO BANNER -->
-      <div class="relative overflow-hidden clean-card p-6 sm:p-8 bg-gradient-to-r from-[#4A2B1D] to-[#8C5137] text-white border-0 shadow-xl animate-fade-in-up hover-lift">
+      <div class="relative overflow-hidden clean-card p-6 sm:p-8 bg-gradient-to-r from-[#4A2B1D] via-[#683C28] to-[#8C5137] text-white border-0 shadow-xl animate-fade-in-up hover-lift">
         <div class="relative z-10 max-w-2xl">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm text-[11px] font-bold uppercase tracking-wider mb-3 animate-pulse-gentle">
             <i class="fa-solid fa-shield-halved"></i> Management Portal
@@ -87,72 +87,72 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         
         <!-- Metric 1: Applications -->
-        <div class="clean-card p-6 bg-white dark:bg-[#120B07] hover-lift hover-glow animate-fade-in-up delay-75 group">
+        <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] hover-lift hover-glow animate-fade-in-up delay-75 group">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">Applications</span>
-            <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#D48D66] uppercase tracking-wider">Applications</span>
+            <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
               <i class="fa-solid fa-file-signature text-base"></i>
             </div>
           </div>
           <div class="flex items-baseline justify-between">
-            <span class="text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white">
+            <span class="text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-[#F9FAFB]">
               <%= (typeof stats !== 'undefined') ? stats.applicationsCount : 0 %>
             </span>
-            <a href="/admin/applications" class="text-xs font-semibold text-[#8C5137] dark:text-[#AA6343] hover:underline flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+            <a href="/admin/applications" class="text-xs font-semibold text-[#8C5137] dark:text-[#D48D66] hover:underline flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
               <span>View All</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
             </a>
           </div>
         </div>
 
         <!-- Metric 2: Events -->
-        <div class="clean-card p-6 bg-white dark:bg-[#120B07] hover-lift hover-glow animate-fade-in-up delay-150 group">
+        <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] hover-lift hover-glow animate-fade-in-up delay-150 group">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">Convoys & Events</span>
-            <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#D48D66] uppercase tracking-wider">Convoys & Events</span>
+            <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
               <i class="fa-solid fa-truck-moving text-base"></i>
             </div>
           </div>
           <div class="flex items-baseline justify-between">
-            <span class="text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white">
+            <span class="text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-[#F9FAFB]">
               <%= (typeof stats !== 'undefined') ? stats.eventsCount : 0 %>
             </span>
-            <a href="/events" target="_blank" class="text-xs font-semibold text-[#8C5137] dark:text-[#AA6343] hover:underline flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+            <a href="/events" target="_blank" class="text-xs font-semibold text-[#8C5137] dark:text-[#D48D66] hover:underline flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
               <span>Live Page</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
             </a>
           </div>
         </div>
 
         <!-- Metric 3: Members -->
-        <div class="clean-card p-6 bg-white dark:bg-[#120B07] hover-lift hover-glow animate-fade-in-up delay-200 group">
+        <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] hover-lift hover-glow animate-fade-in-up delay-200 group">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">Registered Drivers</span>
-            <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#D48D66] uppercase tracking-wider">Registered Drivers</span>
+            <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
               <i class="fa-solid fa-id-badge text-base"></i>
             </div>
           </div>
           <div class="flex items-baseline justify-between">
-            <span class="text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white">
+            <span class="text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-[#F9FAFB]">
               <%= (typeof stats !== 'undefined') ? stats.membersCount : 0 %>
             </span>
-            <a href="/team" target="_blank" class="text-xs font-semibold text-[#8C5137] dark:text-[#AA6343] hover:underline flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+            <a href="/team" target="_blank" class="text-xs font-semibold text-[#8C5137] dark:text-[#D48D66] hover:underline flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
               <span>Roster</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
             </a>
           </div>
         </div>
 
         <!-- Metric 4: Media Gallery -->
-        <div class="clean-card p-6 bg-white dark:bg-[#120B07] hover-lift hover-glow animate-fade-in-up delay-300 group">
+        <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] hover-lift hover-glow animate-fade-in-up delay-300 group">
           <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">Media Gallery</span>
-            <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#D48D66] uppercase tracking-wider">Media Gallery</span>
+            <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
               <i class="fa-solid fa-camera-retro text-base"></i>
             </div>
           </div>
           <div class="flex items-baseline justify-between">
-            <span class="text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white">
+            <span class="text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-[#F9FAFB]">
               <%= (typeof stats !== 'undefined') ? stats.galleryCount : 0 %>
             </span>
-            <a href="/gallery" target="_blank" class="text-xs font-semibold text-[#8C5137] dark:text-[#AA6343] hover:underline flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+            <a href="/gallery" target="_blank" class="text-xs font-semibold text-[#8C5137] dark:text-[#D48D66] hover:underline flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
               <span>Gallery</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
             </a>
           </div>
@@ -164,20 +164,20 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         <!-- Left: Recent Applications Table -->
-        <div class="lg:col-span-2 clean-card p-6 bg-white dark:bg-[#120B07] hover-glow transition-all duration-300 animate-fade-in-up delay-200">
-          <div class="flex items-center justify-between mb-6 pb-4 border-b border-[#E1E2E4] dark:border-[#4A2B1D]">
+        <div class="lg:col-span-2 clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] hover-glow transition-all duration-300 animate-fade-in-up delay-200">
+          <div class="flex items-center justify-between mb-6 pb-4 border-b border-[#E1E2E4] dark:border-[#262A36]">
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-[#8C5137]/10 text-[#8C5137] dark:text-[#AA6343] flex items-center justify-center">
+              <div class="w-9 h-9 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 text-[#8C5137] dark:text-[#D48D66] flex items-center justify-center">
                 <i class="fa-solid fa-inbox text-sm"></i>
               </div>
               <div>
-                <h3 class="font-heading font-bold text-base text-[#4A2B1D] dark:text-white">
+                <h3 class="font-heading font-bold text-base text-[#4A2B1D] dark:text-[#F9FAFB]">
                   Recent Driver Applications
                 </h3>
-                <p class="text-xs text-[#8C5137] dark:text-[#E1E2E4]/80">Latest applications submitted through the website</p>
+                <p class="text-xs text-[#8C5137] dark:text-slate-400">Latest applications submitted through the website</p>
               </div>
             </div>
-            <a href="/admin/applications" class="text-xs font-bold text-[#8C5137] dark:text-[#AA6343] hover:underline">
+            <a href="/admin/applications" class="text-xs font-bold text-[#8C5137] dark:text-[#D48D66] hover:underline">
               View All
             </a>
           </div>
@@ -186,7 +186,7 @@
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs">
                 <thead>
-                  <tr class="border-b border-[#E1E2E4] dark:border-[#4A2B1D] text-[#8C5137] dark:text-[#AA6343] uppercase tracking-wider">
+                  <tr class="border-b border-[#E1E2E4] dark:border-[#262A36] text-[#8C5137] dark:text-[#D48D66] uppercase tracking-wider">
                     <th class="py-2.5 px-3">Driver Name</th>
                     <th class="py-2.5 px-3">Discord</th>
                     <th class="py-2.5 px-3">TMP Profile</th>
@@ -194,11 +194,11 @@
                     <th class="py-2.5 px-3">Date</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-[#E1E2E4] dark:divide-[#4A2B1D]/40">
+                <tbody class="divide-y divide-[#E1E2E4] dark:divide-[#262A36]/60">
                   <% recentApplications.forEach(app => { %>
-                    <tr class="hover:bg-[#E1E2E4]/30 dark:hover:bg-[#1A100A] transition-all duration-150 group">
-                      <td class="py-3 px-3 font-semibold text-[#4A2B1D] dark:text-white group-hover:translate-x-0.5 transition-transform"><%= app.fullName %></td>
-                      <td class="py-3 px-3 text-[#8C5137] dark:text-[#E1E2E4]"><%= app.discordTag %></td>
+                    <tr class="hover:bg-[#E1E2E4]/30 dark:hover:bg-[#202430] transition-all duration-150 group">
+                      <td class="py-3 px-3 font-semibold text-[#4A2B1D] dark:text-[#F9FAFB] group-hover:translate-x-0.5 transition-transform"><%= app.fullName %></td>
+                      <td class="py-3 px-3 text-[#8C5137] dark:text-slate-300"><%= app.discordTag %></td>
                       <td class="py-3 px-3">
                         <a href="<%= app.truckersMpProfile %>" target="_blank" rel="noopener" class="text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1">
                           <span>TMP</span> <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
@@ -210,7 +210,7 @@
                           <%= app.status === 'approved' ? 'Approved' : (app.status === 'rejected' ? 'Rejected' : 'Pending') %>
                         </span>
                       </td>
-                      <td class="py-3 px-3 text-[#8C5137] dark:text-[#E1E2E4]/70 text-[11px]">
+                      <td class="py-3 px-3 text-[#8C5137] dark:text-slate-400 text-[11px]">
                         <%= app.createdAt ? new Date(app.createdAt).toLocaleDateString('en-US') : 'Today' %>
                       </td>
                     </tr>
@@ -219,8 +219,8 @@
               </table>
             </div>
           <% } else { %>
-            <div class="py-12 text-center text-[#8C5137] dark:text-[#E1E2E4]/70">
-              <div class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-[#E1E2E4]/50 dark:bg-[#1A100A] flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] text-xl">
+            <div class="py-12 text-center text-[#8C5137] dark:text-slate-400">
+              <div class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-[#E1E2E4]/50 dark:bg-[#13161D] flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] text-xl">
                 <i class="fa-solid fa-inbox"></i>
               </div>
               <p class="text-xs font-semibold">No driver applications received yet.</p>
@@ -233,33 +233,33 @@
         <div class="space-y-6">
           
           <!-- Quick Operations -->
-          <div class="clean-card p-6 bg-white dark:bg-[#120B07] hover-glow transition-all duration-300 animate-fade-in-up delay-200">
-            <div class="flex items-center gap-3 mb-4 pb-3 border-b border-[#E1E2E4] dark:border-[#4A2B1D]">
-              <div class="w-8 h-8 rounded-xl bg-[#8C5137]/10 text-[#8C5137] dark:text-[#AA6343] flex items-center justify-center text-sm">
+          <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] hover-glow transition-all duration-300 animate-fade-in-up delay-200">
+            <div class="flex items-center gap-3 mb-4 pb-3 border-b border-[#E1E2E4] dark:border-[#262A36]">
+              <div class="w-8 h-8 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 text-[#8C5137] dark:text-[#D48D66] flex items-center justify-center text-sm">
                 <i class="fa-solid fa-bolt"></i>
               </div>
-              <h4 class="font-heading font-bold text-sm text-[#4A2B1D] dark:text-white">
+              <h4 class="font-heading font-bold text-sm text-[#4A2B1D] dark:text-[#F9FAFB]">
                 Quick Operations
               </h4>
             </div>
             <div class="space-y-2">
-              <a href="/apply" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-[#E1E2E4]/40 dark:bg-[#1A100A] hover:bg-[#E1E2E4] dark:hover:bg-[#20130C] text-xs font-semibold text-[#4A2B1D] dark:text-white transition-all duration-200 group hover:translate-x-1">
+              <a href="/apply" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-[#E1E2E4]/40 dark:bg-[#13161D] hover:bg-[#E1E2E4] dark:hover:bg-[#202430] text-xs font-semibold text-[#4A2B1D] dark:text-[#F9FAFB] transition-all duration-200 group hover:translate-x-1">
                 <span class="flex items-center gap-2.5">
-                  <i class="fa-solid fa-paper-plane text-[#8C5137] dark:text-[#AA6343] transition-transform group-hover:scale-110"></i>
+                  <i class="fa-solid fa-paper-plane text-[#8C5137] dark:text-[#D48D66] transition-transform group-hover:scale-110"></i>
                   <span>Test Driver Form</span>
                 </span>
                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
               </a>
-              <a href="/events" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-[#E1E2E4]/40 dark:bg-[#1A100A] hover:bg-[#E1E2E4] dark:hover:bg-[#20130C] text-xs font-semibold text-[#4A2B1D] dark:text-white transition-all duration-200 group hover:translate-x-1">
+              <a href="/events" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-[#E1E2E4]/40 dark:bg-[#13161D] hover:bg-[#E1E2E4] dark:hover:bg-[#202430] text-xs font-semibold text-[#4A2B1D] dark:text-[#F9FAFB] transition-all duration-200 group hover:translate-x-1">
                 <span class="flex items-center gap-2.5">
-                  <i class="fa-solid fa-calendar-days text-[#8C5137] dark:text-[#AA6343] transition-transform group-hover:scale-110"></i>
+                  <i class="fa-solid fa-calendar-days text-[#8C5137] dark:text-[#D48D66] transition-transform group-hover:scale-110"></i>
                   <span>Convoy Schedule</span>
                 </span>
                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
               </a>
-              <a href="/" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-[#E1E2E4]/40 dark:bg-[#1A100A] hover:bg-[#E1E2E4] dark:hover:bg-[#20130C] text-xs font-semibold text-[#4A2B1D] dark:text-white transition-all duration-200 group hover:translate-x-1">
+              <a href="/" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-[#E1E2E4]/40 dark:bg-[#13161D] hover:bg-[#E1E2E4] dark:hover:bg-[#202430] text-xs font-semibold text-[#4A2B1D] dark:text-[#F9FAFB] transition-all duration-200 group hover:translate-x-1">
                 <span class="flex items-center gap-2.5">
-                  <i class="fa-solid fa-globe text-[#8C5137] dark:text-[#AA6343] transition-transform group-hover:scale-110"></i>
+                  <i class="fa-solid fa-globe text-[#8C5137] dark:text-[#D48D66] transition-transform group-hover:scale-110"></i>
                   <span>Open Homepage</span>
                 </span>
                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
@@ -268,38 +268,38 @@
           </div>
 
           <!-- Official Channels & Community -->
-          <div class="clean-card p-6 bg-white dark:bg-[#120B07] hover-glow transition-all duration-300 animate-fade-in-up delay-300">
-            <div class="flex items-center gap-3 mb-4 pb-3 border-b border-[#E1E2E4] dark:border-[#4A2B1D]">
-              <div class="w-8 h-8 rounded-xl bg-[#8C5137]/10 text-[#8C5137] dark:text-[#AA6343] flex items-center justify-center text-sm">
+          <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] hover-glow transition-all duration-300 animate-fade-in-up delay-300">
+            <div class="flex items-center gap-3 mb-4 pb-3 border-b border-[#E1E2E4] dark:border-[#262A36]">
+              <div class="w-8 h-8 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 text-[#8C5137] dark:text-[#D48D66] flex items-center justify-center text-sm">
                 <i class="fa-solid fa-share-nodes"></i>
               </div>
-              <h4 class="font-heading font-bold text-sm text-[#4A2B1D] dark:text-white">
+              <h4 class="font-heading font-bold text-sm text-[#4A2B1D] dark:text-[#F9FAFB]">
                 Official Channels
               </h4>
             </div>
             <div class="space-y-2">
-              <a href="https://truckersmp.com/vtc/80136" target="_blank" rel="noopener" class="flex items-center justify-between p-2.5 rounded-xl bg-[#E1E2E4]/30 dark:bg-[#1A100A] hover:bg-[#E1E2E4]/60 dark:hover:bg-[#20130C] text-xs text-[#8C5137] dark:text-[#E1E2E4] hover:text-[#4A2B1D] dark:hover:text-white transition-all group hover:translate-x-1">
+              <a href="https://truckersmp.com/vtc/80136" target="_blank" rel="noopener" class="flex items-center justify-between p-2.5 rounded-xl bg-[#E1E2E4]/30 dark:bg-[#13161D] hover:bg-[#E1E2E4]/60 dark:hover:bg-[#202430] text-xs text-[#8C5137] dark:text-slate-300 hover:text-[#4A2B1D] dark:hover:text-[#F9FAFB] transition-all group hover:translate-x-1">
                 <span class="flex items-center gap-2">
-                  <i class="fa-solid fa-truck-fast text-[#8C5137] dark:text-[#AA6343]"></i>
+                  <i class="fa-solid fa-truck-fast text-[#8C5137] dark:text-[#D48D66]"></i>
                   <span class="font-medium">TruckersMP VTC #80136</span>
                 </span>
                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60 transition-transform group-hover:translate-x-0.5"></i>
               </a>
-              <a href="https://discord.com/invite/vintageclub" target="_blank" rel="noopener" class="flex items-center justify-between p-2.5 rounded-xl bg-[#E1E2E4]/30 dark:bg-[#1A100A] hover:bg-[#E1E2E4]/60 dark:hover:bg-[#20130C] text-xs text-[#8C5137] dark:text-[#E1E2E4] hover:text-[#4A2B1D] dark:hover:text-white transition-all group hover:translate-x-1">
+              <a href="https://discord.com/invite/vintageclub" target="_blank" rel="noopener" class="flex items-center justify-between p-2.5 rounded-xl bg-[#E1E2E4]/30 dark:bg-[#13161D] hover:bg-[#E1E2E4]/60 dark:hover:bg-[#202430] text-xs text-[#8C5137] dark:text-slate-300 hover:text-[#4A2B1D] dark:hover:text-[#F9FAFB] transition-all group hover:translate-x-1">
                 <span class="flex items-center gap-2">
-                  <i class="fa-brands fa-discord text-indigo-500"></i>
+                  <i class="fa-brands fa-discord text-indigo-400"></i>
                   <span class="font-medium">Discord Server</span>
                 </span>
                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60 transition-transform group-hover:translate-x-0.5"></i>
               </a>
-              <a href="https://www.instagram.com/vintageclubofficiall?stkn=MXNmcnY5cDYweTJ6cQ%3D%3D&utm_source=qr" target="_blank" rel="noopener" class="flex items-center justify-between p-2.5 rounded-xl bg-[#E1E2E4]/30 dark:bg-[#1A100A] hover:bg-[#E1E2E4]/60 dark:hover:bg-[#20130C] text-xs text-[#8C5137] dark:text-[#E1E2E4] hover:text-[#4A2B1D] dark:hover:text-white transition-all group hover:translate-x-1">
+              <a href="https://www.instagram.com/vintageclubofficiall?stkn=MXNmcnY5cDYweTJ6cQ%3D%3D&utm_source=qr" target="_blank" rel="noopener" class="flex items-center justify-between p-2.5 rounded-xl bg-[#E1E2E4]/30 dark:bg-[#13161D] hover:bg-[#E1E2E4]/60 dark:hover:bg-[#202430] text-xs text-[#8C5137] dark:text-slate-300 hover:text-[#4A2B1D] dark:hover:text-[#F9FAFB] transition-all group hover:translate-x-1">
                 <span class="flex items-center gap-2">
-                  <i class="fa-brands fa-instagram text-pink-600"></i>
+                  <i class="fa-brands fa-instagram text-pink-500"></i>
                   <span class="font-medium">Instagram</span>
                 </span>
                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60 transition-transform group-hover:translate-x-0.5"></i>
               </a>
-              <a href="https://www.youtube.com/@VntgClub" target="_blank" rel="noopener" class="flex items-center justify-between p-2.5 rounded-xl bg-[#E1E2E4]/30 dark:bg-[#1A100A] hover:bg-[#E1E2E4]/60 dark:hover:bg-[#20130C] text-xs text-[#8C5137] dark:text-[#E1E2E4] hover:text-[#4A2B1D] dark:hover:text-white transition-all group hover:translate-x-1">
+              <a href="https://www.youtube.com/@VntgClub" target="_blank" rel="noopener" class="flex items-center justify-between p-2.5 rounded-xl bg-[#E1E2E4]/30 dark:bg-[#13161D] hover:bg-[#E1E2E4]/60 dark:hover:bg-[#202430] text-xs text-[#8C5137] dark:text-slate-300 hover:text-[#4A2B1D] dark:hover:text-[#F9FAFB] transition-all group hover:translate-x-1">
                 <span class="flex items-center gap-2">
                   <i class="fa-brands fa-youtube text-red-500"></i>
                   <span class="font-medium">YouTube</span>
