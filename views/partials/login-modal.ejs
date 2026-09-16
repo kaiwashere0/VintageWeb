@@ -1,21 +1,21 @@
 <!-- AUTH & LOGIN MODAL (Discord OAuth & Future Integrations) -->
-<div id="auth-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+<div id="auth-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   
-  <div class="relative w-full max-w-md bg-white dark:bg-[#120B07] border border-[#E1E2E4] dark:border-[#4A2B1D] rounded-3xl shadow-2xl p-6 sm:p-8 overflow-hidden transform transition-all animate-in fade-in zoom-in-95 duration-200">
+  <div class="modal-dialog-card relative w-full max-w-md bg-white dark:bg-[#120B07] border border-[#E1E2E4] dark:border-[#4A2B1D] rounded-3xl shadow-2xl p-6 sm:p-8 overflow-hidden">
     
     <!-- Ambient Warm Glow Background Decoration -->
-    <div class="absolute -top-24 -right-24 w-48 h-48 bg-[#8C5137]/20 dark:bg-[#8C5137]/15 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-[#AA6343]/20 dark:bg-[#AA6343]/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -top-24 -right-24 w-48 h-48 bg-[#8C5137]/20 dark:bg-[#8C5137]/15 rounded-full blur-3xl pointer-events-none animate-pulse-gentle"></div>
+    <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-[#AA6343]/20 dark:bg-[#AA6343]/15 rounded-full blur-3xl pointer-events-none animate-pulse-gentle" style="animation-delay: 1.5s;"></div>
 
     <!-- Close Button -->
-    <button id="close-auth-modal-btn" type="button" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#E1E2E4]/60 dark:bg-[#20130C] text-[#8C5137] dark:text-[#E1E2E4] hover:text-[#4A2B1D] dark:hover:text-white hover:bg-[#E1E2E4] dark:hover:bg-[#301C12] transition-colors flex items-center justify-center" aria-label="Kapat">
+    <button id="close-auth-modal-btn" type="button" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#E1E2E4]/60 dark:bg-[#20130C] text-[#8C5137] dark:text-[#E1E2E4] hover:text-[#4A2B1D] dark:hover:text-white hover:bg-[#E1E2E4] dark:hover:bg-[#301C12] transition-all hover:rotate-90 duration-200 flex items-center justify-center cursor-pointer" aria-label="Kapat">
       <i class="fa-solid fa-xmark text-sm"></i>
     </button>
 
     <!-- Modal Header -->
     <div class="text-center mb-6">
-      <div class="inline-flex items-center justify-center mb-3">
-        <img src="/Wintage_Club_Logo_2050.png" alt="Vintage Club" class="h-14 w-auto object-contain drop-shadow-sm" />
+      <div class="inline-flex items-center justify-center mb-3 transition-transform hover:scale-110 duration-300">
+        <img src="/Wintage_Club_Logo_2050.png" alt="Vintage Club" class="h-14 w-auto object-contain drop-shadow-sm animate-float-gentle" />
       </div>
       <h3 id="modal-title" class="font-heading text-xl sm:text-2xl font-bold text-[#4A2B1D] dark:text-white tracking-tight">
         Vintage Club'a Giriş Yap
@@ -29,9 +29,9 @@
     <div class="space-y-3 mb-6">
       
       <!-- Primary: Discord OAuth2 -->
-      <a href="/auth/discord" class="group flex items-center justify-between w-full px-4 py-3.5 rounded-2xl bg-[#5865F2] hover:bg-[#4752C4] text-white transition-all duration-200 shadow-md hover:shadow-indigo-500/25 hover:-translate-y-0.5">
+      <a href="/auth/discord" class="group flex items-center justify-between w-full px-4 py-3.5 rounded-2xl bg-[#5865F2] hover:bg-[#4752C4] text-white transition-all duration-300 shadow-md hover:shadow-indigo-500/25 hover:-translate-y-1 hover:scale-[1.01] active:scale-95">
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white text-base">
+          <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white text-base transition-transform group-hover:rotate-12 duration-300">
             <i class="fa-brands fa-discord"></i>
           </div>
           <div class="text-left">
@@ -41,7 +41,7 @@
         </div>
         <div class="flex items-center gap-1.5">
           <span class="text-[10px] font-semibold uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full">Önerilen</span>
-          <i class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
+          <i class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1.5"></i>
         </div>
       </a>
 
@@ -68,7 +68,7 @@
       </p>
       <div class="flex items-center justify-center gap-1 text-[11px]">
         <span class="text-[#8C5137] dark:text-[#E1E2E4]/80">Henüz şoför değil misiniz?</span>
-        <a href="/apply" class="text-[#4A2B1D] dark:text-[#AA6343] font-bold hover:underline">
+        <a href="/apply" class="text-[#4A2B1D] dark:text-[#AA6343] font-bold hover:underline transition-colors">
           Aramıza Katıl
         </a>
       </div>

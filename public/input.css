@@ -426,3 +426,193 @@ html.dark ::-webkit-scrollbar-thumb {
 html.dark ::-webkit-scrollbar-thumb:hover {
   background: #AA6343;
 }
+
+/* ========================================================
+   GLOBAL ANIMATIONS & MICRO-INTERACTIONS
+   ======================================================== */
+
+/* 1. Modal Animations */
+.modal-backdrop {
+  opacity: 0;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              backdrop-filter 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-backdrop.is-active {
+  opacity: 1;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.modal-dialog-card {
+  opacity: 0;
+  transform: scale(0.92) translateY(24px);
+  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.modal-backdrop.is-active .modal-dialog-card {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.modal-backdrop.is-closing {
+  opacity: 0;
+  backdrop-filter: blur(0px);
+}
+
+.modal-backdrop.is-closing .modal-dialog-card {
+  opacity: 0;
+  transform: scale(0.94) translateY(12px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* 2. Keyframes */
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pulseGentle {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-float-gentle {
+  animation: floatGentle 4s ease-in-out infinite;
+}
+
+.animate-pulse-gentle {
+  animation: pulseGentle 4s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 3. Reveal on Scroll Utilities */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-on-scroll.scale-reveal {
+  transform: scale(0.93) translateY(16px);
+}
+
+.reveal-on-scroll.scale-reveal.is-revealed {
+  transform: scale(1) translateY(0);
+}
+
+.reveal-on-scroll.left-reveal {
+  transform: translateX(-30px);
+}
+
+.reveal-on-scroll.left-reveal.is-revealed {
+  transform: translateX(0);
+}
+
+.reveal-on-scroll.right-reveal {
+  transform: translateX(30px);
+}
+
+.reveal-on-scroll.right-reveal.is-revealed {
+  transform: translateX(0);
+}
+
+/* Stagger Delays */
+.delay-75 { transition-delay: 75ms; }
+.delay-100 { transition-delay: 100ms; }
+.delay-150 { transition-delay: 150ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+.delay-600 { transition-delay: 600ms; }
+
+/* 4. Interactive Micro-Interactions */
+button:active, .btn-primary:active, .btn-secondary:active {
+  transform: scale(0.97);
+}
+
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+.hover-glow {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hover-glow:hover {
+  border-color: #8C5137;
+  box-shadow: 0 0 20px -4px rgba(140, 81, 55, 0.3);
+}
+
+html.dark .hover-glow:hover {
+  border-color: #AA6343;
+  box-shadow: 0 0 24px -4px rgba(170, 99, 67, 0.45);
+}
+

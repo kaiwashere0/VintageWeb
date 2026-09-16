@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavbarScroll();
   initMobileMenu();
   initAuthModal();
+  initScrollReveal();
   loadAllBackendData();
   setupApplicationForm();
 });
@@ -92,7 +93,7 @@ function initMobileMenu() {
 }
 
 /* ========================================================
-   4. Auth Modal Management
+   4. Auth Modal Management (Smooth Animated Transitions)
    ======================================================== */
 function initAuthModal() {
   const modal = document.getElementById('auth-modal');
@@ -100,14 +101,37 @@ function initAuthModal() {
   const closeBtn = document.getElementById('close-auth-modal-btn');
   if (!modal) return;
 
-  const openModal = () => {
-    modal.classList.remove('hidden');
+  let isTransitioning = false;
+
+  const openModal = (e) => {
+    if (e) e.preventDefault();
+    if (isTransitioning) return;
+    isTransitioning = true;
+
+    modal.classList.remove('hidden', 'is-closing');
+    // Force layout reflow for CSS keyframe/transition initiation
+    void modal.offsetWidth;
+    modal.classList.add('is-active');
     document.body.style.overflow = 'hidden';
+
+    setTimeout(() => {
+      isTransitioning = false;
+    }, 320);
   };
 
   const closeModal = () => {
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
+    if (isTransitioning || modal.classList.contains('hidden')) return;
+    isTransitioning = true;
+
+    modal.classList.add('is-closing');
+    modal.classList.remove('is-active');
+
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      modal.classList.remove('is-closing');
+      document.body.style.overflow = '';
+      isTransitioning = false;
+    }, 220);
   };
 
   openBtns.forEach(btn => btn.addEventListener('click', openModal));
@@ -130,7 +154,34 @@ function initAuthModal() {
 }
 
 /* ========================================================
-   5. Load Dynamic Data from Backend API
+   5. Scroll Reveal Animation Engine
+   ======================================================== */
+function initScrollReveal() {
+  const revealElements = document.querySelectorAll('.reveal-on-scroll');
+  if (!revealElements.length) return;
+
+  if (!('IntersectionObserver' in window)) {
+    revealElements.forEach(el => el.classList.add('is-revealed'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-revealed');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -30px 0px'
+  });
+
+  revealElements.forEach(el => observer.observe(el));
+}
+
+/* ========================================================
+   6. Load Dynamic Data from Backend API
    ======================================================== */
 async function loadAllBackendData() {
   await Promise.allSettled([
@@ -139,6 +190,8 @@ async function loadAllBackendData() {
     loadTeam(),
     loadGallery()
   ]);
+  // Re-run reveal observer for dynamically injected cards
+  setTimeout(initScrollReveal, 100);
 }
 
 async function loadStats() {
