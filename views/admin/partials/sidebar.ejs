@@ -20,63 +20,53 @@
       </button>
     </div>
 
-    <!-- Admin Status Pill -->
-    <div class="px-4 py-2.5 mx-3 my-3 rounded-xl bg-[#8C5137]/10 dark:bg-[#8C5137]/15 border border-[#8C5137]/20 text-[#4A2B1D] dark:text-[#E1E2E4] flex items-center gap-2.5">
-      <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-      <div class="flex-1 min-w-0">
-        <span class="block text-[11px] font-bold uppercase tracking-wider truncate">Admin Session</span>
-        <span class="block text-[9px] opacity-75 truncate">Authorized Operations</span>
-      </div>
-      <i class="fa-solid fa-shield-halved text-xs text-[#8C5137] dark:text-[#AA6343]"></i>
-    </div>
-
     <!-- Navigation Items -->
-    <nav class="p-3 space-y-1">
-      <a href="/admin/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all <%= (typeof currentPath !== 'undefined' && currentPath === '/admin/dashboard') ? 'bg-[#8C5137] text-white shadow-sm' : 'text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white' %>">
-        <i class="fa-solid fa-chart-pie text-sm w-4"></i>
+    <nav class="p-3 space-y-1.5">
+      <a href="/admin/dashboard" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 group <%= (typeof currentPath !== 'undefined' && currentPath === '/admin/dashboard') ? 'bg-[#8C5137] text-white shadow-sm' : 'text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white hover:translate-x-1' %>">
+        <i class="fa-solid fa-chart-pie text-sm w-4 transition-transform group-hover:scale-110"></i>
         <span>Dashboard</span>
       </a>
 
-      <a href="/admin/applications" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all <%= (typeof currentPath !== 'undefined' && currentPath === '/admin/applications') ? 'bg-[#8C5137] text-white shadow-sm' : 'text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white' %>">
+      <a href="/admin/applications" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 group <%= (typeof currentPath !== 'undefined' && currentPath === '/admin/applications') ? 'bg-[#8C5137] text-white shadow-sm' : 'text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white hover:translate-x-1' %>">
         <div class="flex items-center gap-3">
-          <i class="fa-solid fa-file-signature text-sm w-4"></i>
+          <i class="fa-solid fa-file-signature text-sm w-4 transition-transform group-hover:scale-110"></i>
           <span>Driver Applications</span>
         </div>
         <% if (typeof stats !== 'undefined' && stats.applicationsCount > 0) { %>
-          <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#AA6343] text-white font-bold"><%= stats.applicationsCount %></span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#AA6343] text-white font-bold transition-transform group-hover:scale-110"><%= stats.applicationsCount %></span>
         <% } %>
       </a>
 
-      <a href="/team" target="_blank" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white transition-all">
+      <a href="/team" target="_blank" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white hover:translate-x-1 transition-all duration-200 group">
         <div class="flex items-center gap-3">
-          <i class="fa-solid fa-id-badge text-sm w-4"></i>
+          <i class="fa-solid fa-id-badge text-sm w-4 transition-transform group-hover:scale-110"></i>
           <span>Team & Drivers</span>
         </div>
-        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60"></i>
+        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
       </a>
 
-      <a href="/events" target="_blank" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white transition-all">
+      <a href="/events" target="_blank" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white hover:translate-x-1 transition-all duration-200 group">
         <div class="flex items-center gap-3">
-          <i class="fa-solid fa-truck-moving text-sm w-4"></i>
+          <i class="fa-solid fa-truck-moving text-sm w-4 transition-transform group-hover:scale-110"></i>
           <span>Convoy Events</span>
         </div>
-        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60"></i>
+        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
       </a>
 
-      <a href="/gallery" target="_blank" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white transition-all">
+      <a href="/gallery" target="_blank" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white hover:translate-x-1 transition-all duration-200 group">
         <div class="flex items-center gap-3">
-          <i class="fa-solid fa-photo-film text-sm w-4"></i>
+          <i class="fa-solid fa-photo-film text-sm w-4 transition-transform group-hover:scale-110"></i>
           <span>Media Gallery</span>
         </div>
-        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60"></i>
+        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
       </a>
 
       <div class="pt-3 pb-1">
         <div class="border-t border-[#E1E2E4] dark:border-[#4A2B1D]"></div>
       </div>
 
-      <a href="/" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white transition-all">
-        <i class="fa-solid fa-globe text-sm w-4"></i>
+      <a href="/" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-[#8C5137] dark:text-[#E1E2E4] hover:bg-[#E1E2E4]/50 dark:hover:bg-[#20130C] hover:text-[#4A2B1D] dark:hover:text-white hover:translate-x-1 transition-all duration-200 group">
+        <i class="fa-solid fa-globe text-sm w-4 transition-transform group-hover:scale-110"></i>
         <span>Back to Website</span>
       </a>
     </nav>

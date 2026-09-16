@@ -35,11 +35,11 @@ export function createAdminRouter() {
   // 1. Admin Dashboard (Overview)
   router.get(['/', '/dashboard'], async (req, res) => {
     try {
-      const [applicationsCount, eventsCount, membersCount, usersCount, settings] = await Promise.all([
+      const [applicationsCount, eventsCount, membersCount, galleryCount, settings] = await Promise.all([
         Application.countDocuments(),
         Event.countDocuments(),
         Member.countDocuments(),
-        User.countDocuments(),
+        Gallery.countDocuments(),
         DatabaseService.getSettings()
       ]);
 
@@ -54,7 +54,7 @@ export function createAdminRouter() {
           applicationsCount,
           eventsCount,
           membersCount,
-          usersCount
+          galleryCount
         },
         settings,
         recentApplications,
