@@ -480,6 +480,152 @@ function initDiscordBotController() {
   let previewIndex = 0;
   let previewTimer = null;
 
+  // 0. Initialize Custom Dropdown Selectors
+  const initCustomDropdownSelectors = () => {
+    const wrappers = document.querySelectorAll('.custom-dropdown-wrapper');
+    if (!wrappers.length) return;
+
+    wrappers.forEach(wrapper => {
+      const trigger = wrapper.querySelector('.custom-dropdown-trigger');
+      const menu = wrapper.querySelector('.custom-dropdown-menu');
+      const dropdownType = wrapper.getAttribute('data-dropdown');
+
+      if (!trigger || !menu) return;
+
+      // Toggle dropdown open/close
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = !menu.classList.contains('hidden');
+        
+        // Close all other dropdowns
+        document.querySelectorAll('.custom-dropdown-menu').forEach(m => m.classList.add('hidden'));
+        document.querySelectorAll('.custom-dropdown-trigger').forEach(t => t.setAttribute('data-open', 'false'));
+
+        if (!isOpen) {
+          menu.classList.remove('hidden');
+          trigger.setAttribute('data-open', 'true');
+        }
+      });
+
+      // Handle Option Selection
+      menu.querySelectorAll('.custom-dropdown-option').forEach(option => {
+        option.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const val = option.getAttribute('data-value');
+          const title = option.getAttribute('data-title');
+          const desc = option.getAttribute('data-desc');
+
+          if (dropdownType === 'activity-type') {
+            const hiddenInput = document.getElementById('bot-status-type');
+            if (hiddenInput) {
+              hiddenInput.value = val;
+              hiddenInput.dispatchEvent(new Event('change'));
+            }
+
+            const titleEl = document.getElementById('trigger-activity-title');
+            const descEl = document.getElementById('trigger-activity-desc');
+            const iconEl = document.getElementById('trigger-activity-icon');
+            const iconBox = document.getElementById('trigger-activity-icon-box');
+
+            if (titleEl) titleEl.textContent = title;
+            if (descEl) descEl.textContent = desc;
+            if (iconEl) iconEl.className = `fa-solid ${option.getAttribute('data-icon')}`;
+            if (iconBox) {
+              const bg = option.getAttribute('data-icon-bg');
+              const border = option.getAttribute('data-icon-border');
+              const color = option.getAttribute('data-icon-color');
+              iconBox.className = `w-8 h-8 rounded-lg ${bg} border ${border} ${color} flex items-center justify-center text-xs flex-shrink-0`;
+            }
+          } else if (dropdownType === 'online-status') {
+            const hiddenInput = document.getElementById('bot-online-status');
+            if (hiddenInput) {
+              hiddenInput.value = val;
+              hiddenInput.dispatchEvent(new Event('change'));
+            }
+
+            const titleEl = document.getElementById('trigger-online-title');
+            const descEl = document.getElementById('trigger-online-desc');
+            const dotEl = document.getElementById('trigger-online-dot');
+            const iconBox = document.getElementById('trigger-online-icon-box');
+
+            if (titleEl) titleEl.textContent = title;
+            if (descEl) descEl.textContent = desc;
+            if (dotEl) {
+              const dotColor = option.getAttribute('data-dot-color');
+              const dotRing = option.getAttribute('data-dot-ring');
+              dotEl.className = `w-3 h-3 rounded-full ${dotColor} ring-4 ${dotRing}`;
+            }
+            if (iconBox) {
+              const boxBg = option.getAttribute('data-box-bg');
+              const boxBorder = option.getAttribute('data-box-border');
+              iconBox.className = `w-8 h-8 rounded-lg ${boxBg} border ${boxBorder} flex items-center justify-center flex-shrink-0`;
+            }
+          }
+
+          // Update checkmarks
+          menu.querySelectorAll('.custom-dropdown-option').forEach(opt => {
+            const check = opt.querySelector('.option-check');
+            if (check) {
+              if (opt === option) {
+                check.classList.remove('hidden');
+                opt.classList.add('bg-[#8C5137]/10', 'dark:bg-[#D48D66]/10');
+              } else {
+                check.classList.add('hidden');
+                opt.classList.remove('bg-[#8C5137]/10', 'dark:bg-[#D48D66]/10');
+              }
+            }
+          });
+
+          // Close dropdown
+          menu.classList.add('hidden');
+          trigger.setAttribute('data-open', 'false');
+        });
+      });
+    });
+
+    // Close on click outside
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.custom-dropdown-menu').forEach(m => m.classList.add('hidden'));
+      document.querySelectorAll('.custom-dropdown-trigger').forEach(t => t.setAttribute('data-open', 'false'));
+    });
+
+    // Sync initial selected checkmarks
+    const currentStatusType = document.getElementById('bot-status-type')?.value || 'STREAMING';
+    const currentOnlineStatus = document.getElementById('bot-online-status')?.value || 'online';
+
+    const activityOpt = document.querySelector(`.custom-dropdown-option[data-value="${currentStatusType}"]`);
+    if (activityOpt) {
+      activityOpt.querySelector('.option-check')?.classList.remove('hidden');
+      activityOpt.classList.add('bg-[#8C5137]/10', 'dark:bg-[#D48D66]/10');
+      const titleEl = document.getElementById('trigger-activity-title');
+      const descEl = document.getElementById('trigger-activity-desc');
+      const iconEl = document.getElementById('trigger-activity-icon');
+      const iconBox = document.getElementById('trigger-activity-icon-box');
+      if (titleEl) titleEl.textContent = activityOpt.getAttribute('data-title');
+      if (descEl) descEl.textContent = activityOpt.getAttribute('data-desc');
+      if (iconEl) iconEl.className = `fa-solid ${activityOpt.getAttribute('data-icon')}`;
+      if (iconBox) {
+        iconBox.className = `w-8 h-8 rounded-lg ${activityOpt.getAttribute('data-icon-bg')} border ${activityOpt.getAttribute('data-icon-border')} ${activityOpt.getAttribute('data-icon-color')} flex items-center justify-center text-xs flex-shrink-0`;
+      }
+    }
+
+    const onlineOpt = document.querySelector(`.custom-dropdown-option[data-value="${currentOnlineStatus}"]`);
+    if (onlineOpt) {
+      onlineOpt.querySelector('.option-check')?.classList.remove('hidden');
+      onlineOpt.classList.add('bg-[#8C5137]/10', 'dark:bg-[#D48D66]/10');
+      const titleEl = document.getElementById('trigger-online-title');
+      const descEl = document.getElementById('trigger-online-desc');
+      const dotEl = document.getElementById('trigger-online-dot');
+      const iconBox = document.getElementById('trigger-online-icon-box');
+      if (titleEl) titleEl.textContent = onlineOpt.getAttribute('data-title');
+      if (descEl) descEl.textContent = onlineOpt.getAttribute('data-desc');
+      if (dotEl) dotEl.className = `w-3 h-3 rounded-full ${onlineOpt.getAttribute('data-dot-color')} ring-4 ${onlineOpt.getAttribute('data-dot-ring')}`;
+      if (iconBox) iconBox.className = `w-8 h-8 rounded-lg ${onlineOpt.getAttribute('data-box-bg')} border ${onlineOpt.getAttribute('data-box-border')} flex items-center justify-center flex-shrink-0`;
+    }
+  };
+
+  initCustomDropdownSelectors();
+
   // 1. Get current status texts list from DOM inputs
   const getStatusInputs = () => {
     const inputs = statusContainer.querySelectorAll('.status-input');
