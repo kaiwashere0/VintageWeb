@@ -22,7 +22,7 @@ export default {
     badge: 'Official Virtual Trucking Company',
     title_line1: 'NOBILITY ON ROADS',
     title_line2: 'POWER IN THE CONVOY',
-    subtitle: 'Vintage Club is an elite simulation convoy community built for passion, discipline, and unforgettable logistics experiences on European highways.',
+    subtitle: "Vintage Club was founded in 2024 by 'nasriemir.'. It is a dedicated team of individuals who have been in close communication both virtually and in real life since 2021. The bonds within the group embody timeless concepts of brotherhood and family; established with the goal of having great fun together and building enduring, authentic relationships.",
     btn_apply: 'Join Our Fleet',
     btn_explore: 'Explore Convoys',
     status_active: 'Recruitment Season 2026 Open'
@@ -40,7 +40,7 @@ export default {
   home: {
     about_title: 'Who is Vintage Club?',
     about_subtitle: 'Elite Logistics & TruckersMP Community',
-    about_desc: 'Founded with a vision of realistic driving aesthetics and convoy discipline, Vintage Club delivers the premier European virtual trucking experience.',
+    about_desc: "Vintage Club was founded in 2024 by 'nasriemir.'. It is a dedicated team of individuals who have been in close communication both virtually and in real life since 2021. The bonds within the group embody timeless concepts of brotherhood and family; established with the goal of having great fun together and building enduring, authentic relationships.",
     read_more: 'Learn More',
     
     events_title: 'Scheduled Convoys',
@@ -71,11 +71,11 @@ export default {
   about: {
     page_title: 'About Vintage Club — Elite Virtual Trucking Community',
     hero_title: 'OUR JOURNEY & VALUES',
-    hero_subtitle: 'The spirit of classical craftsmanship fused with modern virtual trucking excellence.',
-    vision_title: 'Our Vision',
-    vision_desc: 'To establish a respectful, synchronized, and highly disciplined convoy culture in TruckersMP and ETS2/ATS communities across Europe and the globe.',
-    mission_title: 'Our Mission',
-    mission_desc: 'Providing an immersive simulation environment where passionate virtual truckers travel thousands of kilometers together in harmony and mutual respect.',
+    hero_subtitle: "Vintage Club was founded in 2024 by 'nasriemir.'. It brings together individuals connected both virtually and in real life since 2021.",
+    vision_title: 'Who We Are & Our Story',
+    vision_desc: "Vintage Club was founded in 2024 by 'nasriemir.'. It is a dedicated team of individuals who have been in close communication both virtually and in real life since 2021.",
+    mission_title: 'Our Purpose & Bonds',
+    mission_desc: "The bonds within the group embody timeless concepts of brotherhood and family; established with the goal of having great fun together and building enduring, authentic relationships.",
     rules_title: 'Fleet Regulations',
     rules_item1: 'Respect and polite communication in Discord and in-game radio channels.',
     rules_item2: 'Adherence to convoy speeds, safe following distance, and designated lane discipline.',

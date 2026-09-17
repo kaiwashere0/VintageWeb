@@ -22,7 +22,7 @@ export default {
     badge: 'Resmi Sanal Lojistik Şirketi (VTC)',
     title_line1: 'YOLLARDA ASALET',
     title_line2: 'KONVOYDA GÜÇ',
-    subtitle: 'Vintage Club, Avrupa otoyollarında tutku, disiplin ve unutulmaz lojistik deneyimleri için kurulmuş seçkin bir simülasyon konvoy topluluğudur.',
+    subtitle: "Vintage Club, 2024 yılında 'nasriemir.' tarafından kurulmuştur. 2021 yılından bu yana hem sanal ortamda hem de gerçek hayatta iletişimde olan bireylerden oluşan bir ekiptir. Grup içindeki bağlar, kardeşlik ve aile gibi kavramları somutlaştırmakta olup; birlikte eğlenmek ve güçlü ilişkiler kurmak amacıyla oluşturulmuştur.",
     btn_apply: 'Filomuza Katıl',
     btn_explore: 'Konvoyları İncele',
     status_active: '2026 Sezonu Sürücü Alımları Aktif'
@@ -40,7 +40,7 @@ export default {
   home: {
     about_title: 'Vintage Club Kimdir?',
     about_subtitle: 'Seçkin Lojistik & TruckersMP Topluluğu',
-    about_desc: 'Gerçekçi sürüş estetiği ve konvoy disiplini vizyonuyla kurulan Vintage Club, Avrupa virtual trucking sahnesinde benzersiz bir deneyim sunar.',
+    about_desc: "Vintage Club, 2024 yılında 'nasriemir.' tarafından kurulmuştur. 2021 yılından bu yana hem sanal ortamda hem de gerçek hayatta iletişimde olan bireylerden oluşan bir ekiptir. Grup içindeki bağlar, kardeşlik ve aile gibi kavramları somutlaştırmakta olup; birlikte eğlenmek ve güçlü ilişkiler kurmak amacıyla oluşturulmuştur.",
     read_more: 'Daha Fazla Bilgi',
     
     events_title: 'Planlanan Konvoylar',
@@ -71,11 +71,11 @@ export default {
   about: {
     page_title: 'Hakkımızda — Vintage Club Sanal Lojistik Topluluğu',
     hero_title: 'YOLCULUĞUMUZ VE DEĞERLERİMİZ',
-    hero_subtitle: 'Klasik işçilik ruhunun modern sanal tır simülasyonu mükemmelliğiyle buluşması.',
-    vision_title: 'Vizyonumuz',
-    vision_desc: 'TruckersMP ve ETS2/ATS topluluklarında Avrupa ve dünya çapında saygılı, senkronize ve yüksek disiplinli bir konvoy kültürü oluşturmak.',
-    mission_title: 'Misyonumuz',
-    mission_desc: 'Tutkulu sanal sürücülerin binlerce kilometreyi uyum ve karşılıklı saygı içinde birlikte katettiği sürükleyici bir simülasyon ortamı sunmak.',
+    hero_subtitle: "Vintage Club, 2024 yılında 'nasriemir.' tarafından kurulmuştur. 2021 yılından bu yana hem sanal ortamda hem de gerçek hayatta iletişimde olan bir ekiptir.",
+    vision_title: 'Biz Kimiz & Hikayemiz',
+    vision_desc: "Vintage Club, 2024 yılında 'nasriemir.' tarafından kurulmuştur. 2021 yılından bu yana hem sanal ortamda hem de gerçek hayatta iletişimde olan bireylerden oluşan bir ekiptir.",
+    mission_title: 'Amacımız & Bağlarımız',
+    mission_desc: "Grup içindeki bağlar, kardeşlik ve aile gibi kavramları somutlaştırmakta olup; birlikte eğlenmek ve güçlü ilişkiler kurmak amacıyla oluşturulmuştur.",
     rules_title: 'Filo Kuralları',
     rules_item1: 'Discord ve oyun içi telsiz kanallarında saygılı ve nezaketli iletişim.',
     rules_item2: 'Konvoy hızlarına, güvenli takip mesafesine ve şerit disiplinine tam uyum.',
