@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://vintageclub.com/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vintageclub.com/?lang=en" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://vintageclub.com/?lang=tr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://vintageclub.com/?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vintageclub.com/" />
+  </url>
+  <url>
+    <loc>https://vintageclub.com/about</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vintageclub.com/about?lang=en" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://vintageclub.com/about?lang=tr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://vintageclub.com/about?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vintageclub.com/about" />
+  </url>
+  <url>
+    <loc>https://vintageclub.com/events</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vintageclub.com/events?lang=en" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://vintageclub.com/events?lang=tr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://vintageclub.com/events?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vintageclub.com/events" />
+  </url>
+  <url>
+    <loc>https://vintageclub.com/team</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vintageclub.com/team?lang=en" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://vintageclub.com/team?lang=tr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://vintageclub.com/team?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vintageclub.com/team" />
+  </url>
+  <url>
+    <loc>https://vintageclub.com/gallery</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vintageclub.com/gallery?lang=en" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://vintageclub.com/gallery?lang=tr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://vintageclub.com/gallery?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vintageclub.com/gallery" />
+  </url>
+  <url>
+    <loc>https://vintageclub.com/apply</loc>
+    <lastmod>2026-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vintageclub.com/apply?lang=en" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://vintageclub.com/apply?lang=tr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://vintageclub.com/apply?lang=de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vintageclub.com/apply" />
+  </url>
+</urlset>

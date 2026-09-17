@@ -1,9 +1,80 @@
+<%
+  const siteUrl = (typeof fullUrl !== 'undefined' && fullUrl) ? fullUrl : 'https://vintageclub.com';
+  const pagePath = (typeof currentPath !== 'undefined' && currentPath) ? currentPath : '/';
+  const pageCanonical = siteUrl + (pagePath === '/' ? '' : pagePath);
+  const langCode = typeof currentLang !== 'undefined' ? currentLang : 'en';
+  
+  const seoTitle = typeof title !== 'undefined' ? title : 'Vintage Club — Virtual Trucking Company';
+  const seoDescription = typeof description !== 'undefined' ? description : "Vintage Club is an elite virtual trucking community founded in 2024 by 'nasriemir.', built on brotherhood, discipline and unforgettable convoy operations.";
+  const seoKeywords = 'Vintage Club, Vintage Club VTC, TruckersMP VTC, Euro Truck Simulator 2, ETS2 Convoy, American Truck Simulator, Virtual Trucking Company, nasriemir, ETS2 Logistics';
+  const ogImg = siteUrl + '/Wintage_Club_Logo_2050.png';
+
+  const localeMap = {
+    'en': 'en_US',
+    'tr': 'tr_TR',
+    'de': 'de_DE'
+  };
+  const currentOgLocale = localeMap[langCode] || 'en_US';
+%>
 <head>
+  <!-- Character Encoding & Viewport -->
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= typeof title !== 'undefined' ? title : 'Vintage Club — Virtual Trucking Company' %></title>
-  <meta name="description" content="<%= typeof description !== 'undefined' ? description : t('footer.tagline', 'Vintage Club Official Website. Nobility on the roads, power in the convoy.') %>" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- Primary SEO Meta Tags -->
+  <title><%= seoTitle %></title>
+  <meta name="title" content="<%= seoTitle %>" />
+  <meta name="description" content="<%= seoDescription %>" />
+  <meta name="keywords" content="<%= seoKeywords %>" />
+  <meta name="author" content="nasriemir., kai7m &amp; Vintage Club Leadership" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="<%= pageCanonical %>" />
+
+  <!-- Multi-Language SEO (hreflang alternates) -->
+  <link rel="alternate" hreflang="en" href="<%= pageCanonical %>?lang=en" />
+  <link rel="alternate" hreflang="tr" href="<%= pageCanonical %>?lang=tr" />
+  <link rel="alternate" hreflang="de" href="<%= pageCanonical %>?lang=de" />
+  <link rel="alternate" hreflang="x-default" href="<%= pageCanonical %>" />
+
+  <!-- Open Graph / Facebook / Discord Embeds -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="<%= pageCanonical %>" />
+  <meta property="og:site_name" content="Vintage Club" />
+  <meta property="og:title" content="<%= seoTitle %>" />
+  <meta property="og:description" content="<%= seoDescription %>" />
+  <meta property="og:image" content="<%= ogImg %>" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Vintage Club Official Logo &amp; Nobility On Roads" />
+  <meta property="og:locale" content="<%= currentOgLocale %>" />
+  <% Object.values(localeMap).filter(l => l !== currentOgLocale).forEach(function(altLocale) { %>
+    <meta property="og:locale:alternate" content="<%= altLocale %>" />
+  <% }); %>
+
+  <!-- Twitter / X Card Embeds -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="<%= pageCanonical %>" />
+  <meta name="twitter:title" content="<%= seoTitle %>" />
+  <meta name="twitter:description" content="<%= seoDescription %>" />
+  <meta name="twitter:image" content="<%= ogImg %>" />
+  <meta name="twitter:site" content="@VintageClub" />
+  <meta name="twitter:creator" content="@nasriemir" />
+
+  <!-- Theme Color & Mobile Chrome / Safari Styling -->
+  <meta name="theme-color" content="#8C5137" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0C0D11" media="(prefers-color-scheme: dark)" />
+  <meta name="msapplication-TileColor" content="#8C5137" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Vintage Club" />
+
+  <!-- Favicon & App Icons -->
   <link rel="icon" type="image/png" href="/Wintage_Club_Logo_2050.png" />
+  <link rel="apple-touch-icon" href="/Wintage_Club_Logo_2050.png" />
 
   <!-- Pre-render Theme Detection (Zero-Flash Dark/Light Mode) -->
   <script>
@@ -23,6 +94,69 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="/output.css?v=3.1" />
-  <link rel="stylesheet" href="/css/main.css?v=3.1" />
+  <link rel="stylesheet" href="/output.css?v=3.2" />
+  <link rel="stylesheet" href="/css/main.css?v=3.2" />
+
+  <!-- Schema.org JSON-LD Structured Data for Google Search -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "<%= siteUrl %>/#organization",
+        "name": "Vintage Club",
+        "alternateName": "Vintage Club VTC",
+        "url": "<%= siteUrl %>",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "<%= ogImg %>",
+          "caption": "Vintage Club Logo"
+        },
+        "founder": {
+          "@type": "Person",
+          "name": "nasriemir."
+        },
+        "foundingDate": "2024",
+        "description": "Vintage Club is an elite Virtual Trucking Company (VTC) founded in 2024 by 'nasriemir.', organizing disciplined TruckersMP convoy events across Euro Truck Simulator 2 and American Truck Simulator.",
+        "sameAs": [
+          "https://truckersmp.com",
+          "https://discord.gg/vintageclub",
+          "https://youtube.com/@vintageclub",
+          "https://instagram.com/vintageclub"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "<%= siteUrl %>/#website",
+        "url": "<%= siteUrl %>",
+        "name": "Vintage Club — Official VTC Portal",
+        "description": "Nobility on roads, power in the convoy. Official portal of Vintage Club virtual logistics.",
+        "publisher": {
+          "@id": "<%= siteUrl %>/#organization"
+        },
+        "inLanguage": ["en", "tr", "de"]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "<%= pageCanonical %>/#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "<%= siteUrl %>/"
+          }<% if (pagePath !== '/') { %>,
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<%= pagePath.replace('/', '').charAt(0).toUpperCase() + pagePath.replace('/', '').slice(1) %>",
+            "item": "<%= pageCanonical %>"
+          }
+          <% } %>
+        ]
+      }
+    ]
+  }
+  </script>
 </head>

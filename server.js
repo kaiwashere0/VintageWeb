@@ -104,6 +104,42 @@ app.get('/api/v1/locales/:lang?', (req, res) => {
   });
 });
 
+// XML Sitemap for Search Engines (SEO)
+app.get('/sitemap.xml', (req, res) => {
+  const host = `${req.protocol}://${req.get('host')}`;
+  const now = new Date().toISOString().split('T')[0];
+  const pages = [
+    { path: '', priority: '1.0', changefreq: 'daily' },
+    { path: 'about', priority: '0.8', changefreq: 'weekly' },
+    { path: 'events', priority: '0.9', changefreq: 'daily' },
+    { path: 'team', priority: '0.8', changefreq: 'weekly' },
+    { path: 'gallery', priority: '0.8', changefreq: 'weekly' },
+    { path: 'apply', priority: '0.9', changefreq: 'weekly' }
+  ];
+
+  let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+  xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n`;
+
+  pages.forEach(p => {
+    const loc = p.path ? `${host}/${p.path}` : `${host}/`;
+    xml += `  <url>\n`;
+    xml += `    <loc>${loc}</loc>\n`;
+    xml += `    <lastmod>${now}</lastmod>\n`;
+    xml += `    <changefreq>${p.changefreq}</changefreq>\n`;
+    xml += `    <priority>${p.priority}</priority>\n`;
+    xml += `    <xhtml:link rel="alternate" hreflang="en" href="${loc}?lang=en" />\n`;
+    xml += `    <xhtml:link rel="alternate" hreflang="tr" href="${loc}?lang=tr" />\n`;
+    xml += `    <xhtml:link rel="alternate" hreflang="de" href="${loc}?lang=de" />\n`;
+    xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${loc}" />\n`;
+    xml += `  </url>\n`;
+  });
+
+  xml += `</urlset>`;
+
+  res.header('Content-Type', 'application/xml');
+  res.send(xml);
+});
+
 // Static Files (public directory - CSS, JS, Media)
 app.use(express.static(path.join(__dirname, 'public'), {
   index: false,

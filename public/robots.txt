@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /developer
+Disallow: /developer/*
+Disallow: /auth/
+Disallow: /api/v1/subscribers
+
+# Sitemap
+Sitemap: https://vintageclub.com/sitemap.xml
