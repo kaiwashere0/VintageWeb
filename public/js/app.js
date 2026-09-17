@@ -1,17 +1,48 @@
 /**
  * Vintage Club - Frontend Application Script
- * Dynamic API Integration + Dark/Light Theme Switcher + Warm Wood/Copper/Snow Palette
+ * Dynamic API Integration + Dark/Light Theme Switcher + Multi-Language (i18n) Support
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+let CLIENT_LOCALES = {};
+
+document.addEventListener('DOMContentLoaded', async () => {
   initThemeToggle();
   initNavbarScroll();
   initMobileMenu();
   initAuthModal();
   initScrollReveal();
+  await loadClientLocales();
   loadAllBackendData();
   setupApplicationForm();
 });
+
+/* ========================================================
+   0. Fetch Client-Side Locales
+   ======================================================== */
+async function loadClientLocales() {
+  try {
+    const res = await fetch('/api/v1/locales');
+    const data = await res.json();
+    if (data.success && data.locales) {
+      CLIENT_LOCALES = data.locales;
+    }
+  } catch (err) {
+    console.warn('Could not load client locales, fallback to default');
+  }
+}
+
+function tClient(path, fallback = '') {
+  const keys = path.split('.');
+  let current = CLIENT_LOCALES;
+  for (const k of keys) {
+    if (current && typeof current === 'object' && k in current) {
+      current = current[k];
+    } else {
+      return fallback;
+    }
+  }
+  return typeof current === 'string' ? current : fallback;
+}
 
 /* ========================================================
    1. Theme Switcher (Dark / Light Mode)
@@ -229,9 +260,9 @@ async function loadEvents() {
           <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-[#E1E2E4]/60 dark:bg-[#20130C] flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] text-2xl shadow-inner">
             <i class="fa-solid fa-calendar-days"></i>
           </div>
-          <h3 class="text-base font-bold text-[#4A2B1D] dark:text-white">No Scheduled Convoys</h3>
+          <h3 class="text-base font-bold text-[#4A2B1D] dark:text-white">${tClient('home.no_events', 'No Scheduled Convoys')}</h3>
           <p class="text-xs sm:text-sm text-[#8C5137] dark:text-[#E1E2E4] mt-1 max-w-md mx-auto">
-            Upcoming official convoys and event dates will be announced here soon.
+            ${tClient('events.hero_subtitle', 'Upcoming official convoys and event dates will be announced here soon.')}
           </p>
         </div>
       `;
@@ -247,32 +278,32 @@ async function loadEvents() {
             </span>
             <span class="flex items-center gap-1.5">
               <i class="fa-regular fa-calendar text-[11px]"></i>
-              ${evt.date ? new Date(evt.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Date TBA'}
+              ${evt.date ? new Date(evt.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Date TBA'}
             </span>
           </div>
           <h3 class="text-lg font-bold text-[#4A2B1D] dark:text-white mb-2">${evt.title}</h3>
-          <p class="text-xs text-[#8C5137] dark:text-[#E1E2E4] mb-4 leading-relaxed">${evt.description || 'No description provided.'}</p>
+          <p class="text-xs text-[#8C5137] dark:text-[#E1E2E4] mb-4 leading-relaxed">${evt.description || ''}</p>
           <div class="text-xs text-[#4A2B1D] dark:text-[#E1E2E4] space-y-1.5 pt-3 border-t border-[#E1E2E4] dark:border-[#4A2B1D]">
             <div class="flex items-center gap-1.5">
               <i class="fa-solid fa-route text-[#8C5137] text-[11px] w-4"></i>
-              <span class="text-[#8C5137]/70 dark:text-[#E1E2E4]/70">Route:</span> 
+              <span class="text-[#8C5137]/70 dark:text-[#E1E2E4]/70">${tClient('events.route', 'Route')}:</span> 
               <span class="font-medium">${evt.departure || '—'} <i class="fa-solid fa-arrow-right-long text-[10px] mx-1 text-[#8C5137]"></i> ${evt.destination || '—'}</span>
             </div>
             <div class="flex items-center gap-1.5">
               <i class="fa-solid fa-gauge-high text-[#8C5137] text-[11px] w-4"></i>
-              <span class="text-[#8C5137]/70 dark:text-[#E1E2E4]/70">Distance:</span> 
+              <span class="text-[#8C5137]/70 dark:text-[#E1E2E4]/70">${tClient('events.distance', 'Distance')}:</span> 
               <span class="font-medium">${evt.distance || '—'}</span>
             </div>
             <div class="flex items-center gap-1.5">
               <i class="fa-solid fa-map-location-dot text-[#8C5137] text-[11px] w-4"></i>
-              <span class="text-[#8C5137]/70 dark:text-[#E1E2E4]/70">DLC Required:</span> 
-              <span class="font-medium">${evt.dlcRequired || 'Base Game'}</span>
+              <span class="text-[#8C5137]/70 dark:text-[#E1E2E4]/70">${tClient('events.dlc_req', 'DLC Required')}:</span> 
+              <span class="font-medium">${evt.dlcRequired || tClient('events.base_game', 'Base Game')}</span>
             </div>
           </div>
         </div>
         <div class="mt-6 pt-4 border-t border-[#E1E2E4] dark:border-[#4A2B1D] flex gap-2">
           <a href="/apply" class="flex-1 py-2 btn-primary text-xs text-center rounded-lg">
-            <i class="fa-solid fa-user-plus mr-1.5 text-[11px]"></i>Join Convoy
+            <i class="fa-solid fa-user-plus mr-1.5 text-[11px]"></i>${tClient('events.join_btn', 'Join Convoy')}
           </a>
         </div>
       </div>
@@ -298,9 +329,9 @@ async function loadTeam() {
           <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-[#E1E2E4]/60 dark:bg-[#20130C] flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] text-2xl shadow-inner">
             <i class="fa-solid fa-users"></i>
           </div>
-          <h3 class="text-base font-bold text-[#4A2B1D] dark:text-white">Roster Updating</h3>
+          <h3 class="text-base font-bold text-[#4A2B1D] dark:text-white">${tClient('team.hero_title', 'Fleet Roster')}</h3>
           <p class="text-xs sm:text-sm text-[#8C5137] dark:text-[#E1E2E4] mt-1 max-w-md mx-auto">
-            Vintage Club administration and driver roster will appear here.
+            ${tClient('team.empty_roster', 'Fleet roster is currently being synchronized.')}
           </p>
         </div>
       `;
@@ -338,9 +369,9 @@ async function loadGallery() {
           <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-[#E1E2E4]/60 dark:bg-[#20130C] flex items-center justify-center text-[#8C5137] dark:text-[#AA6343] text-2xl shadow-inner">
             <i class="fa-solid fa-images"></i>
           </div>
-          <h3 class="text-base font-bold text-[#4A2B1D] dark:text-white">Media Gallery Preparing</h3>
+          <h3 class="text-base font-bold text-[#4A2B1D] dark:text-white">${tClient('gallery.hero_title', 'Cinematic Gallery')}</h3>
           <p class="text-xs sm:text-sm text-[#8C5137] dark:text-[#E1E2E4] mt-1 max-w-md mx-auto">
-            Photographs and cinematic shots from our convoys will be featured here.
+            ${tClient('gallery.empty_gallery', 'Media gallery is currently being curated.')}
           </p>
         </div>
       `;
@@ -387,7 +418,7 @@ function setupApplicationForm() {
     };
 
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Submitting...';
+    submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i>${tClient('apply.submitting', 'Submitting...')}`;
 
     try {
       const res = await fetch('/api/v1/applications', {
@@ -398,19 +429,19 @@ function setupApplicationForm() {
       const result = await res.json();
 
       if (res.ok && result.success) {
-        feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 mr-2"></i> ${result.message || 'Application submitted successfully! We will contact you on Discord.'}`;
+        feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 mr-2"></i> ${tClient('apply.success_msg', result.message || 'Application submitted successfully!')}`;
         feedback.className = 'p-4 rounded-xl bg-emerald-50 dark:bg-[#18100B] border border-emerald-500/40 text-emerald-800 dark:text-emerald-200 text-xs font-medium mt-4 block';
         applyForm.reset();
       } else {
-        feedback.innerHTML = `<i class="fa-solid fa-circle-exclamation text-rose-600 dark:text-rose-400 mr-2"></i> ${result.message || 'Failed to submit application. Please verify your details.'}`;
+        feedback.innerHTML = `<i class="fa-solid fa-circle-exclamation text-rose-600 dark:text-rose-400 mr-2"></i> ${tClient('apply.error_msg', result.message || 'Failed to submit application.')}`;
         feedback.className = 'p-4 rounded-xl bg-rose-50 dark:bg-[#18100B] border border-rose-500/40 text-rose-800 dark:text-rose-200 text-xs font-medium mt-4 block';
       }
     } catch (err) {
-      feedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-rose-600 dark:text-rose-400 mr-2"></i> An error occurred while submitting your application. Please reach out to us on Discord.';
+      feedback.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600 dark:text-rose-400 mr-2"></i> ${tClient('common.server_error', 'An error occurred while submitting your application.')}`;
       feedback.className = 'p-4 rounded-xl bg-rose-50 dark:bg-[#18100B] border border-rose-500/40 text-rose-800 dark:text-rose-200 text-xs font-medium mt-4 block';
     } finally {
       submitBtn.disabled = false;
-      submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane mr-2"></i>Submit Application';
+      submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane mr-2"></i>${tClient('apply.btn_submit', 'Submit Application')}`;
     }
   });
 }

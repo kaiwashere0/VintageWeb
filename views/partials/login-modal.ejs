@@ -18,10 +18,10 @@
         <img src="/Wintage_Club_Logo_2050.png" alt="Vintage Club" class="h-14 w-auto object-contain drop-shadow-sm animate-float-gentle" />
       </div>
       <h3 id="modal-title" class="font-heading text-xl sm:text-2xl font-bold text-[#4A2B1D] dark:text-white tracking-tight">
-        Sign in to Vintage Club
+        <%= t('auth.modal_title', 'Member Authentication') %>
       </h3>
       <p class="mt-1.5 text-xs sm:text-sm text-[#8C5137] dark:text-slate-400 leading-relaxed max-w-xs mx-auto">
-        Sign in to participate in convoy events and access your driver portal.
+        <%= t('auth.modal_subtitle', 'Sign in securely with your Discord account to access the driver dashboard and management portal.') %>
       </p>
     </div>
 
@@ -35,12 +35,11 @@
             <i class="fa-brands fa-discord"></i>
           </div>
           <div class="text-left">
-            <span class="block text-xs font-bold tracking-wide">Continue with Discord</span>
-            <span class="block text-[10px] text-white/80">One-click secure OAuth 2.0 login</span>
+            <span class="block text-xs font-bold tracking-wide"><%= t('auth.btn_discord', 'Continue with Discord') %></span>
+            <span class="block text-[10px] text-white/80">OAuth 2.0</span>
           </div>
         </div>
         <div class="flex items-center gap-1.5">
-          <span class="text-[10px] font-semibold uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-full">Recommended</span>
           <i class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1.5"></i>
         </div>
       </a>
@@ -52,7 +51,7 @@
             <i class="fa-brands fa-steam"></i>
           </div>
           <div class="text-left">
-            <span class="block text-xs font-semibold text-[#4A2B1D] dark:text-white/80">Sign in with Steam</span>
+            <span class="block text-xs font-semibold text-[#4A2B1D] dark:text-white/80">Steam Login</span>
             <span class="block text-[10px] text-[#8C5137] dark:text-slate-500">TruckersMP synchronization</span>
           </div>
         </div>
@@ -64,13 +63,10 @@
     <!-- Security & Terms Footer -->
     <div class="pt-4 border-t border-[#E1E2E4] dark:border-[#262A36] text-center">
       <p class="text-[11px] text-[#8C5137] dark:text-slate-400 leading-relaxed mb-3">
-        By signing in, you agree to the Vintage Club Community Guidelines and Terms.
+        <%= t('auth.privacy_notice', 'We only access your public Discord identifier, username, and avatar for identification.') %>
       </p>
       <div class="flex items-center justify-center gap-1 text-[11px]">
-        <span class="text-[#8C5137] dark:text-slate-400">Not a driver yet?</span>
-        <a href="/apply" class="text-[#4A2B1D] dark:text-[#D48D66] font-bold hover:underline transition-colors">
-          Join Us
-        </a>
+        <span class="text-[#8C5137] dark:text-slate-400">Vintage Club • Est. 2024</span>
       </div>
     </div>
 

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#FFFFFF]">
+<html lang="<%= typeof currentLang !== 'undefined' ? currentLang : 'en' %>" class="h-full bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#FFFFFF]">
 
 <%- include('partials/head', { 
-  title: 'About Us & Heritage — Vintage Club',
-  description: 'Vintage Club was founded in 2024 by nasriemir. History, vision, and core principles.' 
+  title: t('about.page_title', 'About Us & Heritage — Vintage Club'),
+  description: t('about.hero_subtitle', 'The spirit of classical craftsmanship fused with modern virtual trucking excellence.') 
 }) %>
 
 <body class="min-h-full flex flex-col justify-between bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#FFFFFF] selection:bg-[#8C5137] selection:text-white transition-colors duration-300">
@@ -15,13 +15,13 @@
   <main class="flex-grow py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
     <div class="text-center max-w-2xl mx-auto mb-16">
       <div class="text-[#8C5137] dark:text-[#D48D66] text-xs font-bold uppercase tracking-wider mb-2 flex items-center justify-center gap-1.5">
-        <i class="fa-solid fa-scroll"></i> History & Core Values
+        <i class="fa-solid fa-scroll"></i> <%= t('about.hero_title', 'OUR JOURNEY & VALUES') %>
       </div>
       <h1 class="text-3xl sm:text-5xl font-extrabold font-heading text-[#4A2B1D] dark:text-white tracking-tight">
-        About Us & Vision
+        <%= t('home.about_title', 'About Us & Vision') %>
       </h1>
       <p class="text-[#8C5137] dark:text-slate-300 text-sm sm:text-base mt-4">
-        Founded in 2024 by <strong class="text-[#4A2B1D] dark:text-white">nasriemir.</strong> — uniting Euro Truck Simulator 2 & TruckersMP enthusiasts who have shared genuine camaraderie since 2021.
+        <%= t('about.hero_subtitle', 'The spirit of classical craftsmanship fused with modern virtual trucking excellence.') %>
       </p>
     </div>
 
@@ -32,21 +32,14 @@
           <i class="fa-solid fa-feather-pointed"></i>
         </div>
         <div>
-          <h2 class="text-xl font-bold font-heading text-[#4A2B1D] dark:text-white">Our Story & Identity</h2>
-          <p class="text-xs text-[#8C5137] dark:text-slate-400">Written by the founders of Vintage Club</p>
+          <h2 class="text-xl font-bold font-heading text-[#4A2B1D] dark:text-white"><%= t('about.vision_title', 'Our Vision') %></h2>
+          <p class="text-xs text-[#8C5137] dark:text-slate-400">Vintage Club • Est. 2024</p>
         </div>
       </div>
       
       <div class="space-y-4 text-sm leading-relaxed text-[#4A2B1D]/90 dark:text-slate-300">
-        <p>
-          <strong class="text-[#4A2B1D] dark:text-white font-semibold">Vintage Club</strong> was officially founded in <strong>2024</strong> by <strong>nasriemir.</strong> It is composed of a passionate team of individuals who have been in close communication and companionship both in the virtual world and in real life since <strong>2021</strong>.
-        </p>
-        <p>
-          The bonds within the group embody timeless concepts such as <strong>brotherhood and family</strong>. The club was established with the distinct aim of sharing unforgettable moments, having great fun together, and fostering strong, enduring relationships.
-        </p>
-        <p>
-          Whether cruising along scenic European highways or organizing complex multi-company joint convoys, our core motto remains the same: <em>Nobility on the Roads, Power in the Convoy.</em>
-        </p>
+        <p><%= t('about.vision_desc', 'To establish a respectful, synchronized, and highly disciplined convoy culture in TruckersMP and ETS2/ATS communities across Europe and the globe.') %></p>
+        <p><%= t('about.mission_desc', 'Providing an immersive simulation environment where passionate virtual truckers travel thousands of kilometers together in harmony and mutual respect.') %></p>
       </div>
 
       <div class="mt-8 pt-6 border-t border-[#E1E2E4] dark:border-[#262A36] flex flex-wrap items-center justify-between gap-4 text-xs">
@@ -62,6 +55,7 @@
           <a href="https://discord.com/invite/vintageclub" target="_blank" rel="noopener" class="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 font-semibold transition-colors">
             Discord <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
           </a>
+          <span class="text-[#E1E2E4] dark:text-[#262A36]">•</span>
           <a href="https://www.instagram.com/vintageclubofficiall?stkn=MXNmcnY5cDYweTJ6cQ%3D%3D&utm_source=qr" target="_blank" rel="noopener" class="text-pink-600 dark:text-pink-400 hover:underline flex items-center gap-1 font-semibold transition-colors">
             Instagram <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
           </a>
@@ -77,11 +71,11 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
       <div class="clean-card p-6 reveal-on-scroll delay-100 hover-lift hover-glow">
         <div class="w-12 h-12 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 border border-[#8C5137]/20 dark:border-[#D48D66]/20 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] text-xl mb-4">
-          <i class="fa-solid fa-landmark"></i>
+          <i class="fa-solid fa-shield-halved"></i>
         </div>
-        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2">Our Purpose</h3>
+        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2"><%= t('home.feature_1_title', 'Convoy Discipline') %></h3>
         <p class="text-xs text-[#8C5137] dark:text-slate-400 leading-relaxed">
-          To conduct high-standard virtual convoys in an organized, respectful, and disciplined environment.
+          <%= t('home.feature_1_desc', 'Synchronized radio communications, strict distance keeping, and designated pilot escorts.') %>
         </p>
       </div>
 
@@ -89,19 +83,19 @@
         <div class="w-12 h-12 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 border border-[#8C5137]/20 dark:border-[#D48D66]/20 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] text-xl mb-4">
           <i class="fa-solid fa-handshake"></i>
         </div>
-        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2">Unity & Family</h3>
+        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2"><%= t('home.feature_3_title', 'Active Community') %></h3>
         <p class="text-xs text-[#8C5137] dark:text-slate-400 leading-relaxed">
-          A genuine brotherhood connecting mature drivers across the world both in-game and in real life.
+          <%= t('home.feature_3_desc', 'Weekly international convoys, voice channels, and driver ranking progression.') %>
         </p>
       </div>
 
       <div class="clean-card p-6 reveal-on-scroll delay-300 hover-lift hover-glow">
         <div class="w-12 h-12 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 border border-[#8C5137]/20 dark:border-[#D48D66]/20 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] text-xl mb-4">
-          <i class="fa-solid fa-road"></i>
+          <i class="fa-solid fa-truck-front"></i>
         </div>
-        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2">Simulation Quality</h3>
+        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2"><%= t('home.feature_2_title', 'Exclusive Liveries') %></h3>
         <p class="text-xs text-[#8C5137] dark:text-slate-400 leading-relaxed">
-          Realism-focused driving on official TruckersMP simulation servers with professional radio communication.
+          <%= t('home.feature_2_desc', 'Signature warm copper and black custom truck designs tailored for convoy elegance.') %>
         </p>
       </div>
     </div>
@@ -109,33 +103,37 @@
     <!-- CTA Box -->
     <div class="clean-card p-8 text-center bg-[#8C5137]/10 dark:bg-[#181B24] border-[#8C5137]/30 dark:border-[#262A36] reveal-on-scroll hover-glow mb-12">
       <h3 class="font-heading text-xl font-bold text-[#4A2B1D] dark:text-white mb-2">
-        Become a Part of Our Story
+        <%= t('apply.hero_title', 'DRIVER RECRUITMENT') %>
       </h3>
       <p class="text-xs text-[#8C5137] dark:text-slate-400 max-w-md mx-auto mb-6 leading-relaxed">
-        We are always seeking committed, respectful, and skilled drivers to join our convoys.
+        <%= t('apply.hero_subtitle', 'Take your seat in our cockpit. Fill out the application form to join our prestigious fleet.') %>
       </p>
       <a href="/apply" class="px-6 py-2.5 btn-primary text-xs font-semibold rounded-lg shadow-sm">
-        Submit Driver Application
+        <%= t('apply.btn_submit', 'Submit Application') %>
       </a>
     </div>
 
     <!-- Club Rules -->
     <div class="clean-card p-8 bg-white dark:bg-[#181B24] border-[#E1E2E4] dark:border-[#262A36] reveal-on-scroll hover-glow">
       <h2 class="text-xl font-bold font-heading text-[#4A2B1D] dark:text-white mb-4 flex items-center gap-2">
-        <i class="fa-solid fa-scale-balanced text-[#8C5137] dark:text-[#D48D66]"></i> Club Code of Conduct
+        <i class="fa-solid fa-scale-balanced text-[#8C5137] dark:text-[#D48D66]"></i> <%= t('about.rules_title', 'Fleet Regulations') %>
       </h2>
       <ul class="space-y-3.5 text-xs sm:text-sm text-[#4A2B1D]/90 dark:text-slate-300">
         <li class="flex items-start gap-3">
           <i class="fa-solid fa-circle-check text-[#8C5137] dark:text-[#D48D66] mt-1"></i>
-          <span>Full compliance with official TruckersMP rules and traffic regulations is mandatory at all times.</span>
+          <span><%= t('about.rules_item1', 'Respect and polite communication in Discord and in-game radio channels.') %></span>
         </li>
         <li class="flex items-start gap-3">
           <i class="fa-solid fa-circle-check text-[#8C5137] dark:text-[#D48D66] mt-1"></i>
-          <span>Safe following distance must be maintained in all convoys; sudden reckless maneuvers are strictly prohibited.</span>
+          <span><%= t('about.rules_item2', 'Adherence to convoy speeds, safe following distance, and designated lane discipline.') %></span>
         </li>
         <li class="flex items-start gap-3">
           <i class="fa-solid fa-circle-check text-[#8C5137] dark:text-[#D48D66] mt-1"></i>
-          <span>Discord radio discipline, friendly communication, and respect for all members and staff are required.</span>
+          <span><%= t('about.rules_item3', 'Use of official Vintage Club corporate paint job and tag during public convoys.') %></span>
+        </li>
+        <li class="flex items-start gap-3">
+          <i class="fa-solid fa-circle-check text-[#8C5137] dark:text-[#D48D66] mt-1"></i>
+          <span><%= t('about.rules_item4', 'Zero tolerance for trolling, intentional collision, or reckless driving.') %></span>
         </li>
       </ul>
     </div>

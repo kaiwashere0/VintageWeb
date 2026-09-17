@@ -1,5 +1,5 @@
 import express from 'express';
-import DatabaseService, { Application, Event, Member, Gallery, User, Settings } from '../database/index.js';
+import DatabaseService, { Application, Event, Member, Gallery, User, Settings, Subscriber } from '../database/index.js';
 import { isSuperAdmin } from '../auth/index.js';
 
 export function requireAdmin(req, res, next) {
@@ -35,16 +35,17 @@ export function createAdminRouter() {
   // 1. Admin Dashboard (Overview)
   router.get(['/', '/dashboard'], async (req, res) => {
     try {
-      const [applicationsCount, eventsCount, membersCount, galleryCount, settings] = await Promise.all([
+      const [applicationsCount, eventsCount, membersCount, galleryCount, subscribersCount, settings] = await Promise.all([
         Application.countDocuments(),
         Event.countDocuments(),
         Member.countDocuments(),
         Gallery.countDocuments(),
+        Subscriber.countDocuments(),
         DatabaseService.getSettings()
       ]);
 
-      const recentApplications = await Application.find().sort({ createdAt: -1 }).limit(5).lean();
-      const recentUsers = await User.find().sort({ lastLogin: -1 }).limit(6).lean();
+      const recentApplications = await Application.find().sort({ createdAt: -1 }).limit(10).lean();
+      const recentUsers = await User.find().sort({ lastLogin: -1 }).limit(8).lean();
 
       res.render('admin/dashboard', {
         title: 'Admin Portal — Vintage Club',
@@ -54,7 +55,8 @@ export function createAdminRouter() {
           applicationsCount,
           eventsCount,
           membersCount,
-          galleryCount
+          galleryCount,
+          subscribersCount
         },
         settings,
         recentApplications,
@@ -66,23 +68,69 @@ export function createAdminRouter() {
     }
   });
 
-  // 2. Applications (Placeholder / Entry)
+  // 2. Applications (All Applications View)
   router.get('/applications', async (req, res) => {
-    const applications = await DatabaseService.getApplications();
-    res.render('admin/dashboard', {
-      title: 'Driver Applications — Admin Portal',
-      currentPath: '/admin/applications',
-      user: req.session.user,
-      stats: {
-        applicationsCount: applications.length,
-        eventsCount: await Event.countDocuments(),
-        membersCount: await Member.countDocuments(),
-        usersCount: await User.countDocuments()
-      },
-      settings: await DatabaseService.getSettings(),
-      recentApplications: applications,
-      recentUsers: []
-    });
+    try {
+      const applications = await DatabaseService.getApplications();
+      const settings = await DatabaseService.getSettings();
+
+      res.render('admin/dashboard', {
+        title: 'Driver Applications — Admin Portal',
+        currentPath: '/admin/applications',
+        user: req.session.user,
+        stats: {
+          applicationsCount: applications.length,
+          eventsCount: await Event.countDocuments(),
+          membersCount: await Member.countDocuments(),
+          galleryCount: await Gallery.countDocuments(),
+          subscribersCount: await Subscriber.countDocuments()
+        },
+        settings,
+        recentApplications: applications,
+        recentUsers: []
+      });
+    } catch (err) {
+      console.error('[AdminRouter] Applications error:', err);
+      res.status(500).send('Error loading applications.');
+    }
+  });
+
+  // 3. Update Application Status (Approve / Reject)
+  router.post('/applications/:id/status', async (req, res) => {
+    try {
+      const { status } = req.body;
+      const { id } = req.params;
+      const adminName = req.session.user?.globalName || req.session.user?.username || 'Admin';
+
+      const updated = await DatabaseService.updateApplicationStatus(id, status, adminName);
+      if (!updated) {
+        return res.status(404).json({ success: false, message: 'Application not found.' });
+      }
+      res.json({ success: true, message: `Application ${status} successfully.`, data: updated });
+    } catch (err) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
+  // 4. Delete Application
+  router.delete('/applications/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      await DatabaseService.deleteApplication(id);
+      res.json({ success: true, message: 'Application removed successfully.' });
+    } catch (err) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
+  // 5. Update Settings
+  router.post('/settings', async (req, res) => {
+    try {
+      const updated = await DatabaseService.updateSettings(req.body);
+      res.json({ success: true, message: 'Settings updated successfully.', settings: updated });
+    } catch (err) {
+      res.status(500).json({ success: false, error: err.message });
+    }
   });
 
   return router;

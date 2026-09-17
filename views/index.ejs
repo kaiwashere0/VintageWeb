@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#FFFFFF]">
+<html lang="<%= typeof currentLang !== 'undefined' ? currentLang : 'en' %>" class="h-full bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#FFFFFF]">
 
 <%- include('partials/head', { 
-  title: 'Vintage Club — Official Website',
-  description: 'Vintage Club was founded in 2024 by nasriemir. Nobility on the roads, power in the convoy.' 
+  title: 'Vintage Club — ' + t('hero.title_line1', 'Nobility on Roads'),
+  description: t('hero.subtitle', 'Vintage Club is an elite simulation convoy community built for passion, discipline, and unforgettable logistics experiences on European highways.') 
 }) %>
 
 <body class="min-h-full flex flex-col justify-between bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#FFFFFF] selection:bg-[#8C5137] selection:text-white transition-colors duration-300">
@@ -22,20 +22,20 @@
 
       <!-- Main Slogan -->
       <h1 class="font-heading text-3xl sm:text-5xl md:text-6xl font-extrabold text-[#4A2B1D] dark:text-white tracking-tight mb-6 leading-tight max-w-3xl animate-fade-in-up">
-        Nobility on the Roads, Power in the Convoy
+        <%= t('hero.title_line1', 'Nobility on the Roads') %>, <%= t('hero.title_line2', 'Power in the Convoy') %>
       </h1>
 
       <p class="text-[#8C5137] dark:text-slate-300 text-sm sm:text-base md:text-lg max-w-2xl font-normal mb-10 leading-relaxed animate-fade-in-up delay-100">
-        Founded in 2024 by <strong class="text-[#4A2B1D] dark:text-white font-semibold">nasriemir.</strong>, Vintage Club is an exclusive driving community of friends connected since 2021, embodying brotherhood, mutual respect, and convoy excellence.
+        <%= t('hero.subtitle', 'Vintage Club is an elite simulation convoy community built for passion, discipline, and unforgettable logistics experiences on European highways.') %>
       </p>
 
       <!-- Action Buttons -->
       <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto animate-fade-in-up delay-200">
         <a href="/apply" class="w-full sm:w-auto px-8 py-3 btn-primary text-xs sm:text-sm font-semibold rounded-lg shadow-sm gap-2">
-          <i class="fa-solid fa-paper-plane text-xs"></i> Join as a Driver
+          <i class="fa-solid fa-paper-plane text-xs"></i> <%= t('hero.btn_apply', 'Join Our Fleet') %>
         </a>
         <a href="/events" class="w-full sm:w-auto px-8 py-3 btn-secondary text-xs sm:text-sm font-semibold rounded-lg gap-2">
-          <i class="fa-solid fa-calendar-days text-xs"></i> Convoy Schedule
+          <i class="fa-solid fa-calendar-days text-xs"></i> <%= t('hero.btn_explore', 'Explore Convoys') %>
         </a>
       </div>
 
@@ -44,22 +44,22 @@
         <div class="clean-card p-5 text-center hover-lift hover-glow">
           <div class="text-[#8C5137] dark:text-[#D48D66] mb-1 text-base"><i class="fa-solid fa-users"></i></div>
           <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-members">0</span>
-          <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1">Active Drivers</span>
+          <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1"><%= t('stats.members', 'Active Drivers') %></span>
         </div>
         <div class="clean-card p-5 text-center hover-lift hover-glow delay-100">
           <div class="text-[#8C5137] dark:text-[#D48D66] mb-1 text-base"><i class="fa-solid fa-flag-checkered"></i></div>
           <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-convoys">0</span>
-          <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1">Completed Convoys</span>
+          <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1"><%= t('stats.convoys', 'Completed Convoys') %></span>
         </div>
         <div class="clean-card p-5 text-center hover-lift hover-glow delay-200">
           <div class="text-[#8C5137] dark:text-[#D48D66] mb-1 text-base"><i class="fa-solid fa-road"></i></div>
           <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-km">0 KM</span>
-          <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1">Total Distance</span>
+          <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1"><%= t('stats.km', 'Total Distance') %></span>
         </div>
         <div class="clean-card p-5 text-center hover-lift hover-glow delay-300">
           <div class="text-[#8C5137] dark:text-[#D48D66] mb-1 text-base"><i class="fa-solid fa-clock-rotate-left"></i></div>
           <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-founded">2024</span>
-          <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1">Established</span>
+          <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1"><%= t('stats.founded', 'Established') %></span>
         </div>
       </div>
 
@@ -70,13 +70,13 @@
   <section id="about" class="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
     <div class="text-center max-w-3xl mx-auto mb-12 reveal-on-scroll">
       <div class="text-[#8C5137] dark:text-[#D48D66] text-xs font-bold uppercase tracking-wider mb-2 flex items-center justify-center gap-1.5">
-        <i class="fa-solid fa-building-columns"></i> Heritage & Philosophy
+        <i class="fa-solid fa-building-columns"></i> <%= t('about.hero_title', 'Heritage & Philosophy') %>
       </div>
       <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-[#4A2B1D] dark:text-white tracking-tight mb-4">
-        Disciplined Convoys, Lasting Brotherhood
+        <%= t('home.about_title', 'Who is Vintage Club?') %>
       </h2>
       <p class="text-[#8C5137] dark:text-slate-300 text-sm sm:text-base leading-relaxed">
-        <strong class="text-[#4A2B1D] dark:text-white">Vintage Club</strong> was founded in 2024 by <strong class="text-[#4A2B1D] dark:text-white font-semibold">nasriemir.</strong> It brings together individuals who have stayed in close communication both virtually and in real life since 2021.
+        <%= t('home.about_desc', 'Founded with a vision of realistic driving aesthetics and convoy discipline, Vintage Club delivers the premier European virtual trucking experience.') %>
       </p>
     </div>
 
@@ -86,9 +86,9 @@
         <div class="w-11 h-11 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 border border-[#8C5137]/20 dark:border-[#D48D66]/20 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] text-lg mb-4">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
-        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2">Convoy Discipline</h3>
+        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2"><%= t('home.feature_1_title', 'Convoy Discipline') %></h3>
         <p class="text-xs text-[#8C5137] dark:text-slate-400 leading-relaxed">
-          Safe following distances, regulated speed limits, and professional convoy control escort management on Simulation servers.
+          <%= t('home.feature_1_desc', 'Synchronized radio communications, strict distance keeping, and designated pilot escorts.') %>
         </p>
       </div>
 
@@ -96,9 +96,9 @@
         <div class="w-11 h-11 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 border border-[#8C5137]/20 dark:border-[#D48D66]/20 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] text-lg mb-4">
           <i class="fa-solid fa-handshake-angle"></i>
         </div>
-        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2">Brotherhood & Family</h3>
+        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2"><%= t('home.feature_3_title', 'Active Community') %></h3>
         <p class="text-xs text-[#8C5137] dark:text-slate-400 leading-relaxed">
-          A mature, respectful environment built on authentic real-life and virtual friendship established since 2021.
+          <%= t('home.feature_3_desc', 'Weekly international convoys, voice channels, and driver ranking progression.') %>
         </p>
       </div>
 
@@ -106,16 +106,16 @@
         <div class="w-11 h-11 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 border border-[#8C5137]/20 dark:border-[#D48D66]/20 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] text-lg mb-4">
           <i class="fa-solid fa-truck-front"></i>
         </div>
-        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2">Custom Fleet Identity</h3>
+        <h3 class="font-bold font-heading text-[#4A2B1D] dark:text-white text-base mb-2"><%= t('home.feature_2_title', 'Exclusive Liveries') %></h3>
         <p class="text-xs text-[#8C5137] dark:text-slate-400 leading-relaxed">
-          Distinctive club styling across Scania, Volvo, Mercedes-Benz, and MAN trucks with unified paint schemes.
+          <%= t('home.feature_2_desc', 'Signature warm copper and black custom truck designs tailored for convoy elegance.') %>
         </p>
       </div>
     </div>
 
     <div class="text-center reveal-on-scroll delay-200">
       <a href="/about" class="inline-flex items-center gap-2 text-xs font-semibold text-[#8C5137] dark:text-[#D48D66] hover:underline">
-        <span>Read the full story & code of conduct</span>
+        <span><%= t('home.read_more', 'Learn More') %></span>
         <i class="fa-solid fa-arrow-right text-[10px]"></i>
       </a>
     </div>
@@ -127,15 +127,15 @@
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal-on-scroll">
         <div>
           <div class="text-[#8C5137] dark:text-[#D48D66] text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <i class="fa-solid fa-user-group"></i> Leadership & Drivers
+            <i class="fa-solid fa-user-group"></i> <%= t('team.hero_title', 'Fleet Roster') %>
           </div>
           <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-[#4A2B1D] dark:text-white tracking-tight">
-            Our Team • Roster
+            <%= t('nav.team', 'Roster') %>
           </h2>
-          <p class="text-[#8C5137] dark:text-slate-400 text-sm mt-1">Vintage Club founders, convoy leaders, and verified drivers.</p>
+          <p class="text-[#8C5137] dark:text-slate-400 text-sm mt-1"><%= t('team.hero_subtitle', 'Meet the founders, management team, and dedicated drivers driving Vintage Club forward.') %></p>
         </div>
         <a href="/team" class="mt-4 md:mt-0 text-xs font-bold text-[#4A2B1D] dark:text-white hover:text-[#8C5137] dark:hover:text-[#D48D66] flex items-center gap-1.5 transition-colors">
-          Full Team Roster <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          <%= t('team.filter_all', 'Full Team Roster') %> <i class="fa-solid fa-arrow-right text-[10px]"></i>
         </a>
       </div>
 
@@ -150,15 +150,15 @@
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal-on-scroll">
       <div>
         <div class="text-[#8C5137] dark:text-[#D48D66] text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
-          <i class="fa-solid fa-calendar-check"></i> Convoy Operations
+          <i class="fa-solid fa-calendar-check"></i> <%= t('events.hero_title', 'Convoy Schedule') %>
         </div>
         <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-[#4A2B1D] dark:text-white tracking-tight">
-          Our Events • Schedule
+          <%= t('home.events_title', 'Scheduled Convoys') %>
         </h2>
-        <p class="text-[#8C5137] dark:text-slate-400 text-sm mt-1">Upcoming official convoys and partner events on TruckersMP.</p>
+        <p class="text-[#8C5137] dark:text-slate-400 text-sm mt-1"><%= t('home.events_subtitle', 'Next Convoy Departures & Operations') %></p>
       </div>
       <a href="/events" class="mt-4 md:mt-0 text-xs font-bold text-[#4A2B1D] dark:text-white hover:text-[#8C5137] dark:hover:text-[#D48D66] flex items-center gap-1.5 transition-colors">
-        View All Events <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        <%= t('home.view_all_events', 'View All Convoys') %> <i class="fa-solid fa-arrow-right text-[10px]"></i>
       </a>
     </div>
 
@@ -173,15 +173,15 @@
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal-on-scroll">
         <div>
           <div class="text-[#8C5137] dark:text-[#D48D66] text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <i class="fa-solid fa-images"></i> Media Archive
+            <i class="fa-solid fa-images"></i> <%= t('gallery.hero_title', 'Cinematic Gallery') %>
           </div>
           <h2 class="text-3xl sm:text-4xl font-extrabold font-heading text-[#4A2B1D] dark:text-white tracking-tight">
-            Gallery • Moments
+            <%= t('home.gallery_title', 'Convoy Moments') %>
           </h2>
-          <p class="text-[#8C5137] dark:text-slate-400 text-sm mt-1">Photography from our scenic convoys and truck showcases.</p>
+          <p class="text-[#8C5137] dark:text-slate-400 text-sm mt-1"><%= t('home.gallery_subtitle', 'Cinematic Road Photography') %></p>
         </div>
         <a href="/gallery" class="mt-4 md:mt-0 text-xs font-bold text-[#4A2B1D] dark:text-white hover:text-[#8C5137] dark:hover:text-[#D48D66] flex items-center gap-1.5 transition-colors">
-          View Full Gallery <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          <%= t('home.view_all_gallery', 'Open Full Gallery') %> <i class="fa-solid fa-arrow-right text-[10px]"></i>
         </a>
       </div>
 

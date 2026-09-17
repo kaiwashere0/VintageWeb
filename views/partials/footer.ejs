@@ -15,11 +15,11 @@
           </div>
         </a>
         <p class="text-xs text-[#8C5137] dark:text-slate-400 leading-relaxed max-w-sm">
-          Founded in 2024 by <strong class="text-[#4A2B1D] dark:text-white font-semibold">nasriemir.</strong> — an elite driving community connecting dedicated friends across Euro Truck Simulator 2 & TruckersMP since 2021.
+          <%= t('footer.tagline', 'Nobility on the Roads, Power in the Convoy. Professional Euro Truck Simulator 2 & TruckersMP Virtual Trucking Company.') %>
         </p>
         <div class="pt-1 flex items-center gap-2 text-[11px] text-[#8C5137] dark:text-slate-400">
           <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-semibold">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Recruitment Active
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> <%= t('hero.status_active', 'Recruitment Season 2026 Open') %>
           </span>
         </div>
       </div>
@@ -27,37 +27,37 @@
       <!-- Col 2: Quick Navigation (lg: 2 cols) -->
       <div class="lg:col-span-2 flex flex-col space-y-4">
         <h4 class="font-heading text-xs font-bold text-[#4A2B1D] dark:text-white uppercase tracking-wider flex items-center gap-2 h-7">
-          <i class="fa-solid fa-compass text-[#8C5137] dark:text-[#D48D66] text-[11px]"></i> Navigation
+          <i class="fa-solid fa-compass text-[#8C5137] dark:text-[#D48D66] text-[11px]"></i> <%= t('footer.quick_links', 'Navigation') %>
         </h4>
         <ul class="space-y-2 text-xs">
           <li>
             <a href="/" class="hover:text-[#4A2B1D] dark:hover:text-white hover:translate-x-0.5 inline-flex items-center gap-1.5 transition-all">
-              <i class="fa-solid fa-angle-right text-[9px] text-[#8C5137]/60 dark:text-slate-500"></i> Home
+              <i class="fa-solid fa-angle-right text-[9px] text-[#8C5137]/60 dark:text-slate-500"></i> <%= t('nav.home', 'Home') %>
             </a>
           </li>
           <li>
             <a href="/about" class="hover:text-[#4A2B1D] dark:hover:text-white hover:translate-x-0.5 inline-flex items-center gap-1.5 transition-all">
-              <i class="fa-solid fa-angle-right text-[9px] text-[#8C5137]/60 dark:text-slate-500"></i> About Us
+              <i class="fa-solid fa-angle-right text-[9px] text-[#8C5137]/60 dark:text-slate-500"></i> <%= t('nav.about', 'About Us') %>
             </a>
           </li>
           <li>
             <a href="/team" class="hover:text-[#4A2B1D] dark:hover:text-white hover:translate-x-0.5 inline-flex items-center gap-1.5 transition-all">
-              <i class="fa-solid fa-angle-right text-[9px] text-[#8C5137]/60 dark:text-slate-500"></i> Leadership & Team
+              <i class="fa-solid fa-angle-right text-[9px] text-[#8C5137]/60 dark:text-slate-500"></i> <%= t('nav.team', 'Leadership & Team') %>
             </a>
           </li>
           <li>
             <a href="/events" class="hover:text-[#4A2B1D] dark:hover:text-white hover:translate-x-0.5 inline-flex items-center gap-1.5 transition-all">
-              <i class="fa-solid fa-angle-right text-[9px] text-[#8C5137]/60 dark:text-slate-500"></i> Convoy Schedule
+              <i class="fa-solid fa-angle-right text-[9px] text-[#8C5137]/60 dark:text-slate-500"></i> <%= t('nav.events', 'Convoy Schedule') %>
             </a>
           </li>
           <li>
             <a href="/gallery" class="hover:text-[#4A2B1D] dark:hover:text-white hover:translate-x-0.5 inline-flex items-center gap-1.5 transition-all">
-              <i class="fa-solid fa-angle-right text-[9px] text-[#8C5137]/60 dark:text-slate-500"></i> Media Gallery
+              <i class="fa-solid fa-angle-right text-[9px] text-[#8C5137]/60 dark:text-slate-500"></i> <%= t('nav.gallery', 'Media Gallery') %>
             </a>
           </li>
           <li>
             <a href="/apply" class="hover:text-[#4A2B1D] dark:hover:text-white hover:translate-x-0.5 inline-flex items-center gap-1.5 transition-all">
-              <i class="fa-solid fa-angle-right text-[9px] text-[#8C5137]/60 dark:text-slate-500"></i> Driver Application
+              <i class="fa-solid fa-angle-right text-[9px] text-[#8C5137]/60 dark:text-slate-500"></i> <%= t('nav.apply', 'Driver Application') %>
             </a>
           </li>
         </ul>
@@ -66,7 +66,7 @@
       <!-- Col 3: Standards & Quality (lg: 3 cols) -->
       <div class="lg:col-span-3 flex flex-col space-y-4">
         <h4 class="font-heading text-xs font-bold text-[#4A2B1D] dark:text-white uppercase tracking-wider flex items-center gap-2 h-7">
-          <i class="fa-solid fa-shield-halved text-[#8C5137] dark:text-[#D48D66] text-[11px]"></i> Standards
+          <i class="fa-solid fa-shield-halved text-[#8C5137] dark:text-[#D48D66] text-[11px]"></i> <%= t('about.rules_title', 'Standards') %>
         </h4>
         <ul class="space-y-2.5 text-xs text-[#8C5137] dark:text-slate-400">
           <li class="flex items-center gap-2.5">
@@ -79,7 +79,7 @@
             <span class="w-6 h-6 rounded-md bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] flex items-center justify-center flex-shrink-0 text-[#8C5137] dark:text-[#D48D66] text-[11px]">
               <i class="fa-solid fa-server"></i>
             </span>
-            <span>Simulation Dedicated Servers</span>
+            <span>TruckersMP Dedicated Servers</span>
           </li>
           <li class="flex items-center gap-2.5">
             <span class="w-6 h-6 rounded-md bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] flex items-center justify-center flex-shrink-0 text-indigo-500 text-[11px]">
@@ -91,7 +91,7 @@
             <span class="w-6 h-6 rounded-md bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] flex items-center justify-center flex-shrink-0 text-[#8C5137] dark:text-[#D48D66] text-[11px]">
               <i class="fa-solid fa-handshake"></i>
             </span>
-            <span>Brotherhood & Convoy Order</span>
+            <span><%= t('home.feature_1_title', 'Convoy Discipline') %></span>
           </li>
         </ul>
       </div>
@@ -99,11 +99,8 @@
       <!-- Col 4: Community & Channels (lg: 3 cols) -->
       <div class="lg:col-span-3 flex flex-col space-y-4">
         <h4 class="font-heading text-xs font-bold text-[#4A2B1D] dark:text-white uppercase tracking-wider flex items-center gap-2 h-7">
-          <i class="fa-solid fa-share-nodes text-[#8C5137] dark:text-[#D48D66] text-[11px]"></i> Connect
+          <i class="fa-solid fa-share-nodes text-[#8C5137] dark:text-[#D48D66] text-[11px]"></i> <%= t('footer.community_links', 'Connect') %>
         </h4>
-        <p class="text-xs text-[#8C5137] dark:text-slate-400 leading-relaxed">
-          Stay connected with our convoys and community across our official platforms:
-        </p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5 pt-1">
           <a href="https://www.instagram.com/vintageclubofficiall?stkn=MXNmcnY5cDYweTJ6cQ%3D%3D&utm_source=qr" target="_blank" rel="noopener" class="w-full px-3.5 py-2.5 btn-secondary text-xs rounded-xl flex items-center justify-between group transition-all" title="Instagram Profile">
             <span class="flex items-center gap-2.5">
@@ -149,10 +146,10 @@
     <!-- Bottom Copyright Section -->
     <div class="pt-8 border-t border-[#E1E2E4] dark:border-[#262A36] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#8C5137] dark:text-slate-400">
       <div class="flex items-center gap-2 text-center sm:text-left">
-        <span>© 2026 Vintage Club. All rights reserved.</span>
+        <span>© 2026 Vintage Club. <%= t('footer.rights', 'All rights reserved.') %></span>
       </div>
       <div class="text-[11px] flex items-center gap-1.5 font-medium">
-        <i class="fa-solid fa-shield-halved text-[#8C5137] dark:text-[#D48D66]"></i> Vintage Club • Est. 2024
+        <i class="fa-solid fa-shield-halved text-[#8C5137] dark:text-[#D48D66]"></i> Vintage Club • <%= t('footer.vtc_id_label', 'TruckersMP VTC ID') %>: 80136
       </div>
     </div>
 

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#FFFFFF]">
+<html lang="<%= typeof currentLang !== 'undefined' ? currentLang : 'en' %>" class="h-full bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#FFFFFF]">
 
 <%- include('partials/head', { 
-  title: 'Driver Recruitment — Vintage Club',
-  description: 'Vintage Club driver application and membership form.' 
+  title: t('apply.page_title', 'Driver Application — Join Vintage Club Fleet'),
+  description: t('apply.hero_subtitle', 'Take your seat in our cockpit. Fill out the application form to join our prestigious fleet.') 
 }) %>
 
 <body class="min-h-full flex flex-col justify-between bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#FFFFFF] selection:bg-[#8C5137] selection:text-white transition-colors duration-300">
@@ -16,53 +16,53 @@
     <div class="clean-card p-8 sm:p-10 shadow-sm bg-white dark:bg-[#181B24] border-[#E1E2E4] dark:border-[#262A36]">
       <div class="text-center max-w-xl mx-auto mb-8">
         <div class="text-[#8C5137] dark:text-[#D48D66] text-xs font-bold uppercase tracking-wider mb-2 flex items-center justify-center gap-1.5">
-          <i class="fa-solid fa-file-pen"></i> Membership Application
+          <i class="fa-solid fa-file-pen"></i> <%= t('apply.hero_title', 'DRIVER RECRUITMENT') %>
         </div>
         <h1 class="text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white">
-          Apply to Vintage Club
+          <%= t('apply.form_title', 'Recruitment Application Form') %>
         </h1>
         <p class="text-[#8C5137] dark:text-slate-300 text-xs sm:text-sm mt-2">
-          To join our brotherhood on the roads, please fill out the form below. Your application will be sent directly to the Vintage Club leadership via Discord.
+          <%= t('apply.hero_subtitle', 'Take your seat in our cockpit. Fill out the application form to join our prestigious fleet.') %>
         </p>
       </div>
 
       <form id="driver-apply-form" class="space-y-5">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
-            <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5">Full Name *</label>
-            <input type="text" name="fullName" required placeholder="Your full name" class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors" />
+            <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5"><%= t('apply.field_name', 'Full Name') %> *</label>
+            <input type="text" name="fullName" required placeholder="<%= t('apply.field_name_ph', 'e.g. John Doe') %>" class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5">Age *</label>
-            <input type="number" name="age" min="15" max="70" required placeholder="e.g. 22" class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors" />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <div>
-            <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5">Discord Username *</label>
-            <input type="text" name="discordTag" required placeholder="username or user#0000" class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors" />
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5">TruckersMP Profile Link *</label>
-            <input type="url" name="truckersMpProfile" required placeholder="https://truckersmp.com/user/..." class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors" />
+            <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5"><%= t('apply.field_age', 'Age') %> *</label>
+            <input type="number" name="age" min="15" max="70" required placeholder="<%= t('apply.field_age_ph', 'e.g. 19') %>" class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors" />
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
-            <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5">Steam Profile Link</label>
-            <input type="url" name="steamProfile" placeholder="https://steamcommunity.com/id/..." class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors" />
+            <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5"><%= t('apply.field_discord', 'Discord Username / Tag') %> *</label>
+            <input type="text" name="discordTag" required placeholder="<%= t('apply.field_discord_ph', 'e.g. johndoe') %>" class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors" />
           </div>
           <div>
-            <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5">ETS2 Playtime Hours</label>
-            <input type="text" name="experienceHours" placeholder="e.g. 350+ Hours" class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors" />
+            <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5"><%= t('apply.field_tmp', 'TruckersMP Profile Link') %> *</label>
+            <input type="url" name="truckersMpProfile" required placeholder="<%= t('apply.field_tmp_ph', 'https://truckersmp.com/user/1234567') %>" class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5"><%= t('apply.field_steam', 'Steam Profile Link') %></label>
+            <input type="url" name="steamProfile" placeholder="<%= t('apply.field_steam_ph', 'https://steamcommunity.com/id/...') %>" class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5"><%= t('apply.field_hours', 'ETS2 Experience Hours') %></label>
+            <input type="text" name="experienceHours" placeholder="<%= t('apply.field_hours_ph', 'e.g. 450+ Hours') %>" class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors" />
           </div>
         </div>
 
         <!-- Custom Checkbox Grid for DLCs -->
         <div>
-          <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-2">Owned Map DLCs</label>
+          <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-2"><%= t('apply.field_dlc', 'Owned Map DLCs') %></label>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             <label class="custom-checkbox-btn">
               <input type="checkbox" name="dlcList" value="Scandinavia" />
@@ -72,12 +72,12 @@
             <label class="custom-checkbox-btn">
               <input type="checkbox" name="dlcList" value="Going East" />
               <div class="check-icon-box"><i class="fa-solid fa-check"></i></div>
-              <span>Going East</span>
+              <span>Going East!</span>
             </label>
             <label class="custom-checkbox-btn">
               <input type="checkbox" name="dlcList" value="France" />
               <div class="check-icon-box"><i class="fa-solid fa-check"></i></div>
-              <span>France</span>
+              <span>Vive la France!</span>
             </label>
             <label class="custom-checkbox-btn">
               <input type="checkbox" name="dlcList" value="Italia" />
@@ -87,7 +87,7 @@
             <label class="custom-checkbox-btn">
               <input type="checkbox" name="dlcList" value="Baltic" />
               <div class="check-icon-box"><i class="fa-solid fa-check"></i></div>
-              <span>Baltic</span>
+              <span>Beyond the Baltic</span>
             </label>
             <label class="custom-checkbox-btn">
               <input type="checkbox" name="dlcList" value="Black Sea" />
@@ -108,12 +108,12 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5">Additional Notes</label>
-          <textarea name="notes" rows="3" placeholder="Any additional details or introduction you would like to share..." class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors"></textarea>
+          <label class="block text-xs font-semibold text-[#4A2B1D] dark:text-slate-300 mb-1.5"><%= t('apply.field_notes', 'Why do you want to join Vintage Club?') %></label>
+          <textarea name="notes" rows="3" placeholder="<%= t('apply.field_notes_ph', 'Tell us about yourself and what you expect from Vintage Club...') %>" class="w-full px-3.5 py-2.5 bg-white dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] rounded-xl text-[#4A2B1D] dark:text-white placeholder-[#8C5137]/60 dark:placeholder-slate-500 focus:outline-none focus:border-[#8C5137] dark:focus:border-[#D48D66] text-xs sm:text-sm transition-colors"></textarea>
         </div>
 
         <button type="submit" class="w-full py-3 btn-primary text-xs sm:text-sm font-semibold rounded-lg gap-2">
-          <i class="fa-solid fa-paper-plane text-xs"></i> Submit Application
+          <i class="fa-solid fa-paper-plane text-xs"></i> <%= t('apply.btn_submit', 'Submit Application') %>
         </button>
       </form>
 

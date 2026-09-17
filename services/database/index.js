@@ -13,23 +13,11 @@ export class DatabaseService {
   static async init() {
     await connectToDatabase();
     await this.seedInitialData();
-    await this.clearGalleryAndRoster();
-  }
-
-  static async clearGalleryAndRoster() {
-    try {
-      // Clear legacy dummy/mock gallery and members
-      await Member.deleteMany({});
-      await Gallery.deleteMany({});
-      console.log('\x1b[32m✔\x1b[0m \x1b[1m[MongoDB]\x1b[0m Galeri ve Roster veritabanı temizlendi.');
-    } catch (err) {
-      console.error('[DatabaseService] clearGalleryAndRoster error:', err.message);
-    }
   }
 
   static async seedInitialData() {
     try {
-      // 1. Seed Settings
+      // Seed Settings if not exists
       const settingsCount = await Settings.countDocuments();
       if (settingsCount === 0) {
         await Settings.create({
@@ -69,6 +57,7 @@ export class DatabaseService {
     } catch (err) {
       console.error('[DatabaseService] getSettings error:', err.message);
       return {
+        siteMode: 3,
         vtcName: "Vintage Club",
         founder: "nasriemir.",
         establishedYear: 2024,
@@ -95,10 +84,21 @@ export class DatabaseService {
     return doc.toObject();
   }
 
+  static async setSiteMode(mode) {
+    let doc = await Settings.findOne();
+    if (!doc) {
+      doc = await Settings.create({ siteMode: mode });
+    } else {
+      doc.siteMode = mode;
+      await doc.save();
+    }
+    return doc.siteMode;
+  }
+
   // --- Members ---
-  static async getMembers() {
+  static async getMembers(filter = {}) {
     try {
-      return await Member.find().sort({ id: 1 }).lean();
+      return await Member.find(filter).sort({ id: 1 }).lean();
     } catch (err) {
       console.error('[DatabaseService] getMembers error:', err.message);
       return [];
@@ -115,10 +115,14 @@ export class DatabaseService {
     return newMember.toObject();
   }
 
+  static async deleteMember(id) {
+    return await Member.findOneAndDelete({ id });
+  }
+
   // --- Events ---
-  static async getEvents() {
+  static async getEvents(filter = {}) {
     try {
-      return await Event.find().sort({ createdAt: -1 }).lean();
+      return await Event.find(filter).sort({ date: 1, createdAt: -1 }).lean();
     } catch (err) {
       console.error('[DatabaseService] getEvents error:', err.message);
       return [];
@@ -133,10 +137,14 @@ export class DatabaseService {
     return newEvent.toObject();
   }
 
+  static async deleteEvent(id) {
+    return await Event.findOneAndDelete({ id });
+  }
+
   // --- Gallery ---
-  static async getGallery() {
+  static async getGallery(filter = {}) {
     try {
-      return await Gallery.find().sort({ id: 1 }).lean();
+      return await Gallery.find(filter).sort({ id: 1 }).lean();
     } catch (err) {
       console.error('[DatabaseService] getGallery error:', err.message);
       return [];
@@ -153,6 +161,10 @@ export class DatabaseService {
     return newItem.toObject();
   }
 
+  static async deleteGalleryItem(id) {
+    return await Gallery.findOneAndDelete({ id });
+  }
+
   // --- Applications ---
   static async createApplication(applicationData) {
     const newApp = await Application.create({
@@ -162,13 +174,26 @@ export class DatabaseService {
     return newApp.toObject();
   }
 
-  static async getApplications() {
+  static async getApplications(filter = {}) {
     try {
-      return await Application.find().sort({ createdAt: -1 }).lean();
+      return await Application.find(filter).sort({ createdAt: -1 }).lean();
     } catch (err) {
       console.error('[DatabaseService] getApplications error:', err.message);
       return [];
     }
+  }
+
+  static async updateApplicationStatus(id, status, reviewedBy = '') {
+    const app = await Application.findOneAndUpdate(
+      { id },
+      { status, reviewedBy, updatedAt: new Date() },
+      { new: true }
+    ).lean();
+    return app;
+  }
+
+  static async deleteApplication(id) {
+    return await Application.findOneAndDelete({ id });
   }
 
   // --- Subscribers ---
@@ -197,6 +222,10 @@ export class DatabaseService {
       console.error('[DatabaseService] getSubscribers error:', err.message);
       return [];
     }
+  }
+
+  static async deleteSubscriber(email) {
+    return await Subscriber.findOneAndDelete({ email: email.trim().toLowerCase() });
   }
 
   // --- Users (Discord OAuth) ---
@@ -251,6 +280,14 @@ export class DatabaseService {
       return await User.findById(id).lean();
     } catch (err) {
       return null;
+    }
+  }
+
+  static async getAllUsers() {
+    try {
+      return await User.find().sort({ lastLogin: -1 }).lean();
+    } catch (err) {
+      return [];
     }
   }
 }
