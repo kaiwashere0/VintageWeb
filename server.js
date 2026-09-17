@@ -9,8 +9,11 @@ dotenv.config();
 
 import DatabaseService from './services/database/index.js';
 import { createApiRouter } from './services/api/routes.js';
-import { createAuthRouter, isSuperAdmin } from './services/auth/index.js';
+import { createAuthRouter, isSuperAdmin, isDeveloper } from './services/auth/index.js';
 import { createAdminRouter } from './services/admin/routes.js';
+import { createDeveloperRouter } from './services/developer/routes.js';
+import TelemetryService from './services/telemetry/index.js';
+import TruckersMPService from './services/truckersmp/index.js';
 import DiscordBotService from './services/discord-bot/index.js';
 import { i18nMiddleware, LOCALES, AVAILABLE_LANGUAGES } from './services/i18n/index.js';
 
@@ -52,13 +55,19 @@ app.use(session({
 // Multi-Language (i18n) Middleware
 app.use(i18nMiddleware);
 
+// Telemetry & Latency Monitoring Middleware
+app.use(TelemetryService.middleware());
+
 // Expose currentUser and currentPath globally to all EJS templates
 app.use((req, res, next) => {
   if (req.session?.user) {
     const isSuper = isSuperAdmin(req.session.user.discordId);
+    const isDev = isDeveloper(req.session.user.discordId);
     if (isSuper) {
       req.session.user.isSuperAdmin = true;
-      req.session.user.role = 'Super Admin';
+    }
+    if (isDev) {
+      req.session.user.isDeveloper = true;
     }
   }
   res.locals.user = req.session?.user || null;
@@ -105,6 +114,7 @@ app.use(express.static(path.join(__dirname, 'public'), {
 // Microservice Routers
 app.use('/auth', createAuthRouter());
 app.use('/admin', createAdminRouter());
+app.use('/developer', createDeveloperRouter());
 app.use('/api/v1', createApiRouter());
 app.use('/api', createApiRouter()); // Backward compatibility
 

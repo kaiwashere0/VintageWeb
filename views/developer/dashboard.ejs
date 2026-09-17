@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#08090C] text-slate-100">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : "Developer's Hub — Vintage Club" %></title>
+  <link rel="stylesheet" href="/output.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/Wintage_Club_Logo_2050.png">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+
+<body class="min-h-full flex bg-[#08090C] text-slate-100 antialiased selection:bg-[#8C5137] selection:text-white">
+
+  <!-- DEVELOPER SIDEBAR -->
+  <%- include('partials/sidebar', { currentPath: '/developer' }) %>
+
+  <!-- MAIN DEVELOPER WORKSPACE -->
+  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
+    
+    <!-- TOP HEADER -->
+    <%- include('partials/header', { 
+      pageTitle: "Developer's Control Hub", 
+      pageSubtitle: 'System telemetry, microservices controller & live performance graphs' 
+    }) %>
+
+    <main class="p-4 sm:p-8 space-y-8 flex-1">
+
+      <!-- SYSTEM TELEMETRY METRIC GAUGES -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Gauge 1: Uptime & Status -->
+        <div class="p-5 rounded-2xl bg-[#0F1219] border border-[#1E232E] relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-mono mb-2">
+            <span>UPTIME CLOCK</span>
+            <i class="fa-solid fa-clock text-[#D48D66]"></i>
+          </div>
+          <div class="text-2xl font-mono font-bold text-white">
+            <%= Math.floor(systemInfo.uptimeSeconds / 3600) %>h <%= Math.floor((systemInfo.uptimeSeconds % 3600) / 60) %>m <%= systemInfo.uptimeSeconds % 60 %>s
+          </div>
+          <div class="text-[11px] font-mono text-emerald-400 mt-2 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            PID: <%= systemInfo.pid %> | Node <%= systemInfo.nodeVersion %>
+          </div>
+        </div>
+
+        <!-- Gauge 2: Average Latency -->
+        <div class="p-5 rounded-2xl bg-[#0F1219] border border-[#1E232E] relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-mono mb-2">
+            <span>AVG RESPONSE TIME</span>
+            <i class="fa-solid fa-gauge-high text-sky-400"></i>
+          </div>
+          <div id="stat-telemetry-avg-lat" class="text-2xl font-mono font-bold text-white">
+            <%= telemetry.overview.avgLatencyMs %> ms
+          </div>
+          <div class="text-[11px] font-mono text-slate-400 mt-2">
+            Total Logged Requests: <span id="stat-telemetry-total-req" class="text-white font-bold"><%= telemetry.overview.totalRequests %></span>
+          </div>
+        </div>
+
+        <!-- Gauge 3: System Memory Usage -->
+        <div class="p-5 rounded-2xl bg-[#0F1219] border border-[#1E232E] relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-mono mb-2">
+            <span>RAM CONSUMPTION</span>
+            <i class="fa-solid fa-microchip text-purple-400"></i>
+          </div>
+          <div class="text-2xl font-mono font-bold text-white">
+            <%= (systemInfo.totalMemGB - systemInfo.freeMemGB).toFixed(1) %> / <%= systemInfo.totalMemGB %> GB
+          </div>
+          <div class="text-[11px] font-mono text-purple-300 mt-2">
+            Platform: <%= systemInfo.platform %> (<%= systemInfo.arch %>)
+          </div>
+        </div>
+
+        <!-- Gauge 4: Error Telemetry -->
+        <div class="p-5 rounded-2xl bg-[#0F1219] border border-[#1E232E] relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-mono mb-2">
+            <span>ERROR LOGS</span>
+            <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+          </div>
+          <div id="stat-telemetry-total-err" class="text-2xl font-mono font-bold <%= telemetry.overview.totalErrors > 0 ? 'text-amber-400' : 'text-emerald-400' %>">
+            <%= telemetry.overview.totalErrors %> Recorded
+          </div>
+          <div class="text-[11px] font-mono text-slate-400 mt-2">
+            Healthy Services: <span class="text-emerald-400 font-bold">5 / 5 Online</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- VISUAL PERFORMANCE CHARTS SECTION -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Chart 1: Real-time Latency (2 cols) -->
+        <div class="lg:col-span-2 p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E] flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#1E232E]">
+            <div>
+              <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-[#D48D66]">Time-Series Telemetry</span>
+              <h2 class="text-base font-bold text-white font-sans mt-0.5">Route Latency Timeline (ms)</h2>
+            </div>
+            <span class="text-xs font-mono text-slate-400">Past 1 Hour</span>
+          </div>
+          <div class="h-64 w-full">
+            <canvas id="chart-latency"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: HTTP Status Code Breakdown (1 col) -->
+        <div class="p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E] flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#1E232E]">
+            <div>
+              <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-emerald-400">Throughput Distribution</span>
+              <h2 class="text-base font-bold text-white font-sans mt-0.5">HTTP Status Codes</h2>
+            </div>
+          </div>
+          <div class="h-64 w-full flex items-center justify-center">
+            <canvas id="chart-status"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MICROSERVICES UPTIME QUICK STATUS MATRIX -->
+      <div class="p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E]">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#1E232E]">
+          <div>
+            <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-sky-400">System Architecture</span>
+            <h2 class="text-base font-bold text-white font-sans mt-0.5">Microservices Matrix & Uptime Health</h2>
+          </div>
+          <a href="/developer/microservices" class="text-xs font-mono text-[#D48D66] hover:underline flex items-center gap-1">
+            <span>Manage All Microservices</span>
+            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          
+          <!-- Database Microservice -->
+          <div class="p-4 rounded-xl bg-[#151922] border border-[#1E232E] flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+                <i class="fa-solid fa-database"></i>
+              </div>
+              <div>
+                <span class="block text-xs font-bold text-white"><%= microservices.database.name %></span>
+                <span class="text-[10px] font-mono text-slate-400">MongoDB: <%= microservices.database.state %> (<%= microservices.database.latencyMs %>ms)</span>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold <%= microservices.database.status === 'healthy' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400' %>">
+              <%= microservices.database.status.toUpperCase() %>
+            </span>
+          </div>
+
+          <!-- TruckersMP API Microservice -->
+          <div class="p-4 rounded-xl bg-[#151922] border border-[#1E232E] flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-[#8C5137]/20 border border-[#8C5137]/40 text-[#D48D66] flex items-center justify-center text-sm">
+                <i class="fa-solid fa-truck-fast"></i>
+              </div>
+              <div>
+                <span class="block text-xs font-bold text-white"><%= microservices.truckersmp.name %></span>
+                <span class="text-[10px] font-mono text-slate-400">v2 REST Client (<%= microservices.truckersmp.latencyMs >= 0 ? `${microservices.truckersmp.latencyMs}ms` : 'Standby' %>)</span>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400">
+              ACTIVE
+            </span>
+          </div>
+
+          <!-- Discord Bot Microservice -->
+          <div class="p-4 rounded-xl bg-[#151922] border border-[#1E232E] flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm">
+                <i class="fa-brands fa-discord"></i>
+              </div>
+              <div>
+                <span class="block text-xs font-bold text-white"><%= microservices.discordBot.name %></span>
+                <span class="text-[10px] font-mono text-slate-400"><%= microservices.discordBot.tag %></span>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-400">
+              READY
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/js/developer.js"></script>
+</body>
+</html>

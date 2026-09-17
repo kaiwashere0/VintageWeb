@@ -1,0 +1,105 @@
+<!-- DEVELOPER SIDEBAR -->
+<aside id="dev-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#0A0C10] border-r border-[#1E232E] flex flex-col justify-between transition-transform duration-300 -translate-x-full lg:translate-x-0 shadow-2xl">
+  
+  <div>
+    <!-- Brand Header -->
+    <div class="p-5 border-b border-[#1E232E] flex items-center justify-between">
+      <a href="/developer" class="flex items-center gap-3 group">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-[#8C5137] to-[#D48D66] flex items-center justify-center text-white text-xs font-mono font-bold shadow-md">
+          <i class="fa-solid fa-code"></i>
+        </div>
+        <div>
+          <span class="block font-sans font-extrabold text-sm text-white tracking-tight">
+            VINTAGE DEV
+          </span>
+          <span class="text-[9px] uppercase font-mono font-bold tracking-widest text-[#D48D66]">
+            MICROSERVICE HUB
+          </span>
+        </div>
+      </a>
+      <button id="close-dev-sidebar-btn" type="button" class="lg:hidden w-8 h-8 rounded-lg bg-[#181B24] text-slate-400 flex items-center justify-center cursor-pointer">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Navigation Items -->
+    <nav class="p-3 space-y-1.5 font-sans">
+      
+      <div class="px-3 py-1.5 text-[10px] font-mono uppercase font-bold text-slate-500 tracking-wider">
+        System Overview
+      </div>
+
+      <a href="/developer" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 group <%= (typeof currentPath !== 'undefined' && currentPath === '/developer') ? 'bg-gradient-to-r from-[#8C5137] to-[#D48D66] text-white shadow-sm' : 'text-slate-300 hover:bg-[#151922] hover:text-white hover:translate-x-1' %>">
+        <i class="fa-solid fa-gauge-high text-sm w-4 transition-transform group-hover:scale-110"></i>
+        <span>Dashboard & Stats</span>
+      </a>
+
+      <a href="/developer/microservices" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 group <%= (typeof currentPath !== 'undefined' && currentPath === '/developer/microservices') ? 'bg-gradient-to-r from-[#8C5137] to-[#D48D66] text-white shadow-sm' : 'text-slate-300 hover:bg-[#151922] hover:text-white hover:translate-x-1' %>">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-cubes-stacked text-sm w-4 transition-transform group-hover:scale-110"></i>
+          <span>Microservices</span>
+        </div>
+        <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono font-bold">5 Active</span>
+      </a>
+
+      <a href="/developer/telemetry" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 group <%= (typeof currentPath !== 'undefined' && currentPath === '/developer/telemetry') ? 'bg-gradient-to-r from-[#8C5137] to-[#D48D66] text-white shadow-sm' : 'text-slate-300 hover:bg-[#151922] hover:text-white hover:translate-x-1' %>">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-chart-line text-sm w-4 transition-transform group-hover:scale-110"></i>
+          <span>Telemetry & Graphs</span>
+        </div>
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      </a>
+
+      <div class="pt-3 pb-1 px-3 text-[10px] font-mono uppercase font-bold text-slate-500 tracking-wider">
+        Integrations & API
+      </div>
+
+      <a href="/developer/truckersmp" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 group <%= (typeof currentPath !== 'undefined' && currentPath === '/developer/truckersmp') ? 'bg-gradient-to-r from-[#8C5137] to-[#D48D66] text-white shadow-sm' : 'text-slate-300 hover:bg-[#151922] hover:text-white hover:translate-x-1' %>">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-truck-fast text-sm w-4 transition-transform group-hover:scale-110"></i>
+          <span>TruckersMP Web API</span>
+        </div>
+        <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#1F2533] text-[#D48D66] font-mono font-bold">v2.0</span>
+      </a>
+
+      <div class="pt-4 pb-1">
+        <div class="border-t border-[#1E232E]"></div>
+      </div>
+
+      <a href="/admin" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:bg-[#151922] hover:text-white transition-colors">
+        <i class="fa-solid fa-crown text-amber-400 text-sm w-4"></i>
+        <span>Admin Portal</span>
+      </a>
+
+      <a href="/" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:bg-[#151922] hover:text-white transition-colors">
+        <i class="fa-solid fa-globe text-[#D48D66] text-sm w-4"></i>
+        <span>Public Website</span>
+      </a>
+
+    </nav>
+  </div>
+
+  <!-- Bottom Developer Account Info -->
+  <div class="p-3 border-t border-[#1E232E]">
+    <div class="p-3 rounded-2xl bg-[#12151D] border border-[#1E232E] flex items-center justify-between">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <img src="<%= (typeof user !== 'undefined' && user?.avatarUrl) ? user.avatarUrl : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80' %>" alt="<%= (typeof user !== 'undefined' && user?.username) ? user.username : 'Developer' %>" class="w-8 h-8 rounded-full object-cover border border-[#8C5137]/60 flex-shrink-0" />
+        <div class="min-w-0">
+          <span class="block text-xs font-bold text-white truncate font-sans">
+            <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Developer' %>
+          </span>
+          <span class="block text-[10px] text-[#D48D66] font-mono font-semibold truncate">
+            DEVELOPER ROLE
+          </span>
+        </div>
+      </div>
+      <a href="/auth/logout" class="w-7 h-7 rounded-lg text-rose-400 hover:bg-rose-950/50 flex items-center justify-center transition-colors flex-shrink-0 cursor-pointer" title="Log Out">
+        <i class="fa-solid fa-power-off text-xs"></i>
+      </a>
+    </div>
+  </div>
+
+</aside>
+
+<!-- Sidebar Overlay for Mobile -->
+<div id="dev-sidebar-overlay" class="hidden fixed inset-0 z-40 bg-black/70 backdrop-blur-xs lg:hidden"></div>

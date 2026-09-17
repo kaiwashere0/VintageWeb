@@ -70,6 +70,12 @@
               <span class="block text-xs font-bold text-[#4A2B1D] dark:text-white truncate"><%= user.globalName || user.username %></span>
               <span class="text-[10px] text-[#8C5137] dark:text-[#D48D66] font-medium">@<%= user.username %></span>
             </div>
+            <% if (user.isDeveloper) { %>
+              <a href="/developer" class="flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors mb-1">
+                <i class="fa-solid fa-terminal text-xs"></i>
+                <span>Developer Portal</span>
+              </a>
+            <% } %>
             <% if (user.isSuperAdmin) { %>
               <a href="/admin" class="flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs font-semibold text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-colors mb-1">
                 <i class="fa-solid fa-crown text-xs"></i>
@@ -128,6 +134,11 @@
           </div>
           <a href="/auth/logout" class="text-xs text-rose-500 font-semibold"><%= t('nav.logout', 'Log Out') %></a>
         </div>
+        <% if (user.isDeveloper) { %>
+          <a href="/developer" class="block px-3 py-2 rounded-lg text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 mb-1">
+            <i class="fa-solid fa-terminal mr-1"></i> Developer Portal
+          </a>
+        <% } %>
         <% if (user.isSuperAdmin) { %>
           <a href="/admin" class="block px-3 py-2 rounded-lg text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 mb-1">
             <i class="fa-solid fa-crown mr-1"></i> <%= t('nav.admin', 'Admin Portal') %>

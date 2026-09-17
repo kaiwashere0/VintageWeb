@@ -133,6 +133,47 @@ export function createAdminRouter() {
     }
   });
 
+  // 6. TruckersMP Staff Tools (Driver Verification & Ban Checker)
+  router.get('/truckersmp', async (req, res) => {
+    try {
+      const TruckersMPService = (await import('../truckersmp/index.js')).default;
+      const servers = await TruckersMPService.getServers();
+
+      res.render('admin/truckersmp', {
+        title: 'TruckersMP Staff Tools — Admin Portal',
+        currentPath: '/admin/truckersmp',
+        user: req.session.user,
+        servers: servers.response || []
+      });
+    } catch (err) {
+      res.status(500).send('Error loading TruckersMP tools: ' + err.message);
+    }
+  });
+
+  // 7. API for TruckersMP Driver Quick Search
+  router.get('/api/truckersmp/search-driver', async (req, res) => {
+    const { id } = req.query;
+    if (!id) {
+      return res.status(400).json({ success: false, message: 'Driver ID or SteamID64 is required.' });
+    }
+    try {
+      const TruckersMPService = (await import('../truckersmp/index.js')).default;
+      const [player, bans] = await Promise.all([
+        TruckersMPService.getPlayer(id),
+        TruckersMPService.getBans(id)
+      ]);
+
+      res.json({
+        success: !player.error,
+        player: player.response || null,
+        bans: bans.response || [],
+        raw: { player, bans }
+      });
+    } catch (err) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
   return router;
 }
 

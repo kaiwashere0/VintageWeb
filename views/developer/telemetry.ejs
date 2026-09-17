@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#08090C] text-slate-100">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : "Telemetry & Event Stream — Developer Portal" %></title>
+  <link rel="stylesheet" href="/output.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/Wintage_Club_Logo_2050.png">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+
+<body class="min-h-full flex bg-[#08090C] text-slate-100 antialiased selection:bg-[#8C5137] selection:text-white">
+
+  <!-- DEVELOPER SIDEBAR -->
+  <%- include('partials/sidebar', { currentPath: '/developer/telemetry' }) %>
+
+  <!-- MAIN DEVELOPER WORKSPACE -->
+  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
+    
+    <!-- TOP HEADER -->
+    <%- include('partials/header', { 
+      pageTitle: "Telemetry & Performance Analytics", 
+      pageSubtitle: 'Multi-dimensional filtering, dynamic sorting & graphical performance trends' 
+    }) %>
+
+    <main class="p-4 sm:p-8 space-y-8 flex-1">
+
+      <!-- SECTION 1: DYNAMIC MULTI-DIMENSIONAL FILTERING & SORTING TOOLBAR -->
+      <div class="p-5 rounded-2xl bg-[#0F1219] border border-[#1E232E]">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#1E232E]">
+          <div>
+            <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-[#D48D66]">Query Engine</span>
+            <h2 class="text-base font-bold text-white font-sans mt-0.5">Telemetry Filtering & Sorting Controls</h2>
+          </div>
+          <span class="text-xs font-mono text-emerald-400"><i class="fa-solid fa-bolt mr-1"></i> Real-time AJAX</span>
+        </div>
+
+        <form id="telemetry-filter-form" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 text-xs font-mono">
+          
+          <!-- Filter 1: Service -->
+          <div>
+            <label class="block text-[10px] text-slate-400 mb-1 uppercase">Microservice</label>
+            <select id="filter-service" class="w-full px-2.5 py-2 rounded-xl border border-[#1E232E] bg-[#151922] text-white focus:outline-none focus:border-[#8C5137]">
+              <option value="ALL">All Services</option>
+              <option value="Database">MongoDB (Database)</option>
+              <option value="Discord">Discord Bot</option>
+              <option value="Auth">Auth & Session</option>
+              <option value="i18n">i18n Localization</option>
+              <option value="TruckersMP">TruckersMP API</option>
+              <option value="API">API Microservice</option>
+            </select>
+          </div>
+
+          <!-- Filter 2: Log Level -->
+          <div>
+            <label class="block text-[10px] text-slate-400 mb-1 uppercase">Log Level</label>
+            <select id="filter-level" class="w-full px-2.5 py-2 rounded-xl border border-[#1E232E] bg-[#151922] text-white focus:outline-none focus:border-[#8C5137]">
+              <option value="ALL">All Levels</option>
+              <option value="INFO">INFO</option>
+              <option value="WARN">WARN</option>
+              <option value="ERROR">ERROR</option>
+              <option value="CRITICAL">CRITICAL</option>
+            </select>
+          </div>
+
+          <!-- Filter 3: Time Range -->
+          <div>
+            <label class="block text-[10px] text-slate-400 mb-1 uppercase">Time Range</label>
+            <select id="filter-timerange" class="w-full px-2.5 py-2 rounded-xl border border-[#1E232E] bg-[#151922] text-white focus:outline-none focus:border-[#8C5137]">
+              <option value="15m">Last 15 Minutes</option>
+              <option value="1h" selected>Last 1 Hour</option>
+              <option value="24h">Last 24 Hours</option>
+              <option value="7d">Last 7 Days</option>
+              <option value="all">All Time</option>
+            </select>
+          </div>
+
+          <!-- Filter 4: Status Code -->
+          <div>
+            <label class="block text-[10px] text-slate-400 mb-1 uppercase">HTTP Status</label>
+            <select id="filter-status" class="w-full px-2.5 py-2 rounded-xl border border-[#1E232E] bg-[#151922] text-white focus:outline-none focus:border-[#8C5137]">
+              <option value="ALL">All Codes</option>
+              <option value="2xx">2xx (Success)</option>
+              <option value="3xx">3xx (Redirect)</option>
+              <option value="4xx">4xx (Client Err)</option>
+              <option value="5xx">5xx (Server Err)</option>
+            </select>
+          </div>
+
+          <!-- Sort 1: Sort By -->
+          <div>
+            <label class="block text-[10px] text-slate-400 mb-1 uppercase">Sort Metric</label>
+            <select id="filter-sortby" class="w-full px-2.5 py-2 rounded-xl border border-[#1E232E] bg-[#151922] text-white focus:outline-none focus:border-[#8C5137]">
+              <option value="timestamp">Timestamp (Time)</option>
+              <option value="latency">Response Latency</option>
+              <option value="status">Status Code</option>
+            </select>
+          </div>
+
+          <!-- Sort 2: Order -->
+          <div>
+            <label class="block text-[10px] text-slate-400 mb-1 uppercase">Sort Order</label>
+            <select id="filter-sortorder" class="w-full px-2.5 py-2 rounded-xl border border-[#1E232E] bg-[#151922] text-white focus:outline-none focus:border-[#8C5137]">
+              <option value="desc">Descending (High to Low / Newest)</option>
+              <option value="asc">Ascending (Low to High / Oldest)</option>
+            </select>
+          </div>
+
+          <!-- Search Input -->
+          <div class="col-span-2 sm:col-span-1">
+            <label class="block text-[10px] text-slate-400 mb-1 uppercase">Live Search</label>
+            <input type="text" id="filter-search" placeholder="Path / Error..." class="w-full px-2.5 py-2 rounded-xl border border-[#1E232E] bg-[#151922] text-white focus:outline-none focus:border-[#8C5137]" />
+          </div>
+
+        </form>
+      </div>
+
+      <!-- SECTION 2: CHARTS ROW -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Latency Chart -->
+        <div class="p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E]">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#1E232E]">
+            <span class="text-xs font-mono font-bold text-white uppercase">Response Time Trend (ms)</span>
+            <span class="text-[10px] font-mono text-[#D48D66]">Real-time Latency</span>
+          </div>
+          <div class="h-64 w-full">
+            <canvas id="chart-latency"></canvas>
+          </div>
+        </div>
+
+        <!-- Memory / System History Chart -->
+        <div class="p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E]">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#1E232E]">
+            <span class="text-xs font-mono font-bold text-white uppercase">Memory & Heap Timeline (MB)</span>
+            <span class="text-[10px] font-mono text-sky-400">Heap vs RSS</span>
+          </div>
+          <div class="h-64 w-full">
+            <canvas id="chart-memory"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SECTION 3: FILTERED REQUESTS STREAM TABLE -->
+      <div class="p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E]">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#1E232E]">
+          <div>
+            <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-sky-400">HTTP Traffic</span>
+            <h2 class="text-base font-bold text-white font-sans mt-0.5">Filtered Request Stream</h2>
+          </div>
+          <span class="text-xs font-mono text-slate-400">Live Traffic Logs</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left font-mono text-xs">
+            <thead>
+              <tr class="text-slate-500 border-b border-[#1E232E] text-[11px]">
+                <th class="py-2.5 px-3">TIME</th>
+                <th class="py-2.5 px-3">METHOD</th>
+                <th class="py-2.5 px-3">PATH / ENDPOINT</th>
+                <th class="py-2.5 px-3">STATUS</th>
+                <th class="py-2.5 px-3 text-right">LATENCY</th>
+              </tr>
+            </thead>
+            <tbody id="telemetry-requests-table-body">
+              <% if (!telemetry.requests || telemetry.requests.length === 0) { %>
+                <tr>
+                  <td colspan="5" class="py-8 text-center text-xs text-slate-500 font-mono">
+                    No requests captured matching criteria.
+                  </td>
+                </tr>
+              <% } else { %>
+                <% telemetry.requests.forEach(function(r) { %>
+                  <% 
+                    let statusBadge = 'bg-emerald-500/20 text-emerald-400';
+                    if (r.status >= 300 && r.status < 400) statusBadge = 'bg-blue-500/20 text-blue-400';
+                    else if (r.status >= 400 && r.status < 500) statusBadge = 'bg-amber-500/20 text-amber-400';
+                    else if (r.status >= 500) statusBadge = 'bg-rose-500/20 text-rose-400';
+                  %>
+                  <tr class="border-b border-[#1E232E] hover:bg-[#151922] transition-colors">
+                    <td class="py-2.5 px-3 text-slate-400"><%= new Date(r.time).toLocaleTimeString() %></td>
+                    <td class="py-2.5 px-3">
+                      <span class="px-1.5 py-0.5 rounded text-[10px] font-bold <%= r.method === 'GET' ? 'bg-sky-500/20 text-sky-400' : 'bg-amber-500/20 text-amber-400' %>"><%= r.method %></span>
+                    </td>
+                    <td class="py-2.5 px-3 text-slate-200 truncate max-w-[280px]"><%= r.path %></td>
+                    <td class="py-2.5 px-3">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold <%= statusBadge %>"><%= r.status %></span>
+                    </td>
+                    <td class="py-2.5 px-3 text-right text-[#D48D66] font-bold"><%= r.durationMs %> ms</td>
+                  </tr>
+                <% }); %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/js/developer.js"></script>
+</body>
+</html>

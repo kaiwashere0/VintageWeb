@@ -101,10 +101,51 @@ export function createApiRouter() {
     }
   });
 
-  // 4. Etkinlikler / Konvoylar
+  // 4. Etkinlikler / Konvoylar (MongoDB + TruckersMP Live Event Fallback)
   router.get('/events', async (req, res) => {
     try {
-      const events = await DatabaseService.getEvents();
+      let events = await DatabaseService.getEvents();
+      
+      // If no local custom events exist, sync live public events from TruckersMP Web API v2
+      if ((!events || events.length === 0) && !req.query.localOnly) {
+        try {
+          const TruckersMPService = (await import('../truckersmp/index.js')).default;
+          const vtcId = process.env.TRUCKERSMP_VTC_ID;
+          let tmpEvents = null;
+          
+          if (vtcId) {
+            tmpEvents = await TruckersMPService.getVTCEvents(vtcId);
+          }
+          
+          if (!tmpEvents || tmpEvents.error || !tmpEvents.response) {
+            tmpEvents = await TruckersMPService.getEvents();
+          }
+
+          if (tmpEvents && !tmpEvents.error && tmpEvents.response) {
+            const list = Array.isArray(tmpEvents.response) 
+              ? tmpEvents.response 
+              : (tmpEvents.response.featured || tmpEvents.response.today || tmpEvents.response.upcoming || []);
+            
+            events = list.slice(0, 6).map(e => ({
+              id: 'tmp_' + e.id,
+              title: e.name || e.event_name || 'TruckersMP Official Convoy',
+              description: e.description || e.short_description || `Official community convoy on ${e.server?.name || 'Simulation 1'}.`,
+              departure: e.departure?.city || e.departure_city || 'Calais',
+              destination: e.arrive?.city || e.destination_city || 'Duisburg',
+              distance: e.distance || '1,250 KM',
+              server: e.server?.name || e.server || 'Simulation 1',
+              date: e.start_at || e.meetup_at || new Date().toISOString(),
+              dlcRequired: e.dlcs?.map(d => d.name).join(', ') || 'Base Game',
+              status: 'upcoming',
+              isTruckersMP: true,
+              truckersMpUrl: e.url || (e.id ? `https://truckersmp.com/events/${e.id}` : null)
+            }));
+          }
+        } catch (tmpErr) {
+          console.warn('[API /events] TruckersMP live fallback error:', tmpErr.message);
+        }
+      }
+
       res.json({
         success: true,
         count: events.length,
@@ -217,16 +258,34 @@ export function createApiRouter() {
     }
   });
 
-  router.get('/subscribers', async (req, res) => {
+  // 8. Public TruckersMP API Proxy Endpoints
+  router.get('/truckersmp/servers', async (req, res) => {
     try {
-      const subscribers = await DatabaseService.getSubscribers();
-      res.json({
-        success: true,
-        total: subscribers.length,
-        subscribers: subscribers.map(s => ({ email: s.email, createdAt: s.createdAt }))
-      });
+      const TruckersMPService = (await import('../truckersmp/index.js')).default;
+      const servers = await TruckersMPService.getServers();
+      res.json({ success: !servers.error, data: servers.response || [] });
     } catch (err) {
-      res.status(500).json({ success: false, message: 'Could not fetch subscribers.' });
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
+  router.get('/truckersmp/events', async (req, res) => {
+    try {
+      const TruckersMPService = (await import('../truckersmp/index.js')).default;
+      const events = await TruckersMPService.getEvents();
+      res.json({ success: !events.error, data: events.response || {} });
+    } catch (err) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
+  router.get('/truckersmp/player/:id', async (req, res) => {
+    try {
+      const TruckersMPService = (await import('../truckersmp/index.js')).default;
+      const player = await TruckersMPService.getPlayer(req.params.id);
+      res.json({ success: !player.error, data: player.response || null });
+    } catch (err) {
+      res.status(500).json({ success: false, error: err.message });
     }
   });
 

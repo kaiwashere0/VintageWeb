@@ -1,0 +1,28 @@
+<!-- DEVELOPER TOP HEADER -->
+<header class="sticky top-0 z-40 bg-[#0A0C10]/85 backdrop-blur-md border-b border-[#1E232E] px-4 sm:px-8 py-3.5 flex items-center justify-between">
+  
+  <div class="flex items-center gap-3">
+    <button id="open-dev-sidebar-btn" type="button" class="lg:hidden w-9 h-9 rounded-xl bg-[#151922] text-slate-300 flex items-center justify-center cursor-pointer">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div>
+      <h1 class="text-base sm:text-lg font-bold font-sans text-white flex items-center gap-2">
+        <span><%= typeof pageTitle !== 'undefined' ? pageTitle : "Developer's Control Hub" %></span>
+        <span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">LIVE TELEMETRY</span>
+      </h1>
+      <p class="text-xs text-slate-400 font-mono"><%= typeof pageSubtitle !== 'undefined' ? pageSubtitle : 'Microservices telemetry, route monitoring & API sandbox' %></p>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2.5">
+    <button id="flush-cache-btn" type="button" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#151922] border border-[#1E232E] text-xs font-mono text-slate-300 hover:text-white hover:border-[#8C5137] transition-all cursor-pointer" title="Flush In-Memory Cache">
+      <i class="fa-solid fa-arrows-rotate text-[11px] text-[#D48D66]"></i>
+      <span>Flush Cache</span>
+    </button>
+    <a href="/developer/telemetry" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#8C5137]/20 border border-[#8C5137]/40 text-xs font-mono text-[#D48D66] hover:bg-[#8C5137]/30 transition-all">
+      <i class="fa-solid fa-satellite-dish text-[11px] animate-pulse"></i>
+      <span class="hidden sm:inline">Event Stream</span>
+    </a>
+  </div>
+
+</header>
