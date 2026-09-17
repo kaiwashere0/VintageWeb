@@ -298,6 +298,41 @@ html.dark .badge-soft {
   box-shadow: none;
 }
 
+/* Hero Welcome Banner */
+.hero-welcome-banner {
+  background: linear-gradient(135deg, #4A2B1D 0%, #683C28 50%, #8C5137 100%) !important;
+  color: #FFFFFF !important;
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(74, 43, 29, 0.3), 0 8px 10px -6px rgba(74, 43, 29, 0.2);
+}
+
+html.dark .hero-welcome-banner {
+  background: linear-gradient(135deg, #181B24 0%, #202430 50%, #2B1E19 100%) !important;
+  border: 1px solid rgba(212, 141, 102, 0.25) !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+}
+
+.hero-welcome-banner h1,
+.hero-welcome-banner h2,
+.hero-welcome-banner h3,
+.hero-welcome-banner p,
+.hero-welcome-banner span,
+.hero-welcome-banner div,
+.hero-welcome-banner i {
+  color: #FFFFFF !important;
+}
+
+.hero-welcome-banner p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.clean-card {
+  border-radius: 1rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 /* Hero Gradient */
 .hero-gradient {
   background: radial-gradient(circle at 50% -10%, rgba(225, 226, 228, 0.8) 0%, rgba(255, 255, 255, 1) 75%);

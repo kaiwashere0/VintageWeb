@@ -36,21 +36,21 @@
     <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl w-full mx-auto">
 
       <!-- WELCOME HERO BANNER -->
-      <div class="relative overflow-hidden clean-card p-6 sm:p-8 bg-gradient-to-r from-[#4A2B1D] via-[#683C28] to-[#8C5137] text-white border-0 shadow-xl animate-fade-in-up hover-lift">
+      <div class="hero-welcome-banner p-6 sm:p-8 animate-fade-in-up hover-lift">
         <div class="relative z-10 max-w-2xl">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm text-[11px] font-bold uppercase tracking-wider mb-3 animate-pulse-gentle">
-            <i class="fa-solid fa-code"></i> Developer Workspace
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-bold uppercase tracking-wider mb-3 text-white">
+            <i class="fa-solid fa-code text-white"></i> <span class="text-white">Developer Workspace</span>
           </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold font-heading tracking-tight mb-2">
+          <h2 class="text-2xl sm:text-3xl font-extrabold font-heading tracking-tight mb-2 text-white">
             Welcome, <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Developer' %>!
           </h2>
-          <p class="text-xs sm:text-sm text-white/85 leading-relaxed">
+          <p class="text-xs sm:text-sm text-white/90 leading-relaxed font-sans">
             Real-time microservices architecture, live server telemetry, Discord Bot gateway controller, and TruckersMP API integration hub.
           </p>
         </div>
         <!-- Decorative Ambient Icon -->
-        <div class="absolute -right-8 -bottom-8 opacity-10 text-white text-[160px] pointer-events-none select-none transition-transform duration-700 hover:scale-110 animate-float-gentle">
-          <i class="fa-solid fa-terminal"></i>
+        <div class="absolute -right-8 -bottom-8 opacity-15 text-white text-[160px] pointer-events-none select-none transition-transform duration-700 hover:scale-110 animate-float-gentle">
+          <i class="fa-solid fa-terminal text-white"></i>
         </div>
       </div>
 
