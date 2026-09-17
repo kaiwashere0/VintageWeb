@@ -1,6 +1,6 @@
 /**
  * Vintage Club - Developer Portal Engine
- * Chart.js Visualizations + Real-Time Telemetry Filtering & Sorting + API Sandbox
+ * Theme Controller (Dark/Light) + Chart.js Visualizations + Real-Time Telemetry + Discord Bot & Voice API
  */
 
 let latencyChart = null;
@@ -8,6 +8,7 @@ let statusDoughnutChart = null;
 let memoryTimelineChart = null;
 
 document.addEventListener('DOMContentLoaded', () => {
+  initThemeController();
   initDeveloperSidebar();
   initFlushCacheButton();
   initTelemetryCharts();
@@ -17,7 +18,49 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ========================================================
-   1. Sidebar Controls for Mobile
+   1. Dark / Light Mode Theme Controller
+   ======================================================== */
+function initThemeController() {
+  const toggleBtns = document.querySelectorAll('.theme-toggle-btn');
+  
+  toggleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      
+      // Update Chart.js themes dynamically if charts exist
+      updateChartsTheme();
+    });
+  });
+}
+
+function updateChartsTheme() {
+  const isDark = document.documentElement.classList.contains('dark');
+  const textColor = isDark ? '#94A3B8' : '#8C5137';
+  const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(74,43,29,0.06)';
+
+  [latencyChart, memoryTimelineChart].forEach(chart => {
+    if (chart) {
+      if (chart.options.scales?.x) {
+        chart.options.scales.x.ticks.color = textColor;
+        chart.options.scales.x.grid.color = gridColor;
+      }
+      if (chart.options.scales?.y) {
+        chart.options.scales.y.ticks.color = textColor;
+        chart.options.scales.y.grid.color = gridColor;
+      }
+      chart.update();
+    }
+  });
+
+  if (statusDoughnutChart && statusDoughnutChart.options.plugins?.legend) {
+    statusDoughnutChart.options.plugins.legend.labels.color = textColor;
+    statusDoughnutChart.update();
+  }
+}
+
+/* ========================================================
+   2. Sidebar Controls for Mobile
    ======================================================== */
 function initDeveloperSidebar() {
   const sidebar = document.getElementById('dev-sidebar');
@@ -46,7 +89,7 @@ function initDeveloperSidebar() {
 }
 
 /* ========================================================
-   2. Flush In-Memory Cache
+   3. Flush In-Memory Cache
    ======================================================== */
 function initFlushCacheButton() {
   const btn = document.getElementById('flush-cache-btn');
@@ -60,7 +103,7 @@ function initFlushCacheButton() {
       const res = await fetch('/developer/api/microservices/flush-cache', { method: 'POST' });
       const json = await res.json();
       if (json.success) {
-        showDevToast('Caches flushed successfully!', 'success');
+        showDevToast('In-memory cache flushed successfully!', 'success');
       }
     } catch (err) {
       showDevToast('Flush failed: ' + err.message, 'error');
@@ -71,7 +114,7 @@ function initFlushCacheButton() {
 }
 
 /* ========================================================
-   3. Telemetry Visual Charts (Chart.js)
+   4. Telemetry Visual Charts (Chart.js)
    ======================================================== */
 async function initTelemetryCharts() {
   const latencyCanvas = document.getElementById('chart-latency');
@@ -79,6 +122,10 @@ async function initTelemetryCharts() {
   const memoryCanvas = document.getElementById('chart-memory');
 
   if (!latencyCanvas && !statusCanvas && !memoryCanvas) return;
+
+  const isDark = document.documentElement.classList.contains('dark');
+  const textColor = isDark ? '#94A3B8' : '#8C5137';
+  const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(74,43,29,0.06)';
 
   try {
     const res = await fetch('/developer/api/telemetry/data?timeRange=1h');
@@ -99,8 +146,8 @@ async function initTelemetryCharts() {
           datasets: [{
             label: 'Response Time (ms)',
             data: latencies.length ? latencies : [12, 18, 9, 24, 15, 11],
-            borderColor: '#D48D66',
-            backgroundColor: 'rgba(212, 141, 102, 0.12)',
+            borderColor: '#8C5137',
+            backgroundColor: 'rgba(140, 81, 55, 0.12)',
             borderWidth: 2,
             fill: true,
             tension: 0.35,
@@ -115,8 +162,8 @@ async function initTelemetryCharts() {
             legend: { display: false }
           },
           scales: {
-            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8', font: { size: 10 } } },
-            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8', font: { size: 10 } } }
+            x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 } } },
+            y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 } } }
           }
         }
       });
@@ -128,7 +175,7 @@ async function initTelemetryCharts() {
       statusDoughnutChart = new Chart(statusCanvas, {
         type: 'doughnut',
         data: {
-          labels: ['2xx OK', '3xx Redirect', '4xx Client Err', '5xx Server Err'],
+          labels: ['2xx Success', '3xx Redirect', '4xx Client Error', '5xx Server Error'],
           datasets: [{
             data: dist.some(v => v > 0) ? dist : [95, 3, 2, 0],
             backgroundColor: ['#10B981', '#3B82F6', '#F59E0B', '#EF4444'],
@@ -142,7 +189,7 @@ async function initTelemetryCharts() {
           plugins: {
             legend: {
               position: 'bottom',
-              labels: { color: '#94A3B8', font: { size: 11 }, boxWidth: 12 }
+              labels: { color: textColor, font: { size: 11 }, boxWidth: 12 }
             }
           },
           cutout: '70%'
@@ -185,11 +232,11 @@ async function initTelemetryCharts() {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { labels: { color: '#94A3B8', font: { size: 10 }, boxWidth: 10 } }
+            legend: { labels: { color: textColor, font: { size: 10 }, boxWidth: 10 } }
           },
           scales: {
-            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8', font: { size: 10 } } },
-            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8', font: { size: 10 } } }
+            x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 } } },
+            y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 } } }
           }
         }
       });
@@ -201,15 +248,13 @@ async function initTelemetryCharts() {
 }
 
 /* ========================================================
-   4. Telemetry Multi-Dimensional Filtering & Sorting
+   5. Telemetry Multi-Dimensional Filtering & Sorting
    ======================================================== */
 function initTelemetryFilters() {
   const filterForm = document.getElementById('telemetry-filter-form');
   if (!filterForm) return;
 
   const runFilter = async () => {
-    const service = document.getElementById('filter-service')?.value || 'ALL';
-    const level = document.getElementById('filter-level')?.value || 'ALL';
     const timeRange = document.getElementById('filter-timerange')?.value || '1h';
     const statusCode = document.getElementById('filter-status')?.value || 'ALL';
     const sortBy = document.getElementById('filter-sortby')?.value || 'timestamp';
@@ -217,8 +262,6 @@ function initTelemetryFilters() {
     const search = document.getElementById('filter-search')?.value.trim() || '';
 
     const params = new URLSearchParams({
-      service,
-      level,
       timeRange,
       statusCode,
       sortBy,
@@ -250,16 +293,16 @@ function initTelemetryFilters() {
   const clearLogsBtn = document.getElementById('clear-error-logs-btn');
   if (clearLogsBtn) {
     clearLogsBtn.addEventListener('click', async () => {
-      if (!confirm('Are you sure you want to clear all error logs?')) return;
+      if (!confirm('Are you sure you want to clear the error log buffer?')) return;
       try {
         const res = await fetch('/developer/api/telemetry/logs', { method: 'DELETE' });
         const json = await res.json();
         if (json.success) {
-          showDevToast('Error logs cleared', 'success');
+          showDevToast('Error log buffer cleared successfully.', 'success');
           runFilter();
         }
       } catch (err) {
-        showDevToast('Clear error logs failed', 'error');
+        showDevToast('Failed to clear error logs: ' + err.message, 'error');
       }
     });
   }
@@ -270,25 +313,25 @@ function renderTelemetryTables(data) {
   const reqContainer = document.getElementById('telemetry-requests-table-body');
   if (reqContainer) {
     if (!data.requests || data.requests.length === 0) {
-      reqContainer.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-slate-500 font-mono">No matching requests found</td></tr>`;
+      reqContainer.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-[#8C5137] dark:text-slate-400 font-mono">No matching requests recorded.</td></tr>`;
     } else {
       reqContainer.innerHTML = data.requests.map(r => {
-        let statusBadge = 'bg-emerald-500/20 text-emerald-400';
-        if (r.status >= 300 && r.status < 400) statusBadge = 'bg-blue-500/20 text-blue-400';
-        else if (r.status >= 400 && r.status < 500) statusBadge = 'bg-amber-500/20 text-amber-400';
-        else if (r.status >= 500) statusBadge = 'bg-rose-500/20 text-rose-400';
+        let statusBadge = 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400';
+        if (r.status >= 300 && r.status < 400) statusBadge = 'bg-blue-500/15 text-blue-600 dark:text-blue-400';
+        else if (r.status >= 400 && r.status < 500) statusBadge = 'bg-amber-500/15 text-amber-600 dark:text-amber-400';
+        else if (r.status >= 500) statusBadge = 'bg-rose-500/15 text-rose-600 dark:text-rose-400';
 
         return `
-          <tr class="border-b border-[#1E232E] hover:bg-[#151922] transition-colors font-mono text-xs">
-            <td class="py-2.5 px-3 text-slate-400">${new Date(r.time).toLocaleTimeString()}</td>
+          <tr class="border-b border-[#E1E2E4] dark:border-[#262A36] hover:bg-[#F8F9FA] dark:hover:bg-[#151922] transition-colors font-mono text-xs">
+            <td class="py-2.5 px-3 text-[#8C5137] dark:text-slate-400">${new Date(r.time).toLocaleTimeString()}</td>
             <td class="py-2.5 px-3">
-              <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${r.method === 'GET' ? 'bg-sky-500/20 text-sky-400' : 'bg-amber-500/20 text-amber-400'}">${r.method}</span>
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${r.method === 'GET' ? 'bg-sky-500/15 text-sky-600 dark:text-sky-400' : 'bg-amber-500/15 text-amber-600 dark:text-amber-400'}">${r.method}</span>
             </td>
-            <td class="py-2.5 px-3 text-slate-200 truncate max-w-[280px]">${r.path}</td>
+            <td class="py-2.5 px-3 text-[#4A2B1D] dark:text-slate-200 truncate max-w-[280px]">${r.path}</td>
             <td class="py-2.5 px-3">
               <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${statusBadge}">${r.status}</span>
             </td>
-            <td class="py-2.5 px-3 text-right text-[#D48D66] font-bold">${r.durationMs} ms</td>
+            <td class="py-2.5 px-3 text-right text-[#8C5137] dark:text-[#D48D66] font-bold">${r.durationMs} ms</td>
           </tr>
         `;
       }).join('');
@@ -299,18 +342,18 @@ function renderTelemetryTables(data) {
   const errContainer = document.getElementById('telemetry-errors-table-body');
   if (errContainer) {
     if (!data.errors || data.errors.length === 0) {
-      errContainer.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-xs text-emerald-400 font-mono"><i class="fa-solid fa-circle-check mr-1.5"></i> Zero errors recorded in this scope</td></tr>`;
+      errContainer.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-xs text-emerald-600 dark:text-emerald-400 font-mono"><i class="fa-solid fa-circle-check mr-1.5"></i> Zero errors recorded in this scope.</td></tr>`;
     } else {
       errContainer.innerHTML = data.errors.map(e => `
-        <tr class="border-b border-[#1E232E] hover:bg-[#151922] transition-colors font-mono text-xs">
-          <td class="py-2.5 px-3 text-slate-400">${new Date(e.time).toLocaleTimeString()}</td>
+        <tr class="border-b border-[#E1E2E4] dark:border-[#262A36] hover:bg-[#F8F9FA] dark:hover:bg-[#151922] transition-colors font-mono text-xs">
+          <td class="py-2.5 px-3 text-[#8C5137] dark:text-slate-400">${new Date(e.time).toLocaleTimeString()}</td>
           <td class="py-2.5 px-3">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${e.severity === 'CRITICAL' ? 'bg-rose-600 text-white' : (e.severity === 'WARN' ? 'bg-amber-500/20 text-amber-400' : 'bg-rose-500/20 text-rose-400')}">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${e.severity === 'CRITICAL' ? 'bg-rose-600 text-white' : (e.severity === 'WARN' ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' : 'bg-rose-500/15 text-rose-600 dark:text-rose-400')}">
               ${e.severity}
             </span>
           </td>
-          <td class="py-2.5 px-3 font-bold text-slate-300">${e.service}</td>
-          <td class="py-2.5 px-3 text-slate-200">${e.message}</td>
+          <td class="py-2.5 px-3 font-bold text-[#4A2B1D] dark:text-slate-200">${e.service}</td>
+          <td class="py-2.5 px-3 text-[#4A2B1D] dark:text-slate-200">${e.message}</td>
         </tr>
       `).join('');
     }
@@ -338,7 +381,7 @@ function updateTelemetryCharts(data) {
 }
 
 /* ========================================================
-   5. Interactive TruckersMP Sandbox
+   6. Interactive TruckersMP Sandbox
    ======================================================== */
 function initTruckersMPSandbox() {
   const form = document.getElementById('tmp-sandbox-form');
@@ -354,7 +397,7 @@ function initTruckersMPSandbox() {
 
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Testing...';
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Testing Sandbox...';
     }
 
     const start = Date.now();
@@ -370,7 +413,7 @@ function initTruckersMPSandbox() {
 
       if (statusBadge) {
         statusBadge.textContent = `${res.status} OK (${duration}ms)`;
-        statusBadge.className = `text-[10px] font-mono px-2 py-0.5 rounded font-bold ${res.ok ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`;
+        statusBadge.className = `text-[10px] font-mono px-2 py-0.5 rounded font-bold ${res.ok ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/20'}`;
       }
 
       if (responseBox) {
@@ -379,13 +422,13 @@ function initTruckersMPSandbox() {
     } catch (err) {
       if (responseBox) responseBox.textContent = 'Error executing request: ' + err.message;
       if (statusBadge) {
-        statusBadge.textContent = 'FAIL';
-        statusBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-rose-500 text-white';
+        statusBadge.textContent = 'FAILED';
+        statusBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-rose-600 text-white';
       }
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fa-solid fa-play"></i> Run Sandbox Test';
+        submitBtn.innerHTML = '<i class="fa-solid fa-play"></i> Execute Sandbox Request';
       }
     }
   });
@@ -405,7 +448,7 @@ function initTruckersMPSandbox() {
 }
 
 /* ========================================================
-   6. Discord Bot Presence & Live Simulator Controller
+   7. Discord Bot Presence & Live Simulator Controller
    ======================================================== */
 function initDiscordBotController() {
   const form = document.getElementById('bot-presence-form');
@@ -421,7 +464,6 @@ function initDiscordBotController() {
   const statPresenceMode = document.getElementById('stat-presence-mode');
   const statusContainer = document.getElementById('status-items-container');
   const addStatusBtn = document.getElementById('add-status-item-btn');
-  const saveTopBtn = document.getElementById('save-bot-settings-top-btn');
   const feedbackEl = document.getElementById('form-status-feedback');
 
   // Preview elements
@@ -490,19 +532,19 @@ function initDiscordBotController() {
     // Online indicator color
     if (previewStatusIndicator) {
       if (type === 'STREAMING') {
-        previewStatusIndicator.className = 'absolute bottom-1 right-1 w-6 h-6 rounded-full border-4 border-[#2B2D31] bg-[#593695] flex items-center justify-center text-[10px] text-white';
-        previewStatusIndicator.innerHTML = '<i class="fa-solid fa-tower-broadcast text-[8px]"></i>';
+        previewStatusIndicator.className = 'absolute bottom-0 right-0 w-5 h-5 rounded-full border-2 border-[#232428] bg-[#593695] flex items-center justify-center text-[8px] text-white';
+        previewStatusIndicator.innerHTML = '<i class="fa-solid fa-tower-broadcast"></i>';
       } else if (online === 'online') {
-        previewStatusIndicator.className = 'absolute bottom-1 right-1 w-6 h-6 rounded-full border-4 border-[#2B2D31] bg-emerald-500';
+        previewStatusIndicator.className = 'absolute bottom-0 right-0 w-5 h-5 rounded-full border-2 border-[#232428] bg-emerald-500';
         previewStatusIndicator.innerHTML = '';
       } else if (online === 'idle') {
-        previewStatusIndicator.className = 'absolute bottom-1 right-1 w-6 h-6 rounded-full border-4 border-[#2B2D31] bg-amber-500';
+        previewStatusIndicator.className = 'absolute bottom-0 right-0 w-5 h-5 rounded-full border-2 border-[#232428] bg-amber-500';
         previewStatusIndicator.innerHTML = '';
       } else if (online === 'dnd') {
-        previewStatusIndicator.className = 'absolute bottom-1 right-1 w-6 h-6 rounded-full border-4 border-[#2B2D31] bg-rose-500';
+        previewStatusIndicator.className = 'absolute bottom-0 right-0 w-5 h-5 rounded-full border-2 border-[#232428] bg-rose-500';
         previewStatusIndicator.innerHTML = '';
       } else {
-        previewStatusIndicator.className = 'absolute bottom-1 right-1 w-6 h-6 rounded-full border-4 border-[#2B2D31] bg-slate-500';
+        previewStatusIndicator.className = 'absolute bottom-0 right-0 w-5 h-5 rounded-full border-2 border-[#232428] bg-slate-500';
         previewStatusIndicator.innerHTML = '';
       }
     }
@@ -529,7 +571,7 @@ function initDiscordBotController() {
       };
       const conf = icons[type] || icons.STREAMING;
       previewActivityIcon.className = `fa-solid ${conf.icon}`;
-      previewActivityIconBox.className = `w-9 h-9 rounded-lg ${conf.bg} text-white flex items-center justify-center flex-shrink-0 text-sm shadow-md`;
+      previewActivityIconBox.className = `w-8 h-8 rounded-lg ${conf.bg} text-white flex items-center justify-center flex-shrink-0 text-xs shadow-md`;
     }
 
     if (previewStreamTag && previewStreamLink) {
@@ -591,11 +633,11 @@ function initDiscordBotController() {
     addStatusBtn.addEventListener('click', () => {
       const currentCount = statusContainer.querySelectorAll('.status-row').length;
       const newRow = document.createElement('div');
-      newRow.className = 'status-row flex items-center gap-2 p-2.5 rounded-xl bg-[#151922] border border-[#1E232E] group animate-fadeIn';
+      newRow.className = 'status-row flex items-center gap-2 p-2.5 rounded-xl bg-[#F8F9FA] dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] group animate-fadeIn';
       newRow.innerHTML = `
-        <span class="row-index text-[11px] font-mono font-bold text-slate-500 w-6 text-center">#${currentCount + 1}</span>
-        <input type="text" name="statusItem" placeholder="e.g. 🚛 Nobility on the Roads" class="status-input flex-1 px-3 py-1.5 rounded-lg bg-[#0F1219] border border-[#1E232E] text-white text-xs font-sans focus:outline-none focus:border-[#8C5137] transition-colors" required />
-        <button type="button" class="remove-status-btn w-8 h-8 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 flex items-center justify-center transition-colors cursor-pointer" title="Remove Message">
+        <span class="row-index text-xs font-mono font-bold text-[#8C5137] dark:text-slate-400 w-7 text-center flex-shrink-0">#${currentCount + 1}</span>
+        <input type="text" name="statusItem" placeholder="e.g. 🚛 Nobility on the Roads" class="status-input flex-1 px-3 py-2 rounded-lg bg-white dark:bg-[#0F1219] border border-[#E1E2E4] dark:border-[#1E232E] text-[#4A2B1D] dark:text-white text-xs font-sans focus:outline-none focus:border-[#8C5137] transition-colors" required />
+        <button type="button" class="remove-status-btn w-8 h-8 rounded-lg text-[#8C5137] dark:text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 flex items-center justify-center transition-colors cursor-pointer flex-shrink-0" title="Remove Message">
           <i class="fa-solid fa-trash text-xs"></i>
         </button>
       `;
@@ -608,9 +650,7 @@ function initDiscordBotController() {
       const input = newRow.querySelector('.status-input');
       if (input) {
         input.focus();
-        input.addEventListener('input', () => {
-          updatePreview();
-        });
+        input.addEventListener('input', updatePreview);
       }
     });
   }
@@ -636,9 +676,7 @@ function initDiscordBotController() {
 
     // Handle input change on existing status inputs
     statusContainer.querySelectorAll('.status-input').forEach(input => {
-      input.addEventListener('input', () => {
-        updatePreview();
-      });
+      input.addEventListener('input', updatePreview);
     });
   }
 
@@ -683,14 +721,7 @@ function initDiscordBotController() {
     });
   });
 
-  // 9. Save Top Button Trigger
-  if (saveTopBtn) {
-    saveTopBtn.addEventListener('click', () => {
-      form.requestSubmit();
-    });
-  }
-
-  // 10. AJAX Submit Form Handler
+  // 9. AJAX Submit Presence Form Handler
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -737,13 +768,13 @@ function initDiscordBotController() {
       const json = await res.json();
 
       if (json.success) {
-        showDevToast('Discord Bot presence updated & live broadcast active!', 'success');
-        if (feedbackEl) feedbackEl.textContent = `Last saved at ${new Date().toLocaleTimeString()}`;
+        showDevToast('Discord Bot presence broadcasted successfully!', 'success');
+        if (feedbackEl) feedbackEl.textContent = `Last broadcasted at ${new Date().toLocaleTimeString()}`;
         updatePreview();
         startPreviewTicker();
       } else {
         showDevToast(json.error || 'Failed to update presence', 'error');
-        if (feedbackEl) feedbackEl.textContent = 'Save failed: ' + (json.error || 'Unknown error');
+        if (feedbackEl) feedbackEl.textContent = 'Error: ' + (json.error || 'Unknown error');
       }
     } catch (err) {
       showDevToast('Network error: ' + err.message, 'error');
@@ -756,7 +787,7 @@ function initDiscordBotController() {
     }
   });
 
-  // 11. Voice Channel 24/7 Controller Handlers
+  // 10. Voice Channel 24/7 Controller Handlers
   const voiceEnabledToggle = document.getElementById('bot-voice-enabled');
   const guildIdInput = document.getElementById('bot-voice-guild-id');
   const channelIdInput = document.getElementById('bot-voice-channel-id');
@@ -771,11 +802,11 @@ function initDiscordBotController() {
   const updateVoiceBadge = (status) => {
     if (!voiceStatusBadge || !voiceStatusText) return;
     if (status && status.connected) {
-      voiceStatusBadge.className = 'px-3 py-1 rounded-xl font-mono text-xs font-bold flex items-center gap-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
-      voiceStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>Bağlı: #${status.channelName || 'Ses Kanalı'}</span>`;
+      voiceStatusBadge.className = 'px-3 py-1 rounded-xl font-mono text-xs font-bold flex items-center gap-2 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30';
+      voiceStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span>Connected: #${status.channelName || 'Voice Channel'}</span>`;
     } else {
-      voiceStatusBadge.className = 'px-3 py-1 rounded-xl font-mono text-xs font-bold flex items-center gap-2 bg-[#151922] text-slate-400 border border-[#1E232E]';
-      voiceStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-500"></span><span>Ses Bağlantısı Yok</span>`;
+      voiceStatusBadge.className = 'px-3 py-1 rounded-xl font-mono text-xs font-bold flex items-center gap-2 bg-[#F8F9FA] dark:bg-[#13161D] text-[#8C5137] dark:text-slate-400 border border-[#E1E2E4] dark:border-[#262A36]';
+      voiceStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500"></span><span>No Voice Connection</span>`;
     }
   };
 
@@ -783,8 +814,8 @@ function initDiscordBotController() {
     saveVoiceBtn.addEventListener('click', async () => {
       const originalHtml = saveVoiceBtn.innerHTML;
       saveVoiceBtn.disabled = true;
-      saveVoiceBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Bağlanıyor...';
-      if (voiceFeedbackEl) voiceFeedbackEl.textContent = 'Ses kanalına bağlanılıyor...';
+      saveVoiceBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connecting...';
+      if (voiceFeedbackEl) voiceFeedbackEl.textContent = 'Connecting to Discord voice channel...';
 
       const enabled = voiceEnabledToggle ? voiceEnabledToggle.checked : true;
       const guildId = guildIdInput ? guildIdInput.value.trim() : '';
@@ -812,11 +843,11 @@ function initDiscordBotController() {
           if (voiceFeedbackEl) voiceFeedbackEl.textContent = json.message;
           updateVoiceBadge(json.voiceStatus);
         } else {
-          showDevToast(json.error || json.message || 'Ses bağlantı hatası', 'error');
-          if (voiceFeedbackEl) voiceFeedbackEl.textContent = 'Hata: ' + (json.error || json.message);
+          showDevToast(json.error || json.message || 'Voice connection error', 'error');
+          if (voiceFeedbackEl) voiceFeedbackEl.textContent = 'Error: ' + (json.error || json.message);
         }
       } catch (err) {
-        showDevToast('Ağ hatası: ' + err.message, 'error');
+        showDevToast('Network error: ' + err.message, 'error');
       } finally {
         saveVoiceBtn.disabled = false;
         saveVoiceBtn.innerHTML = originalHtml;
@@ -828,7 +859,7 @@ function initDiscordBotController() {
     disconnectVoiceBtn.addEventListener('click', async () => {
       const originalHtml = disconnectVoiceBtn.innerHTML;
       disconnectVoiceBtn.disabled = true;
-      disconnectVoiceBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ayrılıyor...';
+      disconnectVoiceBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Disconnecting...';
 
       try {
         const res = await fetch('/developer/api/bot/voice', {
@@ -843,12 +874,12 @@ function initDiscordBotController() {
         const json = await res.json();
         if (json.success) {
           if (voiceEnabledToggle) voiceEnabledToggle.checked = false;
-          showDevToast('Bot ses kanalından ayrıldı.', 'info');
-          if (voiceFeedbackEl) voiceFeedbackEl.textContent = 'Bot ses kanalından ayrıldı.';
+          showDevToast('Bot disconnected from voice channel.', 'info');
+          if (voiceFeedbackEl) voiceFeedbackEl.textContent = 'Bot disconnected from voice channel.';
           updateVoiceBadge({ connected: false });
         }
       } catch (err) {
-        showDevToast('Ayrılma hatası: ' + err.message, 'error');
+        showDevToast('Disconnection error: ' + err.message, 'error');
       } finally {
         disconnectVoiceBtn.disabled = false;
         disconnectVoiceBtn.innerHTML = originalHtml;

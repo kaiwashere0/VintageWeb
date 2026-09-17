@@ -1,149 +1,185 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#08090C] text-slate-100">
+<html lang="en" class="h-full bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#F9FAFB]">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= typeof title !== 'undefined' ? title : "TruckersMP API Console — Developer Portal" %></title>
-  <link rel="stylesheet" href="/output.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title><%= typeof title !== 'undefined' ? title : "TruckersMP Web API Explorer — Vintage Club" %></title>
   <link rel="icon" type="image/png" href="/Wintage_Club_Logo_2050.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/output.css">
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
 </head>
 
-<body class="min-h-full flex bg-[#08090C] text-slate-100 antialiased selection:bg-[#8C5137] selection:text-white font-sans">
+<body class="min-h-full bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#F9FAFB] flex font-sans antialiased selection:bg-[#8C5137] selection:text-white">
 
   <!-- DEVELOPER SIDEBAR -->
   <%- include('partials/sidebar', { currentPath: '/developer/truckersmp' }) %>
 
-  <!-- MAIN DEVELOPER WORKSPACE -->
-  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
+  <!-- MAIN VIEWPORT WRAPPER (Offset by sidebar width on lg) -->
+  <div class="flex-1 lg:pl-64 flex flex-col min-h-screen">
     
-    <!-- TOP HEADER -->
+    <!-- TOP NAVIGATION BAR -->
     <%- include('partials/header', { 
-      pageTitle: "TruckersMP Web API v2 Console", 
-      pageSubtitle: 'OpenAPI 3.1 schema implementation, active route registry & sandbox tester' 
+      pageTitle: "TruckersMP Web API Explorer", 
+      pageSubtitle: 'Interactive sandbox console & OpenAPI 3.1 endpoint test bench' 
     }) %>
 
-    <main class="p-4 sm:p-8 space-y-8 flex-1">
+    <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl w-full mx-auto">
 
-      <!-- SECTION 1: INTERACTIVE SANDBOX TESTER -->
-      <div class="p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E] shadow-sm">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-[#1E232E]">
-          <div>
-            <span class="text-[11px] font-extrabold uppercase tracking-widest text-[#D48D66]">OpenAPI 3.1 Live Sandbox</span>
-            <h2 class="text-xl font-bold text-white font-heading mt-0.5">Interactive TruckersMP API Tester</h2>
+      <!-- TOP API HEALTH & VERSION CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        
+        <!-- Upstream Status -->
+        <div class="clean-card p-5 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] flex items-center justify-between shadow-sm hover-lift">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#D48D66] uppercase tracking-wider">Upstream Status</span>
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span class="text-sm font-bold text-[#4A2B1D] dark:text-[#F9FAFB] font-sans">API v2 Connected</span>
+            </div>
           </div>
-          <div class="flex items-center gap-2">
-            <span id="sandbox-status-badge" class="text-[11px] font-semibold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">READY</span>
+          <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 border border-[#8C5137]/20 text-[#8C5137] dark:text-[#D48D66] flex items-center justify-center text-sm flex-shrink-0">
+            <i class="fa-solid fa-truck-fast"></i>
           </div>
         </div>
 
-        <form id="tmp-sandbox-form" class="space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-            
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-400 mb-1.5 uppercase tracking-wide">Target Endpoint</label>
-              <select id="sandbox-endpoint" class="custom-select w-full px-3 py-2.5 rounded-xl border border-[#1E232E] bg-[#151922] font-medium text-white">
-                <option value="servers">GET /servers (Live Fleet Servers)</option>
-                <option value="game_time">GET /game_time (In-game Clock)</option>
-                <option value="events">GET /events (Featured & Upcoming Events)</option>
-                <option value="version">GET /version (ETS2/ATS Compatibility)</option>
-                <option value="rules">GET /rules (Official Rules)</option>
-                <option value="player">GET /player/{id} (Player Profile)</option>
-                <option value="bans">GET /bans/{id} (Player Ban Records)</option>
-                <option value="vtc">GET /vtc/{id} (VTC Information)</option>
-                <option value="vtc_members">GET /vtc/{id}/members (VTC Member Roster)</option>
-                <option value="vtc_events">GET /vtc/{id}/events (VTC Event Calendar)</option>
-              </select>
+        <!-- Latency -->
+        <div class="clean-card p-5 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] flex items-center justify-between shadow-sm hover-lift">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#D48D66] uppercase tracking-wider">Upstream Ping</span>
+            <div class="text-sm font-bold text-[#8C5137] dark:text-[#D48D66] font-mono">
+              <%= tmpService.latencyMs >= 0 ? `${tmpService.latencyMs} ms` : 'Live' %>
             </div>
-
-            <div id="sandbox-id-container" style="display: none;">
-              <label class="block text-xs font-mono text-slate-400 mb-1.5 uppercase">Identifier (ID / SteamID64 / VTC ID)</label>
-              <input type="text" id="sandbox-id" placeholder="e.g. 76561198000000000 or 12345" class="w-full px-3 py-2.5 rounded-xl border border-[#1E232E] bg-[#151922] font-mono text-xs text-white focus:outline-none focus:border-[#8C5137]" />
-            </div>
-
-            <div class="flex items-end">
-              <button type="submit" id="sandbox-submit-btn" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#8C5137] to-[#D48D66] hover:from-[#9C5B3E] hover:to-[#DE9670] text-xs font-mono font-bold text-white transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-play"></i>
-                <span>Run Sandbox Test</span>
-              </button>
-            </div>
-
           </div>
-        </form>
-
-        <!-- Response Console -->
-        <div class="mt-6">
-          <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
-            <span>RESPONSE PAYLOAD (JSON)</span>
-            <span>Content-Type: application/json</span>
-          </div>
-          <div class="p-4 rounded-xl bg-[#08090C] border border-[#1E232E] overflow-x-auto max-h-96">
-            <pre id="sandbox-response-code" class="text-xs font-mono text-emerald-400 whitespace-pre-wrap">{
-  "status": "ready",
-  "message": "Select an endpoint above and click 'Run Sandbox Test' to inspect live responses."
-}</pre>
+          <div class="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 flex items-center justify-center text-sm flex-shrink-0">
+            <i class="fa-solid fa-gauge-high"></i>
           </div>
         </div>
+
+        <!-- Simulation Game Version -->
+        <div class="clean-card p-5 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] flex items-center justify-between shadow-sm hover-lift">
+          <div class="space-y-1 min-w-0">
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#D48D66] uppercase tracking-wider">Supported Version</span>
+            <div class="text-sm font-bold text-[#4A2B1D] dark:text-white font-mono truncate">
+              ETS2: <%= (version && version.name) || '1.51 / 1.52' %>
+            </div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center text-sm flex-shrink-0">
+            <i class="fa-solid fa-code-compare"></i>
+          </div>
+        </div>
+
+        <!-- Active Public Servers -->
+        <div class="clean-card p-5 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] flex items-center justify-between shadow-sm hover-lift">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#D48D66] uppercase tracking-wider">Live Servers</span>
+            <div class="text-sm font-bold text-emerald-600 dark:text-emerald-400 font-mono">
+              <%= (servers && servers.response) ? servers.response.length : 12 %> Online
+            </div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm flex-shrink-0">
+            <i class="fa-solid fa-server"></i>
+          </div>
+        </div>
+
       </div>
 
-      <!-- SECTION 2: SPECIFICATION ROUTE REGISTRY -->
-      <div class="p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E]">
-        <div class="mb-4 pb-3 border-b border-[#1E232E]">
-          <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-sky-400">Documentation & Schema</span>
-          <h2 class="text-base font-bold text-white font-sans mt-0.5">Implemented TruckersMP API Routes</h2>
+      <!-- MAIN SANDBOX TEST CONSOLE -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+        
+        <!-- LEFT: SANDBOX FORM (5 Cols) -->
+        <div class="xl:col-span-5 space-y-6">
+          <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] space-y-5 shadow-sm">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-[#E1E2E4] dark:border-[#262A36]">
+              <div>
+                <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-[#8C5137] dark:text-[#D48D66]">Test Bench</span>
+                <h3 class="text-base font-bold font-heading text-[#4A2B1D] dark:text-white mt-0.5">API Request Sandbox</h3>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#8C5137]/15 dark:bg-[#D48D66]/20 text-[#8C5137] dark:text-[#D48D66]">
+                POST /test
+              </span>
+            </div>
+
+            <form id="tmp-sandbox-form" class="space-y-4">
+              
+              <!-- Endpoint Selector -->
+              <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-[#4A2B1D] dark:text-slate-300 font-sans">
+                  Select Target Endpoint <span class="text-rose-500">*</span>
+                </label>
+                <select id="sandbox-endpoint" class="w-full px-3.5 py-2.5 rounded-xl bg-[#F8F9FA] dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] text-[#4A2B1D] dark:text-white text-xs font-sans focus:outline-none focus:border-[#8C5137] transition-colors cursor-pointer">
+                  <optgroup label="Player & Bans">
+                    <option value="player" selected>GET /v2/player/{id} (Player Profile)</option>
+                    <option value="bans">GET /v2/bans/{id} (Player Bans History)</option>
+                  </optgroup>
+                  <optgroup label="Servers & Simulation">
+                    <option value="servers">GET /v2/servers (Live Server Statuses)</option>
+                    <option value="game_time">GET /v2/game_time (In-Game Time)</option>
+                    <option value="version">GET /v2/version (Client Version)</option>
+                    <option value="rules">GET /v2/rules (Official Rules)</option>
+                  </optgroup>
+                  <optgroup label="VTC Organization">
+                    <option value="vtc">GET /v2/vtc/{id} (VTC Details)</option>
+                    <option value="vtc_members">GET /v2/vtc/{id}/members (VTC Member List)</option>
+                    <option value="vtc_events">GET /v2/vtc/{id}/events (VTC Events)</option>
+                  </optgroup>
+                  <optgroup label="Events & Convoys">
+                    <option value="events">GET /v2/events (Featured Events)</option>
+                    <option value="event_detail">GET /v2/events/{id} (Specific Event)</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <!-- ID / Parameter Container -->
+              <div id="sandbox-id-container" class="space-y-1.5">
+                <label class="block text-xs font-bold text-[#4A2B1D] dark:text-slate-300 font-sans">
+                  Target ID / SteamID64 / VTC ID
+                </label>
+                <input type="text" id="sandbox-id" value="80136" placeholder="e.g. 80136, 1234567, 76561198..." class="w-full px-3.5 py-2.5 rounded-xl bg-[#F8F9FA] dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] text-[#4A2B1D] dark:text-white text-xs font-mono focus:outline-none focus:border-[#8C5137] transition-colors" />
+                <p class="text-[10px] text-[#8C5137] dark:text-slate-400 font-mono">Default VTC ID: 80136 (Vintage Club)</p>
+              </div>
+
+              <!-- Execute Sandbox Button -->
+              <div class="pt-2">
+                <button type="submit" id="sandbox-submit-btn" class="btn-primary w-full py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-md cursor-pointer">
+                  <i class="fa-solid fa-play"></i>
+                  <span>Execute Sandbox Request</span>
+                </button>
+              </div>
+
+            </form>
+
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-          
-          <div class="p-3.5 rounded-xl bg-[#151922] border border-[#1E232E] flex items-center justify-between">
-            <div>
+        <!-- RIGHT: LIVE JSON RESPONSE VIEWER (7 Cols) -->
+        <div class="xl:col-span-7 space-y-6">
+          <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] space-y-4 shadow-sm">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-[#E1E2E4] dark:border-[#262A36]">
               <div class="flex items-center gap-2">
-                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-400">GET</span>
-                <span class="text-white font-bold">/player/{id}</span>
+                <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-[#8C5137] dark:text-[#D48D66]">Response Payload</span>
+                <span id="sandbox-status-badge" class="text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-[#F8F9FA] dark:bg-[#13161D] text-[#8C5137] dark:text-slate-400 border border-[#E1E2E4] dark:border-[#262A36]">
+                  Awaiting Execution
+                </span>
               </div>
-              <span class="text-[11px] text-slate-400">SteamID64 / TruckersMP ID user details</span>
+              <span class="text-xs font-mono text-[#8C5137] dark:text-slate-400">Content-Type: application/json</span>
             </div>
-            <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Cached 5m</span>
-          </div>
 
-          <div class="p-3.5 rounded-xl bg-[#151922] border border-[#1E232E] flex items-center justify-between">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-400">GET</span>
-                <span class="text-white font-bold">/bans/{id}</span>
-              </div>
-              <span class="text-[11px] text-slate-400">Player ban history and active ban state</span>
-            </div>
-            <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Cached 2m</span>
-          </div>
+            <!-- Code viewer box -->
+            <pre class="p-4 rounded-xl bg-[#F8F9FA] dark:bg-[#111214] border border-[#E1E2E4] dark:border-[#262A36] text-xs font-mono text-[#4A2B1D] dark:text-emerald-400 overflow-x-auto max-h-[460px] leading-relaxed"><code id="sandbox-response-code">// Select an endpoint and click 'Execute Sandbox Request' to inspect live upstream data payload.</code></pre>
 
-          <div class="p-3.5 rounded-xl bg-[#151922] border border-[#1E232E] flex items-center justify-between">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-400">GET</span>
-                <span class="text-white font-bold">/servers</span>
-              </div>
-              <span class="text-[11px] text-slate-400">Real-time simulation server status & queues</span>
-            </div>
-            <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Cached 30s</span>
           </div>
-
-          <div class="p-3.5 rounded-xl bg-[#151922] border border-[#1E232E] flex items-center justify-between">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-400">GET</span>
-                <span class="text-white font-bold">/events</span>
-              </div>
-              <span class="text-[11px] text-slate-400">Public & featured VTC convoy events</span>
-            </div>
-            <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Cached 5m</span>
-          </div>
-
         </div>
+
       </div>
 
     </main>

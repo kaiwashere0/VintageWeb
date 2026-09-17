@@ -1,92 +1,132 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#08090C] text-slate-100">
+<html lang="en" class="h-full bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#F9FAFB]">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= typeof title !== 'undefined' ? title : "Developer's Hub — Vintage Club" %></title>
-  <link rel="stylesheet" href="/output.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="/Wintage_Club_Logo_2050.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/output.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
 </head>
 
-<body class="min-h-full flex bg-[#08090C] text-slate-100 antialiased selection:bg-[#8C5137] selection:text-white font-sans">
+<body class="min-h-full bg-[#FFFFFF] dark:bg-[#0C0D11] text-[#4A2B1D] dark:text-[#F9FAFB] flex font-sans antialiased selection:bg-[#8C5137] selection:text-white">
 
   <!-- DEVELOPER SIDEBAR -->
   <%- include('partials/sidebar', { currentPath: '/developer' }) %>
 
-  <!-- MAIN DEVELOPER WORKSPACE -->
-  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
+  <!-- MAIN VIEWPORT WRAPPER (Offset by sidebar width on lg) -->
+  <div class="flex-1 lg:pl-64 flex flex-col min-h-screen">
     
-    <!-- TOP HEADER -->
+    <!-- TOP NAVIGATION BAR -->
     <%- include('partials/header', { 
-      pageTitle: "Developer's Control Hub", 
-      pageSubtitle: 'System telemetry, microservices controller & live performance graphs' 
+      pageTitle: "Developer Portal", 
+      pageSubtitle: 'Telemetry & Control Hub' 
     }) %>
 
-    <main class="p-4 sm:p-8 space-y-8 flex-1">
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl w-full mx-auto">
 
-      <!-- SYSTEM TELEMETRY METRIC GAUGES -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- WELCOME HERO BANNER -->
+      <div class="relative overflow-hidden clean-card p-6 sm:p-8 bg-gradient-to-r from-[#4A2B1D] via-[#683C28] to-[#8C5137] text-white border-0 shadow-xl animate-fade-in-up hover-lift">
+        <div class="relative z-10 max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm text-[11px] font-bold uppercase tracking-wider mb-3 animate-pulse-gentle">
+            <i class="fa-solid fa-code"></i> Developer Workspace
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold font-heading tracking-tight mb-2">
+            Welcome, <%= (typeof user !== 'undefined' && (user?.globalName || user?.username)) ? (user.globalName || user.username) : 'Developer' %>!
+          </h2>
+          <p class="text-xs sm:text-sm text-white/85 leading-relaxed">
+            Real-time microservices architecture, live server telemetry, Discord Bot gateway controller, and TruckersMP API integration hub.
+          </p>
+        </div>
+        <!-- Decorative Ambient Icon -->
+        <div class="absolute -right-8 -bottom-8 opacity-10 text-white text-[160px] pointer-events-none select-none transition-transform duration-700 hover:scale-110 animate-float-gentle">
+          <i class="fa-solid fa-terminal"></i>
+        </div>
+      </div>
+
+      <!-- 4 KEY METRICS CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         
-        <!-- Gauge 1: Uptime & Status -->
-        <div class="p-5 rounded-2xl bg-[#0F1219] border border-[#1E232E] relative overflow-hidden">
-          <div class="flex items-center justify-between text-slate-400 text-xs font-mono mb-2">
-            <span>UPTIME CLOCK</span>
-            <i class="fa-solid fa-clock text-[#D48D66]"></i>
+        <!-- Metric 1: Uptime -->
+        <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] hover-lift hover-glow animate-fade-in-up delay-75 group">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#D48D66] uppercase tracking-wider">System Uptime</span>
+            <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+              <i class="fa-solid fa-clock text-base"></i>
+            </div>
           </div>
-          <div class="text-2xl font-mono font-bold text-white">
-            <%= Math.floor(systemInfo.uptimeSeconds / 3600) %>h <%= Math.floor((systemInfo.uptimeSeconds % 3600) / 60) %>m <%= systemInfo.uptimeSeconds % 60 %>s
-          </div>
-          <div class="text-[11px] font-mono text-emerald-400 mt-2 flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            PID: <%= systemInfo.pid %> | Node <%= systemInfo.nodeVersion %>
-          </div>
-        </div>
-
-        <!-- Gauge 2: Average Latency -->
-        <div class="p-5 rounded-2xl bg-[#0F1219] border border-[#1E232E] relative overflow-hidden">
-          <div class="flex items-center justify-between text-slate-400 text-xs font-mono mb-2">
-            <span>AVG RESPONSE TIME</span>
-            <i class="fa-solid fa-gauge-high text-sky-400"></i>
-          </div>
-          <div id="stat-telemetry-avg-lat" class="text-2xl font-mono font-bold text-white">
-            <%= telemetry.overview.avgLatencyMs %> ms
-          </div>
-          <div class="text-[11px] font-mono text-slate-400 mt-2">
-            Total Logged Requests: <span id="stat-telemetry-total-req" class="text-white font-bold"><%= telemetry.overview.totalRequests %></span>
+          <div class="space-y-1">
+            <div class="text-2xl font-extrabold font-heading text-[#4A2B1D] dark:text-[#F9FAFB]">
+              <%= Math.floor(systemInfo.uptimeSeconds / 3600) %>h <%= Math.floor((systemInfo.uptimeSeconds % 3600) / 60) %>m <%= systemInfo.uptimeSeconds % 60 %>s
+            </div>
+            <div class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              Node <%= systemInfo.nodeVersion %> (PID <%= systemInfo.pid %>)
+            </div>
           </div>
         </div>
 
-        <!-- Gauge 3: System Memory Usage -->
-        <div class="p-5 rounded-2xl bg-[#0F1219] border border-[#1E232E] relative overflow-hidden">
-          <div class="flex items-center justify-between text-slate-400 text-xs font-mono mb-2">
-            <span>RAM CONSUMPTION</span>
-            <i class="fa-solid fa-microchip text-purple-400"></i>
+        <!-- Metric 2: Average Latency -->
+        <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] hover-lift hover-glow animate-fade-in-up delay-150 group">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#D48D66] uppercase tracking-wider">Avg Latency</span>
+            <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+              <i class="fa-solid fa-gauge-high text-base"></i>
+            </div>
           </div>
-          <div class="text-2xl font-mono font-bold text-white">
-            <%= (systemInfo.totalMemGB - systemInfo.freeMemGB).toFixed(1) %> / <%= systemInfo.totalMemGB %> GB
-          </div>
-          <div class="text-[11px] font-mono text-purple-300 mt-2">
-            Platform: <%= systemInfo.platform %> (<%= systemInfo.arch %>)
+          <div class="space-y-1">
+            <div id="stat-telemetry-avg-lat" class="text-2xl font-extrabold font-heading text-[#4A2B1D] dark:text-[#F9FAFB]">
+              <%= telemetry.overview.avgLatencyMs %> ms
+            </div>
+            <div class="text-[11px] font-mono text-[#8C5137] dark:text-slate-400">
+              Total Requests: <span id="stat-telemetry-total-req" class="font-bold text-[#4A2B1D] dark:text-white"><%= telemetry.overview.totalRequests %></span>
+            </div>
           </div>
         </div>
 
-        <!-- Gauge 4: Error Telemetry -->
-        <div class="p-5 rounded-2xl bg-[#0F1219] border border-[#1E232E] relative overflow-hidden">
-          <div class="flex items-center justify-between text-slate-400 text-xs font-mono mb-2">
-            <span>ERROR LOGS</span>
-            <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+        <!-- Metric 3: RAM Memory -->
+        <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] hover-lift hover-glow animate-fade-in-up delay-200 group">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#D48D66] uppercase tracking-wider">Memory Usage</span>
+            <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+              <i class="fa-solid fa-microchip text-base"></i>
+            </div>
           </div>
-          <div id="stat-telemetry-total-err" class="text-2xl font-mono font-bold <%= telemetry.overview.totalErrors > 0 ? 'text-amber-400' : 'text-emerald-400' %>">
-            <%= telemetry.overview.totalErrors %> Recorded
+          <div class="space-y-1">
+            <div class="text-2xl font-extrabold font-heading text-[#4A2B1D] dark:text-[#F9FAFB]">
+              <%= (systemInfo.totalMemGB - systemInfo.freeMemGB).toFixed(1) %> / <%= systemInfo.totalMemGB %> GB
+            </div>
+            <div class="text-[11px] font-mono text-[#8C5137] dark:text-purple-300">
+              Platform: <%= systemInfo.platform %> (<%= systemInfo.arch %>)
+            </div>
           </div>
-          <div class="text-[11px] font-mono text-slate-400 mt-2">
-            Healthy Services: <span class="text-emerald-400 font-bold">5 / 5 Online</span>
+        </div>
+
+        <!-- Metric 4: Health Status -->
+        <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] hover-lift hover-glow animate-fade-in-up delay-300 group">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-[#8C5137] dark:text-[#D48D66] uppercase tracking-wider">System Health</span>
+            <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 flex items-center justify-center text-[#8C5137] dark:text-[#D48D66] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+              <i class="fa-solid fa-heart-pulse text-base"></i>
+            </div>
+          </div>
+          <div class="space-y-1">
+            <div class="text-2xl font-extrabold font-heading text-emerald-600 dark:text-emerald-400">
+              5 / 5 Healthy
+            </div>
+            <div class="text-[11px] font-mono text-[#8C5137] dark:text-slate-400">
+              Errors Logged: <span class="font-bold <%= telemetry.overview.totalErrors > 0 ? 'text-amber-500' : 'text-emerald-600 dark:text-emerald-400' %>"><%= telemetry.overview.totalErrors %></span>
+            </div>
           </div>
         </div>
 
@@ -96,13 +136,13 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- Chart 1: Real-time Latency (2 cols) -->
-        <div class="lg:col-span-2 p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E] flex flex-col justify-between">
-          <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#1E232E]">
+        <div class="lg:col-span-2 clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] flex flex-col justify-between shadow-sm">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#E1E2E4] dark:border-[#262A36]">
             <div>
-              <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-[#D48D66]">Time-Series Telemetry</span>
-              <h2 class="text-base font-bold text-white font-sans mt-0.5">Route Latency Timeline (ms)</h2>
+              <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-[#8C5137] dark:text-[#D48D66]">Time-Series Telemetry</span>
+              <h2 class="text-base font-bold font-heading text-[#4A2B1D] dark:text-white mt-0.5">Route Latency Timeline (ms)</h2>
             </div>
-            <span class="text-xs font-mono text-slate-400">Past 1 Hour</span>
+            <span class="text-xs font-mono text-[#8C5137] dark:text-slate-400">Past 1 Hour</span>
           </div>
           <div class="h-64 w-full">
             <canvas id="chart-latency"></canvas>
@@ -110,11 +150,11 @@
         </div>
 
         <!-- Chart 2: HTTP Status Code Breakdown (1 col) -->
-        <div class="p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E] flex flex-col justify-between">
-          <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#1E232E]">
+        <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] flex flex-col justify-between shadow-sm">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#E1E2E4] dark:border-[#262A36]">
             <div>
-              <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-emerald-400">Throughput Distribution</span>
-              <h2 class="text-base font-bold text-white font-sans mt-0.5">HTTP Status Codes</h2>
+              <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-emerald-600 dark:text-emerald-400">Throughput Distribution</span>
+              <h2 class="text-base font-bold font-heading text-[#4A2B1D] dark:text-white mt-0.5">HTTP Status Codes</h2>
             </div>
           </div>
           <div class="h-64 w-full flex items-center justify-center">
@@ -124,14 +164,14 @@
 
       </div>
 
-      <!-- MICROSERVICES UPTIME QUICK STATUS MATRIX -->
-      <div class="p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E]">
-        <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#1E232E]">
+      <!-- MICROSERVICES UPTIME MATRIX -->
+      <div class="clean-card p-6 bg-white dark:bg-[#181B24] border border-[#E1E2E4] dark:border-[#262A36] shadow-sm">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#E1E2E4] dark:border-[#262A36]">
           <div>
-            <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-sky-400">System Architecture</span>
-            <h2 class="text-base font-bold text-white font-sans mt-0.5">Microservices Matrix & Uptime Health</h2>
+            <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-[#8C5137] dark:text-[#D48D66]">Architecture Overview</span>
+            <h2 class="text-base font-bold font-heading text-[#4A2B1D] dark:text-white mt-0.5">Microservices Matrix & Uptime Health</h2>
           </div>
-          <a href="/developer/microservices" class="text-xs font-mono text-[#D48D66] hover:underline flex items-center gap-1">
+          <a href="/developer/microservices" class="text-xs font-semibold text-[#8C5137] dark:text-[#D48D66] hover:underline flex items-center gap-1">
             <span>Manage All Microservices</span>
             <i class="fa-solid fa-arrow-right text-[10px]"></i>
           </a>
@@ -140,49 +180,49 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           
           <!-- Database Microservice -->
-          <div class="p-4 rounded-xl bg-[#151922] border border-[#1E232E] flex items-center justify-between">
+          <div class="p-4 rounded-xl bg-[#F8F9FA] dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm">
                 <i class="fa-solid fa-database"></i>
               </div>
               <div>
-                <span class="block text-xs font-bold text-white"><%= microservices.database.name %></span>
-                <span class="text-[10px] font-mono text-slate-400">MongoDB: <%= microservices.database.state %> (<%= microservices.database.latencyMs %>ms)</span>
+                <span class="block text-xs font-bold text-[#4A2B1D] dark:text-white"><%= microservices.database.name %></span>
+                <span class="text-[10px] font-mono text-[#8C5137] dark:text-slate-400">MongoDB: <%= microservices.database.state %> (<%= microservices.database.latencyMs %>ms)</span>
               </div>
             </div>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold <%= microservices.database.status === 'healthy' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400' %>">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold <%= microservices.database.status === 'healthy' ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' : 'bg-rose-500/15 text-rose-600 dark:text-rose-400' %>">
               <%= microservices.database.status.toUpperCase() %>
             </span>
           </div>
 
           <!-- TruckersMP API Microservice -->
-          <div class="p-4 rounded-xl bg-[#151922] border border-[#1E232E] flex items-center justify-between">
+          <div class="p-4 rounded-xl bg-[#F8F9FA] dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-[#8C5137]/20 border border-[#8C5137]/40 text-[#D48D66] flex items-center justify-center text-sm">
+              <div class="w-10 h-10 rounded-xl bg-[#8C5137]/10 dark:bg-[#D48D66]/10 border border-[#8C5137]/20 text-[#8C5137] dark:text-[#D48D66] flex items-center justify-center text-sm">
                 <i class="fa-solid fa-truck-fast"></i>
               </div>
               <div>
-                <span class="block text-xs font-bold text-white"><%= microservices.truckersmp.name %></span>
-                <span class="text-[10px] font-mono text-slate-400">v2 REST Client (<%= microservices.truckersmp.latencyMs >= 0 ? `${microservices.truckersmp.latencyMs}ms` : 'Standby' %>)</span>
+                <span class="block text-xs font-bold text-[#4A2B1D] dark:text-white"><%= microservices.truckersmp.name %></span>
+                <span class="text-[10px] font-mono text-[#8C5137] dark:text-slate-400">v2 REST Client (<%= microservices.truckersmp.latencyMs >= 0 ? `${microservices.truckersmp.latencyMs}ms` : 'Standby' %>)</span>
               </div>
             </div>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
               ACTIVE
             </span>
           </div>
 
           <!-- Discord Bot Microservice -->
-          <div class="p-4 rounded-xl bg-[#151922] border border-[#1E232E] flex items-center justify-between">
+          <div class="p-4 rounded-xl bg-[#F8F9FA] dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm">
+              <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-sm">
                 <i class="fa-brands fa-discord"></i>
               </div>
               <div>
-                <span class="block text-xs font-bold text-white"><%= microservices.discordBot.name %></span>
-                <span class="text-[10px] font-mono text-slate-400"><%= microservices.discordBot.tag %></span>
+                <span class="block text-xs font-bold text-[#4A2B1D] dark:text-white"><%= microservices.discordBot.name %></span>
+                <span class="text-[10px] font-mono text-[#8C5137] dark:text-slate-400"><%= microservices.discordBot.tag %></span>
               </div>
             </div>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-400">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-500/15 text-indigo-600 dark:text-indigo-400">
               READY
             </span>
           </div>
