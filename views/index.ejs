@@ -11,79 +11,53 @@
   <!-- NAVBAR PARTIAL (Essential Links Only) -->
   <%- include('partials/navbar', { currentPath: '/' }) %>
 
-  <!-- 2. HERO SECTION WITH CINEMATIC BANNER & SEAMLESS FADE -->
-  <section class="relative pt-16 pb-24 sm:pt-24 sm:pb-32 px-4 sm:px-6 lg:px-8 border-b border-[#E1E2E4] dark:border-[#262A36] flex flex-col items-center justify-center text-center overflow-hidden">
-    
-    <!-- Hero Background Banner Layer with Smooth Downward Gradient Fade -->
-    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
-      <img src="/VTC_Memeber_Bio_Signature.png" alt="Vintage Club Convoy Banner" class="w-full h-full object-cover object-top opacity-60 dark:opacity-50 scale-105 transform transition-transform duration-1000" />
+  <!-- 2. HERO SECTION -->
+  <section class="hero-gradient pt-12 pb-20 sm:pt-16 sm:pb-24 px-4 sm:px-6 lg:px-8 border-b border-[#E1E2E4] dark:border-[#262A36] flex flex-col items-center justify-center text-center overflow-hidden">
+    <div class="max-w-4xl mx-auto flex flex-col items-center">
       
-      <!-- Top Vignette & Subtle Center Tint for text readability -->
-      <div class="absolute inset-0 bg-radial from-transparent via-black/20 to-black/60 dark:via-black/40 dark:to-black/80"></div>
-      
-      <!-- Silky Smooth Downward Gradient Fade into Page Background -->
-      <div class="absolute inset-0 bg-gradient-to-b from-white/30 via-white/70 to-[#FFFFFF] dark:from-[#0C0D11]/30 dark:via-[#0C0D11]/75 dark:to-[#0C0D11]"></div>
-      <div class="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#FFFFFF] dark:from-[#0C0D11] via-[#FFFFFF]/90 dark:via-[#0C0D11]/90 to-transparent"></div>
-    </div>
-
-    <!-- Hero Content Layer -->
-    <div class="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
-      
-      <!-- Live Status Capsule Badge -->
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 dark:bg-[#181B24]/80 border border-[#8C5137]/30 text-xs font-semibold text-[#8C5137] dark:text-[#D48D66] mb-6 shadow-sm backdrop-blur-md animate-fade-in-up">
-        <span class="flex h-2 w-2 relative">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-        </span>
-        <span class="tracking-wide">TruckersMP VTC #80136 • 2026 Fleet Active</span>
-      </div>
-
-      <!-- Brand Logo with Gentle Floating Motion -->
+      <!-- Brand Logo -->
       <div class="mb-6 sm:mb-8 transition-transform duration-300 hover:scale-105 animate-fade-in-scale">
-        <img src="/Wintage_Club_Logo_2050.png" alt="Vintage Club Logo" class="h-32 sm:h-40 md:h-48 w-auto object-contain drop-shadow-2xl mx-auto animate-float-gentle" />
+        <img src="/Wintage_Club_Logo_2050.png" alt="Vintage Club Logo" class="h-32 sm:h-40 md:h-44 w-auto object-contain drop-shadow-md mx-auto animate-float-gentle" />
       </div>
 
-      <!-- Main Dual-Tone Headline -->
-      <h1 class="font-heading text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight max-w-3xl animate-fade-in-up">
-        <span class="text-[#4A2B1D] dark:text-white block"><%= t('hero.title_line1', 'Nobility on the Roads') %></span>
-        <span class="bg-gradient-to-r from-[#8C5137] via-[#D48D66] to-[#E5A882] bg-clip-text text-transparent block mt-1"><%= t('hero.title_line2', 'Power in the Convoy') %></span>
+      <!-- Main Slogan -->
+      <h1 class="font-heading text-3xl sm:text-5xl md:text-6xl font-extrabold text-[#4A2B1D] dark:text-white tracking-tight mb-6 leading-tight max-w-3xl animate-fade-in-up">
+        <%= t('hero.title_line1', 'Nobility on the Roads') %>, <%= t('hero.title_line2', 'Power in the Convoy') %>
       </h1>
 
-      <p class="text-[#4A2B1D] dark:text-slate-200 text-sm sm:text-base md:text-lg max-w-2xl font-normal mb-10 leading-relaxed drop-shadow-xs animate-fade-in-up delay-100">
+      <p class="text-[#8C5137] dark:text-slate-300 text-sm sm:text-base md:text-lg max-w-2xl font-normal mb-10 leading-relaxed animate-fade-in-up delay-100">
         <%= t('hero.subtitle', 'Vintage Club is an elite simulation convoy community built for passion, discipline, and unforgettable logistics experiences on European highways.') %>
       </p>
 
       <!-- Action Buttons -->
-      <div class="flex flex-col sm:flex-row items-center gap-3.5 w-full sm:w-auto animate-fade-in-up delay-200">
-        <a href="/apply" class="w-full sm:w-auto px-8 py-3.5 btn-primary text-xs sm:text-sm font-bold rounded-xl shadow-lg gap-2 flex items-center justify-center">
-          <i class="fa-solid fa-paper-plane text-xs"></i>
-          <span><%= t('hero.btn_apply', 'Join Our Fleet') %></span>
+      <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto animate-fade-in-up delay-200">
+        <a href="/apply" class="w-full sm:w-auto px-8 py-3 btn-primary text-xs sm:text-sm font-semibold rounded-lg shadow-sm gap-2">
+          <i class="fa-solid fa-paper-plane text-xs"></i> <%= t('hero.btn_apply', 'Join Our Fleet') %>
         </a>
-        <a href="/events" class="w-full sm:w-auto px-8 py-3.5 btn-secondary text-xs sm:text-sm font-bold rounded-xl backdrop-blur-md gap-2 flex items-center justify-center">
-          <i class="fa-solid fa-calendar-days text-xs text-[#8C5137] dark:text-[#D48D66]"></i>
-          <span><%= t('hero.btn_explore', 'Explore Convoys') %></span>
+        <a href="/events" class="w-full sm:w-auto px-8 py-3 btn-secondary text-xs sm:text-sm font-semibold rounded-lg gap-2">
+          <i class="fa-solid fa-calendar-days text-xs"></i> <%= t('hero.btn_explore', 'Explore Convoys') %>
         </a>
       </div>
 
-      <!-- Glassmorphic Live Stats Cards -->
+      <!-- Dynamic Live Stats Cards -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 w-full max-w-4xl mt-16 reveal-on-scroll">
-        <div class="clean-card p-5 text-center hover-lift hover-glow backdrop-blur-xl bg-white/80 dark:bg-[#13161D]/80 border border-[#E1E2E4] dark:border-[#262A36] shadow-md">
-          <div class="text-[#8C5137] dark:text-[#D48D66] mb-1.5 text-lg"><i class="fa-solid fa-users"></i></div>
+        <div class="clean-card p-5 text-center hover-lift hover-glow">
+          <div class="text-[#8C5137] dark:text-[#D48D66] mb-1 text-base"><i class="fa-solid fa-users"></i></div>
           <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-members">0</span>
           <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1"><%= t('stats.members', 'Active Drivers') %></span>
         </div>
-        <div class="clean-card p-5 text-center hover-lift hover-glow delay-100 backdrop-blur-xl bg-white/80 dark:bg-[#13161D]/80 border border-[#E1E2E4] dark:border-[#262A36] shadow-md">
-          <div class="text-[#8C5137] dark:text-[#D48D66] mb-1.5 text-lg"><i class="fa-solid fa-flag-checkered"></i></div>
+        <div class="clean-card p-5 text-center hover-lift hover-glow delay-100">
+          <div class="text-[#8C5137] dark:text-[#D48D66] mb-1 text-base"><i class="fa-solid fa-flag-checkered"></i></div>
           <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-convoys">0</span>
           <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1"><%= t('stats.convoys', 'Completed Convoys') %></span>
         </div>
-        <div class="clean-card p-5 text-center hover-lift hover-glow delay-200 backdrop-blur-xl bg-white/80 dark:bg-[#13161D]/80 border border-[#E1E2E4] dark:border-[#262A36] shadow-md">
-          <div class="text-[#8C5137] dark:text-[#D48D66] mb-1.5 text-lg"><i class="fa-solid fa-road"></i></div>
+        <div class="clean-card p-5 text-center hover-lift hover-glow delay-200">
+          <div class="text-[#8C5137] dark:text-[#D48D66] mb-1 text-base"><i class="fa-solid fa-road"></i></div>
           <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-km">0 KM</span>
           <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1"><%= t('stats.km', 'Total Distance') %></span>
         </div>
-        <div class="clean-card p-5 text-center hover-lift hover-glow delay-300 backdrop-blur-xl bg-white/80 dark:bg-[#13161D]/80 border border-[#E1E2E4] dark:border-[#262A36] shadow-md">
-          <div class="text-[#8C5137] dark:text-[#D48D66] mb-1.5 text-lg"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <div class="clean-card p-5 text-center hover-lift hover-glow delay-300">
+          <div class="text-[#8C5137] dark:text-[#D48D66] mb-1 text-base"><i class="fa-solid fa-clock-rotate-left"></i></div>
           <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-founded">2024</span>
           <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1"><%= t('stats.founded', 'Established') %></span>
         </div>
