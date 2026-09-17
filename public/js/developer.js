@@ -248,10 +248,37 @@ async function initTelemetryCharts() {
 }
 
 /* ========================================================
-   5. Telemetry Multi-Dimensional Filtering & Sorting
+   5. Telemetry Multi-Dimensional Filtering, Sorting & Pagination
    ======================================================== */
+let currentTelemetryRequests = [];
+let currentTelemetryPage = 1;
+let telemetryPageSize = 10;
+
 function initTelemetryFilters() {
   const filterForm = document.getElementById('telemetry-filter-form');
+  const pageSizeSelect = document.getElementById('telemetry-page-size');
+
+  if (pageSizeSelect) {
+    pageSizeSelect.addEventListener('change', (e) => {
+      telemetryPageSize = parseInt(e.target.value, 10) || 10;
+      renderTelemetryPage(1);
+    });
+  }
+
+  // If telemetry page loaded with initial rows, extract them
+  const initialTableBody = document.getElementById('telemetry-requests-table-body');
+  if (initialTableBody && initialTableBody.querySelectorAll('tr').length > 0 && !currentTelemetryRequests.length) {
+    // Trigger initial fetch to populate reactive dataset
+    fetch('/developer/api/telemetry/data?timeRange=1h')
+      .then(r => r.json())
+      .then(json => {
+        if (json.success && json.data) {
+          renderTelemetryTables(json.data);
+        }
+      })
+      .catch(err => console.error('[Telemetry] Initial fetch error:', err));
+  }
+
   if (!filterForm) return;
 
   const runFilter = async () => {
@@ -309,34 +336,9 @@ function initTelemetryFilters() {
 }
 
 function renderTelemetryTables(data) {
-  // 1. Render Requests Table
-  const reqContainer = document.getElementById('telemetry-requests-table-body');
-  if (reqContainer) {
-    if (!data.requests || data.requests.length === 0) {
-      reqContainer.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-[#8C5137] dark:text-slate-400 font-mono">No matching requests recorded.</td></tr>`;
-    } else {
-      reqContainer.innerHTML = data.requests.map(r => {
-        let statusBadge = 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400';
-        if (r.status >= 300 && r.status < 400) statusBadge = 'bg-blue-500/15 text-blue-600 dark:text-blue-400';
-        else if (r.status >= 400 && r.status < 500) statusBadge = 'bg-amber-500/15 text-amber-600 dark:text-amber-400';
-        else if (r.status >= 500) statusBadge = 'bg-rose-500/15 text-rose-600 dark:text-rose-400';
-
-        return `
-          <tr class="border-b border-[#E1E2E4] dark:border-[#262A36] hover:bg-[#F8F9FA] dark:hover:bg-[#151922] transition-colors font-mono text-xs">
-            <td class="py-2.5 px-3 text-[#8C5137] dark:text-slate-400">${new Date(r.time).toLocaleTimeString()}</td>
-            <td class="py-2.5 px-3">
-              <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${r.method === 'GET' ? 'bg-sky-500/15 text-sky-600 dark:text-sky-400' : 'bg-amber-500/15 text-amber-600 dark:text-amber-400'}">${r.method}</span>
-            </td>
-            <td class="py-2.5 px-3 text-[#4A2B1D] dark:text-slate-200 truncate max-w-[280px]">${r.path}</td>
-            <td class="py-2.5 px-3">
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${statusBadge}">${r.status}</span>
-            </td>
-            <td class="py-2.5 px-3 text-right text-[#8C5137] dark:text-[#D48D66] font-bold">${r.durationMs} ms</td>
-          </tr>
-        `;
-      }).join('');
-    }
-  }
+  // 1. Store Requests & Paginate
+  currentTelemetryRequests = data.requests || [];
+  renderTelemetryPage(1);
 
   // 2. Render Errors Table
   const errContainer = document.getElementById('telemetry-errors-table-body');
@@ -366,6 +368,113 @@ function renderTelemetryTables(data) {
   if (totalReqEl) totalReqEl.textContent = data.overview.totalRequests;
   if (avgLatEl) avgLatEl.textContent = `${data.overview.avgLatencyMs} ms`;
   if (totalErrEl) totalErrEl.textContent = data.overview.totalErrors;
+}
+
+function renderTelemetryPage(page = 1) {
+  currentTelemetryPage = page;
+  const reqContainer = document.getElementById('telemetry-requests-table-body');
+  const startIdxEl = document.getElementById('page-start-idx');
+  const endIdxEl = document.getElementById('page-end-idx');
+  const totalCountEl = document.getElementById('page-total-count');
+  const btnContainer = document.getElementById('telemetry-pagination-buttons');
+
+  if (!reqContainer) return;
+
+  const totalItems = currentTelemetryRequests.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / telemetryPageSize));
+
+  if (currentTelemetryPage > totalPages) currentTelemetryPage = totalPages;
+  if (currentTelemetryPage < 1) currentTelemetryPage = 1;
+
+  if (totalItems === 0) {
+    reqContainer.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-xs text-[#8C5137] dark:text-slate-400 font-mono">No matching requests recorded in this scope.</td></tr>`;
+    if (startIdxEl) startIdxEl.textContent = '0';
+    if (endIdxEl) endIdxEl.textContent = '0';
+    if (totalCountEl) totalCountEl.textContent = '0';
+    if (btnContainer) btnContainer.innerHTML = '';
+    return;
+  }
+
+  const startIdx = (currentTelemetryPage - 1) * telemetryPageSize;
+  const endIdx = Math.min(startIdx + telemetryPageSize, totalItems);
+  const pageItems = currentTelemetryRequests.slice(startIdx, endIdx);
+
+  reqContainer.innerHTML = pageItems.map(r => {
+    let statusBadge = 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
+    if (r.status >= 300 && r.status < 400) statusBadge = 'bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/20';
+    else if (r.status >= 400 && r.status < 500) statusBadge = 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20';
+    else if (r.status >= 500) statusBadge = 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/20';
+
+    return `
+      <tr class="border-b border-[#E1E2E4] dark:border-[#262A36] hover:bg-[#F8F9FA] dark:hover:bg-[#151922] transition-colors font-mono text-xs">
+        <td class="py-2.5 px-3 text-[#8C5137] dark:text-slate-400">${new Date(r.time).toLocaleTimeString()}</td>
+        <td class="py-2.5 px-3">
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${r.method === 'GET' ? 'bg-sky-500/15 text-sky-600 dark:text-sky-400 border border-sky-500/20' : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20'}">${r.method}</span>
+        </td>
+        <td class="py-2.5 px-3 text-[#4A2B1D] dark:text-slate-200 truncate max-w-[280px]">${r.path}</td>
+        <td class="py-2.5 px-3">
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${statusBadge}">${r.status}</span>
+        </td>
+        <td class="py-2.5 px-3 text-right text-[#8C5137] dark:text-[#D48D66] font-bold">${r.durationMs} ms</td>
+      </tr>
+    `;
+  }).join('');
+
+  if (startIdxEl) startIdxEl.textContent = (startIdx + 1).toString();
+  if (endIdxEl) endIdxEl.textContent = endIdx.toString();
+  if (totalCountEl) totalCountEl.textContent = totalItems.toString();
+
+  // Render pagination buttons
+  if (btnContainer) {
+    let html = `
+      <button type="button" class="telemetry-page-btn px-2.5 py-1 rounded-lg border border-[#E1E2E4] dark:border-[#262A36] bg-white dark:bg-[#13161D] text-[#4A2B1D] dark:text-white hover:bg-[#8C5137]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors" data-page="${currentTelemetryPage - 1}" ${currentTelemetryPage <= 1 ? 'disabled' : ''} title="Previous Page">
+        <i class="fa-solid fa-chevron-left text-[10px]"></i>
+      </button>
+    `;
+
+    let startPage = Math.max(1, currentTelemetryPage - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+    if (endPage - startPage < 4) {
+      startPage = Math.max(1, endPage - 4);
+    }
+
+    if (startPage > 1) {
+      html += `<button type="button" class="telemetry-page-btn px-2.5 py-1 rounded-lg border border-[#E1E2E4] dark:border-[#262A36] bg-white dark:bg-[#13161D] text-[#4A2B1D] dark:text-white hover:bg-[#8C5137]/10 transition-colors" data-page="1">1</button>`;
+      if (startPage > 2) html += `<span class="px-1 text-slate-400">...</span>`;
+    }
+
+    for (let p = startPage; p <= endPage; p++) {
+      const isActive = p === currentTelemetryPage;
+      html += `
+        <button type="button" class="telemetry-page-btn px-2.5 py-1 rounded-lg border text-xs font-bold transition-all ${isActive ? 'bg-[#8C5137] text-white border-[#8C5137] shadow-xs' : 'border-[#E1E2E4] dark:border-[#262A36] bg-white dark:bg-[#13161D] text-[#4A2B1D] dark:text-white hover:bg-[#8C5137]/10'}" data-page="${p}">
+          ${p}
+        </button>
+      `;
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) html += `<span class="px-1 text-slate-400">...</span>`;
+      html += `<button type="button" class="telemetry-page-btn px-2.5 py-1 rounded-lg border border-[#E1E2E4] dark:border-[#262A36] bg-white dark:bg-[#13161D] text-[#4A2B1D] dark:text-white hover:bg-[#8C5137]/10 transition-colors" data-page="${totalPages}">${totalPages}</button>`;
+    }
+
+    html += `
+      <button type="button" class="telemetry-page-btn px-2.5 py-1 rounded-lg border border-[#E1E2E4] dark:border-[#262A36] bg-white dark:bg-[#13161D] text-[#4A2B1D] dark:text-white hover:bg-[#8C5137]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors" data-page="${currentTelemetryPage + 1}" ${currentTelemetryPage >= totalPages ? 'disabled' : ''} title="Next Page">
+        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+      </button>
+    `;
+
+    btnContainer.innerHTML = html;
+
+    // Attach click events
+    btnContainer.querySelectorAll('.telemetry-page-btn:not([disabled])').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetPage = parseInt(btn.getAttribute('data-page'), 10);
+        if (targetPage && targetPage !== currentTelemetryPage) {
+          renderTelemetryPage(targetPage);
+        }
+      });
+    });
+  }
 }
 
 function updateTelemetryCharts(data) {

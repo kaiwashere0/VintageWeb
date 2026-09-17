@@ -195,6 +195,29 @@
             </table>
           </div>
 
+          <!-- Table Pagination Footer -->
+          <div id="telemetry-pagination" class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-[#E1E2E4] dark:border-[#262A36]">
+            <div class="flex items-center gap-2">
+              <span id="telemetry-pagination-info" class="text-xs font-mono text-[#8C5137] dark:text-slate-400">
+                Showing <strong id="page-start-idx" class="text-[#4A2B1D] dark:text-white">1</strong> to <strong id="page-end-idx" class="text-[#4A2B1D] dark:text-white">10</strong> of <strong id="page-total-count" class="text-[#4A2B1D] dark:text-white"><%= (telemetry.requests || []).length %></strong> requests
+              </span>
+              <span class="text-xs text-[#E1E2E4] dark:text-[#262A36]">|</span>
+              <div class="flex items-center gap-1.5 text-xs text-[#8C5137] dark:text-slate-400 font-mono">
+                <span>Per page:</span>
+                <select id="telemetry-page-size" class="px-2 py-1 rounded-lg bg-[#F8F9FA] dark:bg-[#13161D] border border-[#E1E2E4] dark:border-[#262A36] text-xs font-mono text-[#4A2B1D] dark:text-white cursor-pointer focus:outline-none focus:border-[#8C5137]">
+                  <option value="10" selected>10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Page Buttons Container -->
+            <div id="telemetry-pagination-buttons" class="flex items-center gap-1 self-end sm:self-auto font-mono text-xs">
+              <!-- Rendered via JavaScript -->
+            </div>
+          </div>
+
         </div>
 
         <!-- RIGHT: LIVE MEMORY & CPU TIMELINE (4 Cols) -->
