@@ -17,7 +17,22 @@ const settingsSchema = new mongoose.Schema({
     totalKilometers: { type: String, default: '1,240,500+' },
     foundedDate: { type: String, default: 'October 2024' }
   },
-  systemNotice: { type: String, default: 'Vintage Club 2026 Season Driver Recruitment is Active.' }
+  systemNotice: { type: String, default: 'Vintage Club 2026 Season Driver Recruitment is Active.' },
+  discordBot: {
+    statusType: { type: String, default: 'STREAMING' }, // STREAMING, PLAYING, WATCHING, LISTENING, COMPETING
+    streamingUrl: { type: String, default: 'https://twitch.tv/vintageclub' },
+    statusMode: { type: String, default: 'ROTATING' }, // STATIC or ROTATING
+    statuses: {
+      type: [String],
+      default: [
+        '👑 Vintage Club | 2026',
+        '🚛 Nobility on the Roads',
+        '✨ vintageclub.com'
+      ]
+    },
+    rotationIntervalSeconds: { type: Number, default: 15 },
+    onlineStatus: { type: String, default: 'online' } // online, idle, dnd, invisible
+  }
 }, {
   timestamps: true,
   collection: 'settings'

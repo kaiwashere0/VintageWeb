@@ -37,7 +37,19 @@ export class DatabaseService {
             totalKilometers: "1,240,500+",
             foundedDate: "October 2024"
           },
-          systemNotice: "Vintage Club 2026 Season Driver Recruitment is Active."
+          systemNotice: "Vintage Club 2026 Season Driver Recruitment is Active.",
+          discordBot: {
+            statusType: "STREAMING",
+            streamingUrl: "https://twitch.tv/vintageclub",
+            statusMode: "ROTATING",
+            statuses: [
+              "👑 Vintage Club | 2026",
+              "🚛 Nobility on the Roads",
+              "✨ vintageclub.com"
+            ],
+            rotationIntervalSeconds: 15,
+            onlineStatus: "online"
+          }
         });
         console.log('\x1b[32m✔\x1b[0m \x1b[1m[MongoDB]\x1b[0m Varsayılan VTC ayarları hazırlandı.');
       }
@@ -68,7 +80,19 @@ export class DatabaseService {
         youtubeUrl: "https://www.youtube.com/@VntgClub",
         instagramUrl: "https://www.instagram.com/vintageclubofficiall?stkn=MXNmcnY5cDYweTJ6cQ%3D%3D&utm_source=qr",
         stats: { totalMembers: 48, totalConvoys: 135, totalKilometers: "1,240,500+", foundedDate: "October 2024" },
-        systemNotice: "Vintage Club 2026 Season Driver Recruitment is Active."
+        systemNotice: "Vintage Club 2026 Season Driver Recruitment is Active.",
+        discordBot: {
+          statusType: "STREAMING",
+          streamingUrl: "https://twitch.tv/vintageclub",
+          statusMode: "ROTATING",
+          statuses: [
+            "👑 Vintage Club | 2026",
+            "🚛 Nobility on the Roads",
+            "✨ vintageclub.com"
+          ],
+          rotationIntervalSeconds: 15,
+          onlineStatus: "online"
+        }
       };
     }
   }
@@ -82,6 +106,32 @@ export class DatabaseService {
     }
     await doc.save();
     return doc.toObject();
+  }
+
+  static async getBotSettings() {
+    const settings = await this.getSettings();
+    return settings.discordBot || {
+      statusType: 'STREAMING',
+      streamingUrl: 'https://twitch.tv/vintageclub',
+      statusMode: 'ROTATING',
+      statuses: ['👑 Vintage Club | 2026', '🚛 Nobility on the Roads', '✨ vintageclub.com'],
+      rotationIntervalSeconds: 15,
+      onlineStatus: 'online'
+    };
+  }
+
+  static async updateBotSettings(botUpdates) {
+    let doc = await Settings.findOne();
+    if (!doc) {
+      doc = new Settings({ discordBot: botUpdates });
+    } else {
+      doc.discordBot = {
+        ...(doc.discordBot?.toObject ? doc.discordBot.toObject() : doc.discordBot),
+        ...botUpdates
+      };
+    }
+    await doc.save();
+    return doc.toObject().discordBot;
   }
 
   static async setSiteMode(mode) {

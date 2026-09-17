@@ -125,9 +125,87 @@ export function createDeveloperRouter() {
     }
   });
 
+  // 5. Discord Bot Controller & Presence Manager
+  router.get('/discord-bot', async (req, res) => {
+    try {
+      const DiscordBotService = (await import('../discord-bot/index.js')).default;
+      const microservices = await TelemetryService.getMicroservicesStatus();
+      const botSettings = await DatabaseService.getBotSettings();
+
+      res.render('developer/discord-bot', {
+        title: 'Discord Bot Controller — Developer Portal',
+        currentPath: '/developer/discord-bot',
+        user: req.session.user,
+        botSettings,
+        botService: microservices.discordBot,
+        isClientConnected: Boolean(DiscordBotService?.client?.user)
+      });
+    } catch (err) {
+      res.status(500).send('Discord Bot Controller Error: ' + err.message);
+    }
+  });
+
   // ==========================================
   // Developer REST API Endpoints (AJAX & Charts)
   // ==========================================
+
+  // Discord Bot Presence API (Get & Live Update)
+  router.get('/api/bot/presence', async (req, res) => {
+    try {
+      const botSettings = await DatabaseService.getBotSettings();
+      res.json({ success: true, botSettings });
+    } catch (err) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
+  router.post('/api/bot/presence', async (req, res) => {
+    try {
+      const {
+        statusType = 'STREAMING',
+        streamingUrl = 'https://twitch.tv/vintageclub',
+        statusMode = 'ROTATING',
+        statuses = [],
+        rotationIntervalSeconds = 15,
+        onlineStatus = 'online'
+      } = req.body;
+
+      // Ensure statuses is an array of clean non-empty strings
+      let cleanStatuses = [];
+      if (Array.isArray(statuses)) {
+        cleanStatuses = statuses.map(s => String(s).trim()).filter(Boolean);
+      } else if (typeof statuses === 'string') {
+        cleanStatuses = statuses.split('\n').map(s => s.trim()).filter(Boolean);
+      }
+
+      if (cleanStatuses.length === 0) {
+        cleanStatuses = ['👑 Vintage Club | 2026', '🚛 Nobility on the Roads'];
+      }
+
+      const botPayload = {
+        statusType: String(statusType).toUpperCase(),
+        streamingUrl: String(streamingUrl).trim(),
+        statusMode: String(statusMode).toUpperCase() === 'STATIC' ? 'STATIC' : 'ROTATING',
+        statuses: cleanStatuses,
+        rotationIntervalSeconds: Math.max(5, parseInt(rotationIntervalSeconds, 10) || 15),
+        onlineStatus: ['online', 'idle', 'dnd', 'invisible'].includes(onlineStatus) ? onlineStatus : 'online'
+      };
+
+      const updated = await DatabaseService.updateBotSettings(botPayload);
+
+      // Trigger hot presence reload on live Discord bot instance
+      const DiscordBotService = (await import('../discord-bot/index.js')).default;
+      await DiscordBotService.reloadPresence();
+
+      res.json({
+        success: true,
+        message: 'Discord Bot presence settings updated and live stream broadcasted successfully!',
+        botSettings: updated
+      });
+    } catch (err) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
 
   // Live Telemetry Data API (with multi-dimensional filtering & sorting)
   router.get('/api/telemetry/data', (req, res) => {

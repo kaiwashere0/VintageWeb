@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTelemetryCharts();
   initTelemetryFilters();
   initTruckersMPSandbox();
+  initDiscordBotController();
 });
 
 /* ========================================================
@@ -401,6 +402,363 @@ function initTruckersMPSandbox() {
     endpointSelect.addEventListener('change', handleEndpointChange);
     handleEndpointChange();
   }
+}
+
+/* ========================================================
+   6. Discord Bot Presence & Live Simulator Controller
+   ======================================================== */
+function initDiscordBotController() {
+  const form = document.getElementById('bot-presence-form');
+  if (!form) return;
+
+  const statusTypeSelect = document.getElementById('bot-status-type');
+  const onlineStatusSelect = document.getElementById('bot-online-status');
+  const streamingUrlInput = document.getElementById('bot-streaming-url');
+  const streamingUrlContainer = document.getElementById('streaming-url-container');
+  const intervalSlider = document.getElementById('bot-rotation-interval');
+  const intervalValText = document.getElementById('interval-val-text');
+  const statIntervalDisplay = document.getElementById('stat-interval-display');
+  const statPresenceMode = document.getElementById('stat-presence-mode');
+  const statusContainer = document.getElementById('status-items-container');
+  const addStatusBtn = document.getElementById('add-status-item-btn');
+  const saveTopBtn = document.getElementById('save-bot-settings-top-btn');
+  const feedbackEl = document.getElementById('form-status-feedback');
+
+  // Preview elements
+  const previewStatusText = document.getElementById('preview-status-text');
+  const previewStatusIndicator = document.getElementById('preview-status-indicator');
+  const previewActivityTypeLabel = document.getElementById('preview-activity-type-label');
+  const previewActivityIcon = document.getElementById('preview-activity-icon');
+  const previewActivityIconBox = document.getElementById('preview-activity-icon-box');
+  const previewStreamTag = document.getElementById('preview-stream-tag');
+  const previewStreamLink = document.getElementById('preview-stream-link');
+  const previewTickerLabel = document.getElementById('preview-ticker-label');
+  const previewNextBtn = document.getElementById('preview-next-btn');
+
+  let previewIndex = 0;
+  let previewTimer = null;
+
+  // 1. Get current status texts list from DOM inputs
+  const getStatusInputs = () => {
+    const inputs = statusContainer.querySelectorAll('.status-input');
+    return Array.from(inputs).map(i => i.value.trim()).filter(Boolean);
+  };
+
+  // 2. Re-index row numbers
+  const reindexRows = () => {
+    const rows = statusContainer.querySelectorAll('.status-row');
+    rows.forEach((row, idx) => {
+      const indexEl = row.querySelector('.row-index');
+      if (indexEl) indexEl.textContent = `#${idx + 1}`;
+    });
+  };
+
+  // 3. Update Preview UI based on form values
+  const updatePreview = () => {
+    const type = statusTypeSelect ? statusTypeSelect.value : 'STREAMING';
+    const online = onlineStatusSelect ? onlineStatusSelect.value : 'online';
+    const streamUrl = streamingUrlInput ? streamingUrlInput.value.trim() : 'https://twitch.tv/vintageclub';
+    const modeRadio = form.querySelector('input[name="statusMode"]:checked');
+    const mode = modeRadio ? modeRadio.value : 'ROTATING';
+    const intervalSec = intervalSlider ? parseInt(intervalSlider.value, 10) : 15;
+    const statuses = getStatusInputs();
+
+    // Stream URL container visibility
+    if (streamingUrlContainer) {
+      if (type === 'STREAMING') {
+        streamingUrlContainer.classList.remove('opacity-60');
+      } else {
+        streamingUrlContainer.classList.add('opacity-60');
+      }
+    }
+
+    // Interval display text
+    if (intervalValText) intervalValText.textContent = intervalSec;
+    if (statIntervalDisplay) statIntervalDisplay.textContent = intervalSec;
+    if (statPresenceMode) statPresenceMode.textContent = `${type} (${mode})`;
+
+    // Sync timeline preset buttons active state
+    form.querySelectorAll('.timeline-step-btn').forEach(btn => {
+      const sec = parseInt(btn.getAttribute('data-seconds'), 10);
+      if (sec === intervalSec) {
+        btn.classList.add('is-active');
+      } else {
+        btn.classList.remove('is-active');
+      }
+    });
+
+    // Online indicator color
+    if (previewStatusIndicator) {
+      if (type === 'STREAMING') {
+        previewStatusIndicator.className = 'absolute bottom-1 right-1 w-6 h-6 rounded-full border-4 border-[#2B2D31] bg-[#593695] flex items-center justify-center text-[10px] text-white';
+        previewStatusIndicator.innerHTML = '<i class="fa-solid fa-tower-broadcast text-[8px]"></i>';
+      } else if (online === 'online') {
+        previewStatusIndicator.className = 'absolute bottom-1 right-1 w-6 h-6 rounded-full border-4 border-[#2B2D31] bg-emerald-500';
+        previewStatusIndicator.innerHTML = '';
+      } else if (online === 'idle') {
+        previewStatusIndicator.className = 'absolute bottom-1 right-1 w-6 h-6 rounded-full border-4 border-[#2B2D31] bg-amber-500';
+        previewStatusIndicator.innerHTML = '';
+      } else if (online === 'dnd') {
+        previewStatusIndicator.className = 'absolute bottom-1 right-1 w-6 h-6 rounded-full border-4 border-[#2B2D31] bg-rose-500';
+        previewStatusIndicator.innerHTML = '';
+      } else {
+        previewStatusIndicator.className = 'absolute bottom-1 right-1 w-6 h-6 rounded-full border-4 border-[#2B2D31] bg-slate-500';
+        previewStatusIndicator.innerHTML = '';
+      }
+    }
+
+    // Activity type UI
+    if (previewActivityTypeLabel) {
+      const typeLabels = {
+        STREAMING: 'Streaming',
+        PLAYING: 'Playing',
+        LISTENING: 'Listening to',
+        WATCHING: 'Watching',
+        COMPETING: 'Competing in'
+      };
+      previewActivityTypeLabel.textContent = typeLabels[type] || 'Streaming';
+    }
+
+    if (previewActivityIcon && previewActivityIconBox) {
+      const icons = {
+        STREAMING: { icon: 'fa-tower-broadcast', bg: 'bg-[#593695]' },
+        PLAYING: { icon: 'fa-gamepad', bg: 'bg-[#5865F2]' },
+        LISTENING: { icon: 'fa-headphones', bg: 'bg-emerald-600' },
+        WATCHING: { icon: 'fa-tv', bg: 'bg-sky-600' },
+        COMPETING: { icon: 'fa-trophy', bg: 'bg-amber-600' }
+      };
+      const conf = icons[type] || icons.STREAMING;
+      previewActivityIcon.className = `fa-solid ${conf.icon}`;
+      previewActivityIconBox.className = `w-9 h-9 rounded-lg ${conf.bg} text-white flex items-center justify-center flex-shrink-0 text-sm shadow-md`;
+    }
+
+    if (previewStreamTag && previewStreamLink) {
+      if (type === 'STREAMING') {
+        previewStreamTag.style.display = 'inline';
+        previewStreamTag.textContent = streamUrl.includes('youtube') ? 'on YouTube' : 'on Twitch';
+        previewStreamLink.style.display = 'block';
+        previewStreamLink.textContent = streamUrl;
+      } else {
+        previewStreamTag.style.display = 'none';
+        previewStreamLink.style.display = 'none';
+      }
+    }
+
+    // Render active status text in preview
+    if (statuses.length > 0) {
+      const safeIndex = previewIndex % statuses.length;
+      if (previewStatusText) {
+        previewStatusText.textContent = statuses[safeIndex];
+      }
+      if (previewTickerLabel) {
+        previewTickerLabel.textContent = `${mode === 'ROTATING' ? 'Cycling' : 'Fixed'} (${safeIndex + 1} of ${statuses.length})`;
+      }
+    } else {
+      if (previewStatusText) previewStatusText.textContent = '👑 Vintage Club';
+      if (previewTickerLabel) previewTickerLabel.textContent = 'No messages';
+    }
+  };
+
+  // 4. Start Live Simulation Rotator in Frontend Widget
+  const startPreviewTicker = () => {
+    if (previewTimer) clearInterval(previewTimer);
+
+    const modeRadio = form.querySelector('input[name="statusMode"]:checked');
+    const isRotating = !modeRadio || modeRadio.value === 'ROTATING';
+    const intervalSec = intervalSlider ? Math.max(3, parseInt(intervalSlider.value, 10)) : 15;
+
+    if (isRotating) {
+      previewTimer = setInterval(() => {
+        const statuses = getStatusInputs();
+        if (statuses.length > 1) {
+          previewIndex = (previewIndex + 1) % statuses.length;
+          if (previewStatusText) {
+            previewStatusText.style.opacity = '0';
+            setTimeout(() => {
+              updatePreview();
+              previewStatusText.style.opacity = '1';
+            }, 150);
+          } else {
+            updatePreview();
+          }
+        }
+      }, intervalSec * 1000);
+    }
+  };
+
+  // 5. Add new status row
+  if (addStatusBtn) {
+    addStatusBtn.addEventListener('click', () => {
+      const currentCount = statusContainer.querySelectorAll('.status-row').length;
+      const newRow = document.createElement('div');
+      newRow.className = 'status-row flex items-center gap-2 p-2.5 rounded-xl bg-[#151922] border border-[#1E232E] group animate-fadeIn';
+      newRow.innerHTML = `
+        <span class="row-index text-[11px] font-mono font-bold text-slate-500 w-6 text-center">#${currentCount + 1}</span>
+        <input type="text" name="statusItem" placeholder="e.g. 🚛 Nobility on the Roads" class="status-input flex-1 px-3 py-1.5 rounded-lg bg-[#0F1219] border border-[#1E232E] text-white text-xs font-sans focus:outline-none focus:border-[#8C5137] transition-colors" required />
+        <button type="button" class="remove-status-btn w-8 h-8 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 flex items-center justify-center transition-colors cursor-pointer" title="Remove Message">
+          <i class="fa-solid fa-trash text-xs"></i>
+        </button>
+      `;
+
+      statusContainer.appendChild(newRow);
+      reindexRows();
+      updatePreview();
+      startPreviewTicker();
+
+      const input = newRow.querySelector('.status-input');
+      if (input) {
+        input.focus();
+        input.addEventListener('input', () => {
+          updatePreview();
+        });
+      }
+    });
+  }
+
+  // 6. Handle remove status row delegation
+  if (statusContainer) {
+    statusContainer.addEventListener('click', (e) => {
+      const removeBtn = e.target.closest('.remove-status-btn');
+      if (removeBtn) {
+        const row = removeBtn.closest('.status-row');
+        if (statusContainer.querySelectorAll('.status-row').length <= 1) {
+          showDevToast('At least one status message is required.', 'error');
+          return;
+        }
+        if (row) {
+          row.remove();
+          reindexRows();
+          updatePreview();
+          startPreviewTicker();
+        }
+      }
+    });
+
+    // Handle input change on existing status inputs
+    statusContainer.querySelectorAll('.status-input').forEach(input => {
+      input.addEventListener('input', () => {
+        updatePreview();
+      });
+    });
+  }
+
+  // 7. Next preview button
+  if (previewNextBtn) {
+    previewNextBtn.addEventListener('click', () => {
+      const statuses = getStatusInputs();
+      if (statuses.length > 0) {
+        previewIndex = (previewIndex + 1) % statuses.length;
+        updatePreview();
+      }
+    });
+  }
+
+  // 8. Event listeners for form inputs
+  if (statusTypeSelect) statusTypeSelect.addEventListener('change', updatePreview);
+  if (onlineStatusSelect) onlineStatusSelect.addEventListener('change', updatePreview);
+  if (streamingUrlInput) streamingUrlInput.addEventListener('input', updatePreview);
+  if (intervalSlider) {
+    intervalSlider.addEventListener('input', () => {
+      updatePreview();
+      startPreviewTicker();
+    });
+  }
+
+  // Timeline preset button clicks
+  form.querySelectorAll('.timeline-step-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sec = parseInt(btn.getAttribute('data-seconds'), 10);
+      if (intervalSlider && sec) {
+        intervalSlider.value = sec;
+        updatePreview();
+        startPreviewTicker();
+      }
+    });
+  });
+
+  form.querySelectorAll('input[name="statusMode"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      updatePreview();
+      startPreviewTicker();
+    });
+  });
+
+  // 9. Save Top Button Trigger
+  if (saveTopBtn) {
+    saveTopBtn.addEventListener('click', () => {
+      form.requestSubmit();
+    });
+  }
+
+  // 10. AJAX Submit Form Handler
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const submitBtn = document.getElementById('save-bot-form-btn');
+    const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Broadcasting to Discord...';
+    }
+    if (feedbackEl) feedbackEl.textContent = 'Broadcasting updates to Discord Gateway...';
+
+    const statusType = statusTypeSelect ? statusTypeSelect.value : 'STREAMING';
+    const streamingUrl = streamingUrlInput ? streamingUrlInput.value.trim() : 'https://twitch.tv/vintageclub';
+    const onlineStatus = onlineStatusSelect ? onlineStatusSelect.value : 'online';
+    const modeRadio = form.querySelector('input[name="statusMode"]:checked');
+    const statusMode = modeRadio ? modeRadio.value : 'ROTATING';
+    const rotationIntervalSeconds = intervalSlider ? parseInt(intervalSlider.value, 10) : 15;
+    const statuses = getStatusInputs();
+
+    if (statuses.length === 0) {
+      showDevToast('Please enter at least one status message.', 'error');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+      }
+      return;
+    }
+
+    try {
+      const res = await fetch('/developer/api/bot/presence', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          statusType,
+          streamingUrl,
+          onlineStatus,
+          statusMode,
+          rotationIntervalSeconds,
+          statuses
+        })
+      });
+
+      const json = await res.json();
+
+      if (json.success) {
+        showDevToast('Discord Bot presence updated & live broadcast active!', 'success');
+        if (feedbackEl) feedbackEl.textContent = `Last saved at ${new Date().toLocaleTimeString()}`;
+        updatePreview();
+        startPreviewTicker();
+      } else {
+        showDevToast(json.error || 'Failed to update presence', 'error');
+        if (feedbackEl) feedbackEl.textContent = 'Save failed: ' + (json.error || 'Unknown error');
+      }
+    } catch (err) {
+      showDevToast('Network error: ' + err.message, 'error');
+      if (feedbackEl) feedbackEl.textContent = 'Network error occurred.';
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+      }
+    }
+  });
+
+  // Initial Run
+  updatePreview();
+  startPreviewTicker();
 }
 
 /* ========================================================

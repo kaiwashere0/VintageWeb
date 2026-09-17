@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#08090C] text-slate-100">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : "Discord Bot Controller — Vintage Club" %></title>
+  <link rel="stylesheet" href="/output.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/Wintage_Club_Logo_2050.png">
+</head>
+
+<body class="min-h-full flex bg-[#08090C] text-slate-100 antialiased selection:bg-[#8C5137] selection:text-white font-sans">
+
+  <!-- DEVELOPER SIDEBAR -->
+  <%- include('partials/sidebar', { currentPath: '/developer/discord-bot' }) %>
+
+  <!-- MAIN DEVELOPER WORKSPACE -->
+  <div class="flex-1 flex flex-col min-w-0 lg:pl-64">
+    
+    <!-- TOP HEADER -->
+    <%- include('partials/header', { 
+      pageTitle: "Discord Bot Controller", 
+      pageSubtitle: 'Manage live streaming presence, multi-status rotation & bot activity from database' 
+    }) %>
+
+    <main class="p-4 sm:p-6 lg:p-8 space-y-6 flex-1 max-w-7xl w-full mx-auto">
+
+      <!-- 1. TOP METRICS STRIP -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Gateway Status -->
+        <div class="p-4 rounded-2xl bg-[#0F1219] border border-[#1E232E] flex items-center justify-between shadow-sm">
+          <div class="space-y-1">
+            <span class="text-[10px] font-mono uppercase text-slate-400 font-bold tracking-wider">Gateway Status</span>
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full <%= isClientConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400' %>"></span>
+              <span class="text-xs sm:text-sm font-bold text-white font-sans">
+                <%= isClientConnected ? 'Live & Connected' : 'Standby / Waiting' %>
+              </span>
+            </div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm flex-shrink-0">
+            <i class="fa-brands fa-discord"></i>
+          </div>
+        </div>
+
+        <!-- Bot Identity -->
+        <div class="p-4 rounded-2xl bg-[#0F1219] border border-[#1E232E] flex items-center justify-between shadow-sm">
+          <div class="space-y-1 min-w-0">
+            <span class="text-[10px] font-mono uppercase text-slate-400 font-bold tracking-wider">Bot Account</span>
+            <div class="text-xs sm:text-sm font-bold text-white font-sans truncate">
+              <%= botService.tag || 'Vintage Club#5492' %>
+            </div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-sm flex-shrink-0">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+        </div>
+
+        <!-- Active Presence Mode -->
+        <div class="p-4 rounded-2xl bg-[#0F1219] border border-[#1E232E] flex items-center justify-between shadow-sm">
+          <div class="space-y-1">
+            <span class="text-[10px] font-mono uppercase text-slate-400 font-bold tracking-wider">Presence Mode</span>
+            <div class="text-xs sm:text-sm font-bold text-purple-400 font-mono flex items-center gap-1.5">
+              <i class="fa-solid fa-tower-broadcast text-xs"></i>
+              <span id="stat-presence-mode"><%= botSettings.statusType %> (<%= botSettings.statusMode %>)</span>
+            </div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-[#8C5137]/20 border border-[#8C5137]/40 text-[#D48D66] flex items-center justify-center text-sm flex-shrink-0">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+        </div>
+
+        <!-- Rotation Speed -->
+        <div class="p-4 rounded-2xl bg-[#0F1219] border border-[#1E232E] flex items-center justify-between shadow-sm">
+          <div class="space-y-1">
+            <span class="text-[10px] font-mono uppercase text-slate-400 font-bold tracking-wider">Interval Timer</span>
+            <div class="text-xs sm:text-sm font-bold text-emerald-400 font-mono">
+              <span id="stat-interval-display"><%= botSettings.rotationIntervalSeconds || 15 %></span>s / switch
+            </div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm flex-shrink-0">
+            <i class="fa-solid fa-arrows-spin"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 2. MAIN TWO-COLUMN WORKSPACE -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+
+        <!-- LEFT COLUMN: LIVE DISCORD SIMULATOR & TIPS (5 COLS) -->
+        <div class="xl:col-span-5 space-y-6">
+          
+          <!-- Discord Live Mockup Card -->
+          <div class="p-5 sm:p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E] space-y-4 shadow-md">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-[#1E232E]">
+              <div>
+                <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-[#D48D66]">Live Simulation</span>
+                <h3 class="text-sm sm:text-base font-bold text-white font-sans mt-0.5">Discord Profile Preview</h3>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                LIVE WIDGET
+              </span>
+            </div>
+
+            <!-- DISCORD PROFILE CARD MOCKUP -->
+            <div class="rounded-2xl bg-[#232428] border border-[#1E1F22] overflow-hidden shadow-2xl font-sans text-white">
+              
+              <!-- Banner -->
+              <div class="h-16 bg-gradient-to-r from-[#593695] via-[#7B2CBF] to-[#8C5137] relative">
+                <div class="absolute inset-0 bg-black/20"></div>
+              </div>
+
+              <!-- Avatar & Content -->
+              <div class="px-4 pb-4 relative">
+                
+                <!-- Avatar with status badge -->
+                <div class="relative -mt-8 mb-2.5 inline-block">
+                  <div class="w-16 h-16 rounded-full border-4 border-[#232428] bg-[#111214] overflow-hidden flex items-center justify-center shadow-lg">
+                    <img id="preview-avatar" src="/Wintage_Club_Logo_2050.png" alt="Vintage Club Bot" class="w-full h-full object-cover" />
+                  </div>
+                  <!-- Status Circle -->
+                  <div id="preview-status-indicator" class="absolute bottom-0 right-0 w-5 h-5 rounded-full border-2 border-[#232428] bg-[#593695] flex items-center justify-center text-[8px] text-white" title="Streaming">
+                    <i class="fa-solid fa-tower-broadcast"></i>
+                  </div>
+                </div>
+
+                <!-- Bot Name & Badges -->
+                <div class="space-y-0.5">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-sm font-bold text-white font-sans">Vintage Club</span>
+                    <span class="px-1.5 py-0.2 rounded bg-[#5865F2] text-white text-[9px] font-bold uppercase tracking-wider">
+                      BOT
+                    </span>
+                  </div>
+                  <p class="text-[11px] text-slate-400 font-mono">vintageclub#5492</p>
+                </div>
+
+                <!-- Divider -->
+                <div class="border-t border-[#313338] my-3"></div>
+
+                <!-- ACTIVITY BOX (Streaming Simulation) -->
+                <div class="space-y-1.5">
+                  <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">ACTIVITY</div>
+                  
+                  <div class="p-3 rounded-xl bg-[#111214] border border-[#313338] flex items-start gap-3">
+                    
+                    <!-- Activity Icon -->
+                    <div id="preview-activity-icon-box" class="w-8 h-8 rounded-lg bg-[#593695] text-white flex items-center justify-center flex-shrink-0 text-xs shadow-md">
+                      <i id="preview-activity-icon" class="fa-solid fa-tower-broadcast"></i>
+                    </div>
+
+                    <!-- Activity Details -->
+                    <div class="min-w-0 flex-1 space-y-0.5">
+                      <div id="preview-activity-title" class="text-xs font-bold text-white font-sans flex items-center gap-1.5">
+                        <span id="preview-activity-type-label">Streaming</span>
+                        <span class="text-[10px] font-mono text-purple-300 font-normal" id="preview-stream-tag">on Twitch</span>
+                      </div>
+                      
+                      <!-- Animated rotating text preview -->
+                      <div id="preview-status-text" class="text-xs text-purple-200 font-semibold truncate transition-all duration-300 font-sans">
+                        <%= (botSettings.statuses && botSettings.statuses[0]) || '👑 Vintage Club | 2026' %>
+                      </div>
+
+                      <div id="preview-stream-link" class="text-[10px] text-slate-400 font-mono truncate">
+                        <%= botSettings.streamingUrl || 'https://twitch.tv/vintageclub' %>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <!-- Interactive simulator ticker -->
+                <div class="mt-3 p-2 rounded-lg bg-[#1E1F22] font-mono text-[10px] text-slate-400 flex items-center justify-between border border-[#313338]">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="preview-ticker-label">Cycling (1 of <%= (botSettings.statuses || []).length %>)</span>
+                  </div>
+                  <button id="preview-next-btn" type="button" class="text-[10px] text-[#D48D66] hover:text-white transition-colors cursor-pointer font-bold" title="Preview Next Status in List">
+                    <i class="fa-solid fa-forward-step"></i> Next
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Information Callout -->
+            <div class="p-3.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-300 space-y-1">
+              <div class="font-bold flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-info"></i> Streaming Mode (Yayın Yapıyor)
+              </div>
+              <p class="text-[11px] text-indigo-200/80 leading-relaxed">
+                Discord'da mor yayıncı rozeti için geçerli bir <strong>Twitch</strong> veya <strong>YouTube</strong> URL'si gereklidir.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: CONFIGURATION FORM (7 COLS) -->
+        <div class="xl:col-span-7 space-y-6">
+          
+          <form id="bot-presence-form" class="space-y-6">
+
+            <!-- Card 1: Core Activity & Status Type -->
+            <div class="p-5 sm:p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E] space-y-4 shadow-md">
+              
+              <div class="flex items-center justify-between pb-3 border-b border-[#1E232E]">
+                <div>
+                  <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-[#D48D66]">Presence Setup</span>
+                  <h3 class="text-sm sm:text-base font-bold text-white font-sans mt-0.5">Aktivite & Çevrimiçi Modu</h3>
+                </div>
+                <span class="text-xs font-mono text-slate-400">Step 1</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                <!-- Activity Type Selection -->
+                <div class="space-y-1.5">
+                  <label class="block text-xs font-bold text-slate-300 font-sans">
+                    Aktivite Türü (Activity Type) <span class="text-rose-400">*</span>
+                  </label>
+                  <select id="bot-status-type" name="statusType" class="w-full px-3.5 py-2.5 rounded-xl bg-[#151922] border border-[#1E232E] text-white text-xs font-sans focus:outline-none focus:border-[#8C5137] transition-colors cursor-pointer">
+                    <option value="STREAMING" <%= botSettings.statusType === 'STREAMING' ? 'selected' : '' %>>🟣 STREAMING (Yayın Yapıyor)</option>
+                    <option value="PLAYING" <%= botSettings.statusType === 'PLAYING' ? 'selected' : '' %>>🎮 PLAYING (Oynuyor)</option>
+                    <option value="LISTENING" <%= botSettings.statusType === 'LISTENING' ? 'selected' : '' %>>🎧 LISTENING (Dinliyor)</option>
+                    <option value="WATCHING" <%= botSettings.statusType === 'WATCHING' ? 'selected' : '' %>>📺 WATCHING (İzliyor)</option>
+                    <option value="COMPETING" <%= botSettings.statusType === 'COMPETING' ? 'selected' : '' %>>🏆 COMPETING (Yarışıyor)</option>
+                  </select>
+                  <p class="text-[10px] text-slate-400 font-mono">Tavsiye edilen: STREAMING (Mor Rozet)</p>
+                </div>
+
+                <!-- Online Status Selection -->
+                <div class="space-y-1.5">
+                  <label class="block text-xs font-bold text-slate-300 font-sans">
+                    Çevrimiçi Durumu (Online Status)
+                  </label>
+                  <select id="bot-online-status" name="onlineStatus" class="w-full px-3.5 py-2.5 rounded-xl bg-[#151922] border border-[#1E232E] text-white text-xs font-sans focus:outline-none focus:border-[#8C5137] transition-colors cursor-pointer">
+                    <option value="online" <%= botSettings.onlineStatus === 'online' ? 'selected' : '' %>>🟢 Online (Çevrimiçi)</option>
+                    <option value="idle" <%= botSettings.onlineStatus === 'idle' ? 'selected' : '' %>>🟡 Idle (Boşta)</option>
+                    <option value="dnd" <%= botSettings.onlineStatus === 'dnd' ? 'selected' : '' %>>🔴 Do Not Disturb (Rahatsız Etmeyin)</option>
+                    <option value="invisible" <%= botSettings.onlineStatus === 'invisible' ? 'selected' : '' %>>⚪ Invisible (Görünmez)</option>
+                  </select>
+                  <p class="text-[10px] text-slate-400 font-mono">Profildeki durum simgesi</p>
+                </div>
+
+              </div>
+
+              <!-- Streaming URL Input -->
+              <div id="streaming-url-container" class="space-y-1.5 pt-2 border-t border-[#1E232E] <%= botSettings.statusType === 'STREAMING' ? '' : 'opacity-60' %>">
+                <label class="block text-xs font-bold text-slate-300 font-sans flex items-center justify-between">
+                  <span>Canlı Yayın Bağlantısı (Twitch / YouTube URL)</span>
+                  <span class="text-[10px] font-mono text-purple-400 font-normal">Streaming için Gerekli</span>
+                </label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-purple-400 text-xs">
+                    <i class="fa-brands fa-twitch"></i>
+                  </div>
+                  <input type="url" id="bot-streaming-url" name="streamingUrl" value="<%= botSettings.streamingUrl || 'https://twitch.tv/vintageclub' %>" placeholder="https://twitch.tv/vintageclub" class="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-[#151922] border border-[#1E232E] text-white text-xs font-mono focus:outline-none focus:border-[#8C5137] transition-colors" />
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Card 2: Rotation Mode & Interval Timeline -->
+            <div class="p-5 sm:p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E] space-y-5 shadow-md">
+              
+              <div class="flex items-center justify-between pb-3 border-b border-[#1E232E]">
+                <div>
+                  <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-[#D48D66]">Timing & Mode</span>
+                  <h3 class="text-sm sm:text-base font-bold text-white font-sans mt-0.5">Döngü Modu & Geçiş Çizelgesi</h3>
+                </div>
+                <span class="text-xs font-mono text-slate-400">Step 2</span>
+              </div>
+
+              <!-- Mode Selection -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-[#151922] border border-[#1E232E]">
+                <div class="space-y-0.5">
+                  <span class="text-xs font-bold text-white font-sans block">Çalışma Modu</span>
+                  <span class="text-[11px] text-slate-400">Metinler sırayla mı dönsün yoksa tek metin mi kalsın?</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="statusMode" value="ROTATING" <%= botSettings.statusMode === 'ROTATING' ? 'checked' : '' %> class="text-[#8C5137] focus:ring-[#8C5137] bg-[#0F1219] border-[#1E232E]" />
+                    <span class="text-xs font-semibold text-white">Döngüsel (Rotating)</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="statusMode" value="STATIC" <%= botSettings.statusMode === 'STATIC' ? 'checked' : '' %> class="text-[#8C5137] focus:ring-[#8C5137] bg-[#0F1219] border-[#1E232E]" />
+                    <span class="text-xs font-semibold text-slate-300">Sabit (Tek Metin)</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Rotation Interval Interactive Timeline Schedule -->
+              <div id="interval-slider-box" class="space-y-4 pt-2">
+                
+                <div class="flex items-center justify-between">
+                  <div class="space-y-0.5">
+                    <label class="text-xs font-bold text-slate-200 font-sans flex items-center gap-2">
+                      <i class="fa-solid fa-clock-rotate-left text-[#D48D66]"></i>
+                      <span>Geçiş Aralığı (Rotation Interval)</span>
+                    </label>
+                    <p class="text-[11px] text-slate-400">Her bir durum metninin ekranda kalma süresi</p>
+                  </div>
+                  
+                  <!-- Dynamic Time Badge -->
+                  <div class="px-3 py-1 rounded-xl bg-[#8C5137]/20 border border-[#8C5137]/40 text-[#D48D66] text-xs font-mono font-bold flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-stopwatch text-[11px] animate-pulse"></i>
+                    <span><span id="interval-val-text"><%= botSettings.rotationIntervalSeconds || 15 %></span> saniye / döngü</span>
+                  </div>
+                </div>
+
+                <!-- Custom Styled Range Slider -->
+                <div class="py-2 px-1">
+                  <input type="range" id="bot-rotation-interval" name="rotationIntervalSeconds" min="5" max="60" step="5" value="<%= botSettings.rotationIntervalSeconds || 15 %>" class="custom-range-slider" />
+                </div>
+
+                <!-- Timeline Ruler / Tick Marks & Preset Buttons -->
+                <div class="space-y-2">
+                  <div class="grid grid-cols-6 gap-2 pt-1">
+                    <% [5, 10, 15, 30, 45, 60].forEach(function(sec) { %>
+                      <button type="button" data-seconds="<%= sec %>" class="timeline-step-btn py-1.5 px-2 rounded-lg bg-[#151922] border border-[#1E232E] text-[11px] font-mono font-semibold text-slate-300 flex flex-col items-center justify-center gap-0.5 cursor-pointer <%= (botSettings.rotationIntervalSeconds || 15) == sec ? 'is-active' : '' %>">
+                        <span><%= sec %>s</span>
+                        <span class="text-[8px] opacity-70 font-sans"><%= sec === 5 ? 'Hızlı' : (sec === 15 ? 'Önerilen' : (sec === 60 ? 'Yavaş' : 'Adım')) %></span>
+                      </button>
+                    <% }); %>
+                  </div>
+
+                  <div class="flex items-center justify-between text-[10px] font-mono text-slate-500 px-1">
+                    <span>⚡ Minimum: 5 Saniye</span>
+                    <span>⏱️ Maksimum: 60 Saniye</span>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Card 3: Status Messages List -->
+            <div class="p-5 sm:p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E] space-y-4 shadow-md">
+              
+              <div class="flex items-center justify-between pb-3 border-b border-[#1E232E]">
+                <div>
+                  <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-[#D48D66]">Status Messages</span>
+                  <h3 class="text-sm sm:text-base font-bold text-white font-sans mt-0.5">Durum Metinleri Listesi</h3>
+                </div>
+                <button id="add-status-item-btn" type="button" class="px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 hover:bg-indigo-500/20 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm">
+                  <i class="fa-solid fa-plus text-[10px]"></i>
+                  <span>Metin Ekle</span>
+                </button>
+              </div>
+
+              <!-- Status Items Container -->
+              <div id="status-items-container" class="space-y-3">
+                <% const currentStatuses = (botSettings.statuses && botSettings.statuses.length > 0) ? botSettings.statuses : ['👑 Vintage Club | 2026', '🚛 Nobility on the Roads', '✨ vintageclub.com']; %>
+                <% currentStatuses.forEach(function(st, index) { %>
+                  <div class="status-row flex items-center gap-2 p-2.5 rounded-xl bg-[#151922] border border-[#1E232E] group">
+                    <span class="row-index text-xs font-mono font-bold text-slate-400 w-7 text-center flex-shrink-0">#<%= index + 1 %></span>
+                    <input type="text" name="statusItem" value="<%= st %>" placeholder="Örn: 👑 Vintage Club | 2026" class="status-input flex-1 px-3 py-2 rounded-lg bg-[#0F1219] border border-[#1E232E] text-white text-xs font-sans focus:outline-none focus:border-[#8C5137] transition-colors" required />
+                    <button type="button" class="remove-status-btn w-8 h-8 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 flex items-center justify-center transition-colors cursor-pointer flex-shrink-0" title="Metni Sil">
+                      <i class="fa-solid fa-trash text-xs"></i>
+                    </button>
+                  </div>
+                <% }); %>
+              </div>
+
+              <p class="text-[10px] text-slate-400 font-mono">
+                💡 İpucu: Emoji kullanımı desteklenmektedir. Örnek: 👑 Vintage Club 🚛 Nobility on the Roads ✨ vintageclub.com
+              </p>
+
+            </div>
+
+            <!-- Submit Action Bar -->
+            <div class="p-4 sm:p-5 rounded-2xl bg-[#0F1219] border border-[#1E232E] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
+              <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+                <i class="fa-solid fa-cloud-arrow-up text-[#D48D66]"></i>
+                <span id="form-status-feedback">Değişiklikler kaydedilmeye hazır.</span>
+              </div>
+              <button type="submit" id="save-bot-form-btn" class="px-6 py-3 rounded-xl bg-gradient-to-r from-[#8C5137] to-[#D48D66] hover:from-[#73422C] hover:to-[#B87B57] text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-xl cursor-pointer">
+                <i class="fa-solid fa-satellite-dish"></i>
+                <span>Kaydet & Discord'a Canlı Aktar</span>
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/js/developer.js"></script>
+</body>
+</html>
