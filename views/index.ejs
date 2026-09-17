@@ -11,13 +11,24 @@
   <!-- NAVBAR PARTIAL (Essential Links Only) -->
   <%- include('partials/navbar', { currentPath: '/' }) %>
 
-  <!-- 2. HERO SECTION -->
-  <section class="hero-gradient pt-12 pb-20 sm:pt-16 sm:pb-24 px-4 sm:px-6 lg:px-8 border-b border-[#E1E2E4] dark:border-[#262A36] flex flex-col items-center justify-center text-center overflow-hidden">
-    <div class="max-w-4xl mx-auto flex flex-col items-center">
+  <!-- 2. HERO SECTION WITH SEAMLESS BANNER BACKGROUND -->
+  <section class="relative pt-14 pb-20 sm:pt-20 sm:pb-28 px-4 sm:px-6 lg:px-8 border-b border-[#E1E2E4] dark:border-[#262A36] flex flex-col items-center justify-center text-center overflow-hidden">
+    
+    <!-- Hero Background Banner with Seamless Soft Gradient Transition -->
+    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+      <img src="/VTC_Memeber_Bio_Signature.png" alt="Vintage Club Convoy Banner" class="w-full h-full object-cover object-center opacity-35 dark:opacity-30 scale-105 transform" />
+      <!-- Multi-stop Gradient Mask for silky smooth blend into background -->
+      <div class="absolute inset-0 bg-gradient-to-b from-[#FFFFFF]/75 via-[#FFFFFF]/85 to-[#FFFFFF] dark:from-[#0C0D11]/75 dark:via-[#0C0D11]/90 dark:to-[#0C0D11]"></div>
+      <!-- Additional bottom fade edge -->
+      <div class="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#FFFFFF] dark:from-[#0C0D11] via-[#FFFFFF]/80 dark:via-[#0C0D11]/80 to-transparent"></div>
+    </div>
+
+    <!-- Hero Content (Relative Above Banner) -->
+    <div class="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
       
       <!-- Brand Logo -->
       <div class="mb-6 sm:mb-8 transition-transform duration-300 hover:scale-105 animate-fade-in-scale">
-        <img src="/Wintage_Club_Logo_2050.png" alt="Vintage Club Logo" class="h-32 sm:h-40 md:h-44 w-auto object-contain drop-shadow-md mx-auto animate-float-gentle" />
+        <img src="/Wintage_Club_Logo_2050.png" alt="Vintage Club Logo" class="h-32 sm:h-40 md:h-44 w-auto object-contain drop-shadow-xl mx-auto animate-float-gentle" />
       </div>
 
       <!-- Main Slogan -->
@@ -39,24 +50,24 @@
         </a>
       </div>
 
-      <!-- Dynamic Live Stats Cards -->
+      <!-- Dynamic Live Stats Cards (Glassmorphism on Banner) -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 w-full max-w-4xl mt-16 reveal-on-scroll">
-        <div class="clean-card p-5 text-center hover-lift hover-glow">
+        <div class="clean-card p-5 text-center hover-lift hover-glow backdrop-blur-md bg-white/80 dark:bg-[#13161D]/85 border border-[#E1E2E4] dark:border-[#262A36]">
           <div class="text-[#8C5137] dark:text-[#D48D66] mb-1 text-base"><i class="fa-solid fa-users"></i></div>
           <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-members">0</span>
           <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1"><%= t('stats.members', 'Active Drivers') %></span>
         </div>
-        <div class="clean-card p-5 text-center hover-lift hover-glow delay-100">
+        <div class="clean-card p-5 text-center hover-lift hover-glow delay-100 backdrop-blur-md bg-white/80 dark:bg-[#13161D]/85 border border-[#E1E2E4] dark:border-[#262A36]">
           <div class="text-[#8C5137] dark:text-[#D48D66] mb-1 text-base"><i class="fa-solid fa-flag-checkered"></i></div>
           <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-convoys">0</span>
           <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1"><%= t('stats.convoys', 'Completed Convoys') %></span>
         </div>
-        <div class="clean-card p-5 text-center hover-lift hover-glow delay-200">
+        <div class="clean-card p-5 text-center hover-lift hover-glow delay-200 backdrop-blur-md bg-white/80 dark:bg-[#13161D]/85 border border-[#E1E2E4] dark:border-[#262A36]">
           <div class="text-[#8C5137] dark:text-[#D48D66] mb-1 text-base"><i class="fa-solid fa-road"></i></div>
           <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-km">0 KM</span>
           <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1"><%= t('stats.km', 'Total Distance') %></span>
         </div>
-        <div class="clean-card p-5 text-center hover-lift hover-glow delay-300">
+        <div class="clean-card p-5 text-center hover-lift hover-glow delay-300 backdrop-blur-md bg-white/80 dark:bg-[#13161D]/85 border border-[#E1E2E4] dark:border-[#262A36]">
           <div class="text-[#8C5137] dark:text-[#D48D66] mb-1 text-base"><i class="fa-solid fa-clock-rotate-left"></i></div>
           <span class="block text-2xl sm:text-3xl font-extrabold font-heading text-[#4A2B1D] dark:text-white" id="stat-founded">2024</span>
           <span class="text-[11px] sm:text-xs uppercase tracking-wider text-[#8C5137] dark:text-slate-400 font-semibold mt-1"><%= t('stats.founded', 'Established') %></span>
