@@ -131,6 +131,7 @@ export function createDeveloperRouter() {
       const DiscordBotService = (await import('../discord-bot/index.js')).default;
       const microservices = await TelemetryService.getMicroservicesStatus();
       const botSettings = await DatabaseService.getBotSettings();
+      const voiceStatus = DiscordBotService.getVoiceStatus();
 
       res.render('developer/discord-bot', {
         title: 'Discord Bot Controller — Developer Portal',
@@ -138,7 +139,8 @@ export function createDeveloperRouter() {
         user: req.session.user,
         botSettings,
         botService: microservices.discordBot,
-        isClientConnected: Boolean(DiscordBotService?.client?.user)
+        isClientConnected: Boolean(DiscordBotService?.client?.user),
+        voiceStatus
       });
     } catch (err) {
       res.status(500).send('Discord Bot Controller Error: ' + err.message);
@@ -201,6 +203,50 @@ export function createDeveloperRouter() {
         success: true,
         message: 'Discord Bot presence settings updated and live stream broadcasted successfully!',
         botSettings: updated
+      });
+    } catch (err) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
+  // Discord Bot Voice Channel API (Connect, Disconnect & Configure)
+  router.post('/api/bot/voice', async (req, res) => {
+    try {
+      const {
+        enabled = false,
+        guildId = '',
+        channelId = '',
+        selfDeaf = true,
+        selfMute = true,
+        action = 'SAVE' // 'SAVE', 'CONNECT', 'DISCONNECT'
+      } = req.body;
+
+      const voiceConfig = {
+        enabled: action === 'DISCONNECT' ? false : Boolean(enabled),
+        guildId: String(guildId || '').trim(),
+        channelId: String(channelId || '').trim(),
+        selfDeaf: Boolean(selfDeaf),
+        selfMute: Boolean(selfMute)
+      };
+
+      const updated = await DatabaseService.updateBotSettings({ voiceChannel: voiceConfig });
+      const DiscordBotService = (await import('../discord-bot/index.js')).default;
+
+      let voiceResult = null;
+      if (voiceConfig.enabled) {
+        voiceResult = await DiscordBotService.connectToVoiceChannel();
+      } else {
+        voiceResult = DiscordBotService.disconnectVoiceChannel();
+      }
+
+      res.json({
+        success: true,
+        message: voiceConfig.enabled
+          ? (voiceResult.connected ? `Bot successfully connected to voice channel (#${voiceResult.channelName || voiceConfig.channelId}).` : 'Voice settings saved. Bot will connect when channel is available.')
+          : 'Voice channel connection disconnected/disabled.',
+        voiceSettings: updated.voiceChannel,
+        voiceStatus: DiscordBotService.getVoiceStatus(),
+        details: voiceResult
       });
     } catch (err) {
       res.status(500).json({ success: false, error: err.message });

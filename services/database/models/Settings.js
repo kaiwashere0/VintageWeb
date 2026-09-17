@@ -31,7 +31,14 @@ const settingsSchema = new mongoose.Schema({
       ]
     },
     rotationIntervalSeconds: { type: Number, default: 15 },
-    onlineStatus: { type: String, default: 'online' } // online, idle, dnd, invisible
+    onlineStatus: { type: String, default: 'online' }, // online, idle, dnd, invisible
+    voiceChannel: {
+      enabled: { type: Boolean, default: false },
+      guildId: { type: String, default: '' },
+      channelId: { type: String, default: '' },
+      selfDeaf: { type: Boolean, default: true },
+      selfMute: { type: Boolean, default: true }
+    }
   }
 }, {
   timestamps: true,

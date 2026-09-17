@@ -756,6 +756,106 @@ function initDiscordBotController() {
     }
   });
 
+  // 11. Voice Channel 24/7 Controller Handlers
+  const voiceEnabledToggle = document.getElementById('bot-voice-enabled');
+  const guildIdInput = document.getElementById('bot-voice-guild-id');
+  const channelIdInput = document.getElementById('bot-voice-channel-id');
+  const selfDeafCheck = document.getElementById('bot-voice-self-deaf');
+  const selfMuteCheck = document.getElementById('bot-voice-self-mute');
+  const saveVoiceBtn = document.getElementById('save-connect-voice-btn');
+  const disconnectVoiceBtn = document.getElementById('disconnect-voice-btn');
+  const voiceFeedbackEl = document.getElementById('voice-action-feedback');
+  const voiceStatusBadge = document.getElementById('voice-status-badge');
+  const voiceStatusText = document.getElementById('voice-status-text');
+
+  const updateVoiceBadge = (status) => {
+    if (!voiceStatusBadge || !voiceStatusText) return;
+    if (status && status.connected) {
+      voiceStatusBadge.className = 'px-3 py-1 rounded-xl font-mono text-xs font-bold flex items-center gap-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+      voiceStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>Bağlı: #${status.channelName || 'Ses Kanalı'}</span>`;
+    } else {
+      voiceStatusBadge.className = 'px-3 py-1 rounded-xl font-mono text-xs font-bold flex items-center gap-2 bg-[#151922] text-slate-400 border border-[#1E232E]';
+      voiceStatusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-500"></span><span>Ses Bağlantısı Yok</span>`;
+    }
+  };
+
+  if (saveVoiceBtn) {
+    saveVoiceBtn.addEventListener('click', async () => {
+      const originalHtml = saveVoiceBtn.innerHTML;
+      saveVoiceBtn.disabled = true;
+      saveVoiceBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Bağlanıyor...';
+      if (voiceFeedbackEl) voiceFeedbackEl.textContent = 'Ses kanalına bağlanılıyor...';
+
+      const enabled = voiceEnabledToggle ? voiceEnabledToggle.checked : true;
+      const guildId = guildIdInput ? guildIdInput.value.trim() : '';
+      const channelId = channelIdInput ? channelIdInput.value.trim() : '';
+      const selfDeaf = selfDeafCheck ? selfDeafCheck.checked : true;
+      const selfMute = selfMuteCheck ? selfMuteCheck.checked : true;
+
+      try {
+        const res = await fetch('/developer/api/bot/voice', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            enabled,
+            guildId,
+            channelId,
+            selfDeaf,
+            selfMute,
+            action: 'CONNECT'
+          })
+        });
+
+        const json = await res.json();
+        if (json.success) {
+          showDevToast(json.message, 'success');
+          if (voiceFeedbackEl) voiceFeedbackEl.textContent = json.message;
+          updateVoiceBadge(json.voiceStatus);
+        } else {
+          showDevToast(json.error || json.message || 'Ses bağlantı hatası', 'error');
+          if (voiceFeedbackEl) voiceFeedbackEl.textContent = 'Hata: ' + (json.error || json.message);
+        }
+      } catch (err) {
+        showDevToast('Ağ hatası: ' + err.message, 'error');
+      } finally {
+        saveVoiceBtn.disabled = false;
+        saveVoiceBtn.innerHTML = originalHtml;
+      }
+    });
+  }
+
+  if (disconnectVoiceBtn) {
+    disconnectVoiceBtn.addEventListener('click', async () => {
+      const originalHtml = disconnectVoiceBtn.innerHTML;
+      disconnectVoiceBtn.disabled = true;
+      disconnectVoiceBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ayrılıyor...';
+
+      try {
+        const res = await fetch('/developer/api/bot/voice', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            enabled: false,
+            action: 'DISCONNECT'
+          })
+        });
+
+        const json = await res.json();
+        if (json.success) {
+          if (voiceEnabledToggle) voiceEnabledToggle.checked = false;
+          showDevToast('Bot ses kanalından ayrıldı.', 'info');
+          if (voiceFeedbackEl) voiceFeedbackEl.textContent = 'Bot ses kanalından ayrıldı.';
+          updateVoiceBadge({ connected: false });
+        }
+      } catch (err) {
+        showDevToast('Ayrılma hatası: ' + err.message, 'error');
+      } finally {
+        disconnectVoiceBtn.disabled = false;
+        disconnectVoiceBtn.innerHTML = originalHtml;
+      }
+    });
+  }
+
   // Initial Run
   updatePreview();
   startPreviewTicker();

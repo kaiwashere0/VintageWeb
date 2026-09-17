@@ -116,7 +116,14 @@ export class DatabaseService {
       statusMode: 'ROTATING',
       statuses: ['👑 Vintage Club | 2026', '🚛 Nobility on the Roads', '✨ vintageclub.com'],
       rotationIntervalSeconds: 15,
-      onlineStatus: 'online'
+      onlineStatus: 'online',
+      voiceChannel: {
+        enabled: false,
+        guildId: '',
+        channelId: '',
+        selfDeaf: true,
+        selfMute: true
+      }
     };
   }
 

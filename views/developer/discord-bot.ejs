@@ -344,7 +344,108 @@
 
             </div>
 
-            <!-- Card 3: Status Messages List -->
+            <!-- Card 3: 7/24 Ses Kanalı Yönetimi (Voice Channel Keeper) -->
+            <% const voiceConfig = botSettings.voiceChannel || {}; %>
+            <div class="p-5 sm:p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E] space-y-5 shadow-md">
+              
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#1E232E]">
+                <div class="space-y-0.5">
+                  <span class="text-[10px] font-mono uppercase font-bold tracking-widest text-indigo-400">Voice 24/7 Engine</span>
+                  <h3 class="text-sm sm:text-base font-bold text-white font-sans flex items-center gap-2">
+                    <i class="fa-solid fa-volume-high text-indigo-400"></i>
+                    <span>7/24 Ses Kanalında Kalma (Voice Channel)</span>
+                  </h3>
+                </div>
+                
+                <!-- Live Voice Connection Status Badge -->
+                <div id="voice-status-badge" class="px-3 py-1 rounded-xl font-mono text-xs font-bold flex items-center gap-2 <%= (typeof voiceStatus !== 'undefined' && voiceStatus.connected) ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-[#151922] text-slate-400 border border-[#1E232E]' %>">
+                  <span class="w-2 h-2 rounded-full <%= (typeof voiceStatus !== 'undefined' && voiceStatus.connected) ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500' %>"></span>
+                  <span id="voice-status-text">
+                    <%= (typeof voiceStatus !== 'undefined' && voiceStatus.connected) ? `Bağlı: #${voiceStatus.channelName}` : 'Ses Bağlantısı Yok' %>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Voice Enable Toggle -->
+              <div class="flex items-center justify-between p-3.5 rounded-xl bg-[#151922] border border-[#1E232E]">
+                <div class="space-y-0.5">
+                  <span class="text-xs font-bold text-white font-sans block">Otomatik Ses Kanalında Kal</span>
+                  <span class="text-[11px] text-slate-400">Bot açıldığında ve bağlantı koptuğunda otomatik tekrar bağlanır</span>
+                </div>
+                <label class="custom-toggle">
+                  <input type="checkbox" id="bot-voice-enabled" <%= voiceConfig.enabled ? 'checked' : '' %> />
+                  <span class="toggle-track">
+                    <span class="toggle-thumb"></span>
+                  </span>
+                </label>
+              </div>
+
+              <!-- Guild ID & Voice Channel ID Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                <!-- Guild ID Input -->
+                <div class="space-y-1.5">
+                  <label class="block text-xs font-bold text-slate-300 font-sans flex items-center justify-between">
+                    <span>Sunucu ID (Guild ID)</span>
+                    <span class="text-[10px] font-mono text-slate-500">Discord Server ID</span>
+                  </label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-xs">
+                      <i class="fa-solid fa-server"></i>
+                    </div>
+                    <input type="text" id="bot-voice-guild-id" value="<%= voiceConfig.guildId || '' %>" placeholder="Örn: 1243266940873740381" class="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-[#151922] border border-[#1E232E] text-white text-xs font-mono focus:outline-none focus:border-[#8C5137] transition-colors" />
+                  </div>
+                </div>
+
+                <!-- Voice Channel ID Input -->
+                <div class="space-y-1.5">
+                  <label class="block text-xs font-bold text-slate-300 font-sans flex items-center justify-between">
+                    <span>Ses Kanalı ID (Channel ID)</span>
+                    <span class="text-[10px] font-mono text-slate-500">Voice Channel ID</span>
+                  </label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-indigo-400 text-xs">
+                      <i class="fa-solid fa-microphone"></i>
+                    </div>
+                    <input type="text" id="bot-voice-channel-id" value="<%= voiceConfig.channelId || '' %>" placeholder="Örn: 1243266940873740382" class="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-[#151922] border border-[#1E232E] text-white text-xs font-mono focus:outline-none focus:border-[#8C5137] transition-colors" />
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Audio Permissions / State Checkboxes -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <label class="custom-checkbox-btn">
+                  <input type="checkbox" id="bot-voice-self-deaf" <%= voiceConfig.selfDeaf !== false ? 'checked' : '' %> />
+                  <span class="check-icon-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-xs font-sans">Kulaklığı Sağırlaştır (Self Deaf)</span>
+                </label>
+
+                <label class="custom-checkbox-btn">
+                  <input type="checkbox" id="bot-voice-self-mute" <%= voiceConfig.selfMute !== false ? 'checked' : '' %> />
+                  <span class="check-icon-box"><i class="fa-solid fa-check"></i></span>
+                  <span class="text-xs font-sans">Mikrofonu Kapat (Self Mute)</span>
+                </label>
+              </div>
+
+              <!-- Voice Actions Bar -->
+              <div class="pt-3 border-t border-[#1E232E] flex flex-wrap items-center justify-between gap-3">
+                <span id="voice-action-feedback" class="text-xs font-mono text-slate-400">ID'leri girip kaydedebilirsiniz.</span>
+                <div class="flex items-center gap-2">
+                  <button type="button" id="disconnect-voice-btn" class="px-3.5 py-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer">
+                    <i class="fa-solid fa-phone-slash text-[11px]"></i>
+                    <span>Kanaldan Ayrıl</span>
+                  </button>
+                  <button type="button" id="save-connect-voice-btn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-md cursor-pointer">
+                    <i class="fa-solid fa-link text-[11px]"></i>
+                    <span>Kaydet & Sese Bağlan</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Card 4: Status Messages List -->
             <div class="p-5 sm:p-6 rounded-2xl bg-[#0F1219] border border-[#1E232E] space-y-4 shadow-md">
               
               <div class="flex items-center justify-between pb-3 border-b border-[#1E232E]">

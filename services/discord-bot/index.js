@@ -1,4 +1,5 @@
 import { Client, GatewayIntentBits, ActivityType } from 'discord.js';
+import { joinVoiceChannel, getVoiceConnection, VoiceConnectionStatus, entersState } from '@discordjs/voice';
 import DatabaseService from '../database/index.js';
 
 export class DiscordBotService {
@@ -7,6 +8,8 @@ export class DiscordBotService {
   static botSettings = null;
   static currentStatusIndex = 0;
   static presenceTimer = null;
+  static voiceConnection = null;
+  static voiceReconnectTimer = null;
 
   static async init() {
     const token = process.env.DISCORD_BOT_TOKEN;
@@ -21,14 +24,17 @@ export class DiscordBotService {
       this.client = new Client({
         intents: [
           GatewayIntentBits.Guilds,
-          GatewayIntentBits.GuildMessages
+          GatewayIntentBits.GuildMessages,
+          GatewayIntentBits.GuildVoiceStates
         ]
       });
 
       this.client.once('ready', async (c) => {
         console.log(`\x1b[32m✔\x1b[0m \x1b[1m[Discord Bot]\x1b[0m Bot başarıyla bağlandı: \x1b[36m${c.user.tag}\x1b[0m`);
-        // Start Presence & Streaming Loop from Database
+        // 1. Start Presence & Streaming Loop from Database
         await this.startPresenceLoop();
+        // 2. Connect to Voice Channel if enabled in Database
+        await this.connectToVoiceChannel();
       });
 
       this.client.on('error', (err) => {
@@ -140,6 +146,138 @@ export class DiscordBotService {
     this.botSettings = null;
     await this.startPresenceLoop();
     return { success: true, settings: this.botSettings };
+  }
+
+  /**
+   * Connect and stay 24/7 in specified voice channel
+   */
+  static async connectToVoiceChannel() {
+    if (!this.client || !this.client.isReady || !this.client.isReady()) return { success: false, message: 'Bot client is not ready' };
+
+    try {
+      const settings = await DatabaseService.getBotSettings();
+      const voiceConfig = settings.voiceChannel || {};
+
+      // If voice is disabled, disconnect if currently connected
+      if (!voiceConfig.enabled || !voiceConfig.guildId || !voiceConfig.channelId) {
+        this.disconnectVoiceChannel();
+        return { success: true, connected: false, message: 'Voice channel is disabled' };
+      }
+
+      const guild = await this.client.guilds.fetch(voiceConfig.guildId).catch(() => null);
+      if (!guild) {
+        console.warn(`\x1b[33m⚠\x1b[0m \x1b[1m[Discord Voice]\x1b[0m Sunucu bulunamadı (Guild ID: ${voiceConfig.guildId})`);
+        return { success: false, message: 'Guild not found' };
+      }
+
+      const channel = await guild.channels.fetch(voiceConfig.channelId).catch(() => null);
+      if (!channel || channel.type !== 2 && channel.type !== 13) { // 2: GUILD_VOICE, 13: GUILD_STAGE_VOICE
+        console.warn(`\x1b[33m⚠\x1b[0m \x1b[1m[Discord Voice]\x1b[0m Ses kanalı bulunamadı (Channel ID: ${voiceConfig.channelId})`);
+        return { success: false, message: 'Voice channel not found or invalid type' };
+      }
+
+      // Check existing connection
+      const existingConn = getVoiceConnection(guild.id);
+      if (existingConn && existingConn.joinConfig.channelId === channel.id) {
+        this.voiceConnection = existingConn;
+        return { success: true, connected: true, channelName: channel.name, guildName: guild.name };
+      }
+
+      if (existingConn) {
+        existingConn.destroy();
+      }
+
+      // Join Voice Channel
+      this.voiceConnection = joinVoiceChannel({
+        channelId: channel.id,
+        guildId: guild.id,
+        adapterCreator: guild.voiceAdapterCreator,
+        selfDeaf: voiceConfig.selfDeaf ?? true,
+        selfMute: voiceConfig.selfMute ?? true
+      });
+
+      console.log(`\x1b[32m✔\x1b[0m \x1b[1m[Discord Voice]\x1b[0m Bot ses kanalına bağlandı: \x1b[36m#${channel.name}\x1b[0m (${guild.name})`);
+
+      // Auto-Reconnect Watcher
+      this.voiceConnection.on(VoiceConnectionStatus.Disconnected, async () => {
+        try {
+          await Promise.race([
+            entersState(this.voiceConnection, VoiceConnectionStatus.Signalling, 5000),
+            entersState(this.voiceConnection, VoiceConnectionStatus.Connecting, 5000)
+          ]);
+          // Seems to be reconnecting to a new channel
+        } catch (error) {
+          console.warn(`\x1b[33m⚠\x1b[0m \x1b[1m[Discord Voice]\x1b[0m Ses bağlantısı koptu, 5s sonra yeniden bağlanılacak...`);
+          if (this.voiceConnection) {
+            this.voiceConnection.destroy();
+            this.voiceConnection = null;
+          }
+          if (this.voiceReconnectTimer) clearTimeout(this.voiceReconnectTimer);
+          this.voiceReconnectTimer = setTimeout(() => {
+            this.connectToVoiceChannel();
+          }, 5000);
+        }
+      });
+
+      return {
+        success: true,
+        connected: true,
+        channelName: channel.name,
+        guildName: guild.name,
+        channelId: channel.id,
+        guildId: guild.id
+      };
+    } catch (err) {
+      console.error('\x1b[31m✖\x1b[0m \x1b[1m[Discord Voice]\x1b[0m Ses bağlantı hatası:', err.message);
+      return { success: false, error: err.message };
+    }
+  }
+
+  /**
+   * Disconnect from voice channel
+   */
+  static disconnectVoiceChannel() {
+    if (this.voiceReconnectTimer) {
+      clearTimeout(this.voiceReconnectTimer);
+      this.voiceReconnectTimer = null;
+    }
+    if (this.voiceConnection) {
+      this.voiceConnection.destroy();
+      this.voiceConnection = null;
+      console.log(`\x1b[33mℹ\x1b[0m \x1b[1m[Discord Voice]\x1b[0m Bot ses kanalından ayrıldı.`);
+      return { success: true, connected: false };
+    }
+    return { success: true, connected: false };
+  }
+
+  /**
+   * Get Current Live Voice Status
+   */
+  static getVoiceStatus() {
+    if (this.voiceConnection && this.voiceConnection.state.status === VoiceConnectionStatus.Ready) {
+      const channelId = this.voiceConnection.joinConfig.channelId;
+      const guildId = this.voiceConnection.joinConfig.guildId;
+      const guild = this.client?.guilds?.cache?.get(guildId);
+      const channel = guild?.channels?.cache?.get(channelId);
+
+      return {
+        connected: true,
+        status: 'CONNECTED',
+        channelId,
+        guildId,
+        channelName: channel?.name || 'Voice Channel',
+        guildName: guild?.name || 'Discord Server'
+      };
+    }
+
+    return {
+      connected: false,
+      status: 'DISCONNECTED',
+      channelId: null,
+      guildId: null,
+      channelName: null,
+      guildName: null
+    };
   }
 
   // Webhook ve aktif işlemler
