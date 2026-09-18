@@ -44,12 +44,6 @@ export const setupCommand = {
     const configuredChannels = botSettings.channels || {};
     const configuredCount = Object.values(configuredChannels).filter(Boolean).length;
 
-    // Quick Action Accessory Button
-    const quickInstallAccessory = new ButtonBuilder()
-      .setCustomId('btn_setup_quick_create')
-      .setLabel('Quick Install / Hızlı Kur')
-      .setStyle(ButtonStyle.Success);
-
     // Build Discord Container Component V2
     const mainContainer = VintageContainerBuilder.buildBilingualContainer({
       enTitle: 'Vintage Web Platform — System Control Hub',
@@ -58,7 +52,6 @@ export const setupCommand = {
       trDesc: 'Vintage Club için Otonom Kanal Yöneticisi ve Detaylı Telemetri Motoru.',
       emojiKey: 'stats',
       accentColor: VINTAGE_COLORS.GOLD,
-      accessoryButton: quickInstallAccessory,
       ansiLines: [
         `\u001b[1;36m[ENGINE]\u001b[0m Vintage Web 2026 Platform Controller`,
         `\u001b[0;32m[STATUS]\u001b[0m Active • Guild: ${interaction.guild.name}`,
@@ -130,7 +123,7 @@ export const setupCommand = {
 
     await interaction.editReply({
       content: mainContainer.content,
-      components: [...(mainContainer.components || []), selectRow, buttonRow]
+      components: [selectRow, buttonRow]
     });
   }
 };
