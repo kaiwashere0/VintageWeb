@@ -172,28 +172,25 @@ export class DiscordBotService {
       const confirmRow = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
           .setCustomId('btn_delete_confirm_final')
-          .setLabel('Confirm Delete / Silmeyi Onayla')
+          .setLabel('Evet, Tüm Kanalları Sil')
           .setStyle(ButtonStyle.Danger),
         new ButtonBuilder()
           .setCustomId('btn_delete_cancel')
-          .setLabel('Cancel / İptal')
+          .setLabel('İptal')
           .setStyle(ButtonStyle.Secondary)
       );
 
       const deleteWarningContent = [
-        `## ${EmojiResolver.NO} Confirm Deletion of Dedicated Channels`,
-        `> *Özel Kanalların Silinmesini Onaylayın*`,
-        '',
-        `>>> **Are you sure you want to delete all 14 \`vweb-*\` channels and their category? This action is irreversible.**`,
-        `*Tüm 14 adet \`vweb-*\` kanalını ve kategorisini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.*`,
+        `## ${EmojiResolver.NO} Log Kanallarını Silme Onayı`,
+        `> **Dikkat:** 14 adet özel \`vweb-*\` log kanalını ve bağlı kategoriyi silmek istediğinizden emin misiniz?`,
         '',
         '```ansi',
-        `\u001b[1;31m[WARNING]\u001b[0m High Impact Administrative Action`,
-        `\u001b[0;33m[TARGET]\u001b[0m 14 Dedicated vweb-* Channels & Parent Category`,
-        `\u001b[0;37m[EFFECT]\u001b[0m Live telemetry logging will be halted until re-installation`,
+        `\u001b[1;31m[UYARI]\u001b[0m Bu işlem geri alınamaz!`,
+        `\u001b[0;33m[HEDEF]\u001b[0m 14 Özel Log Kanalı ve Kategori`,
+        `\u001b[0;37m[ETKİ]\u001b[0m Tekrar kurulum yapılana kadar Discord logları iletilmez.`,
         '```',
         '',
-        `- Requested by: **${interaction.user.tag}** • Time: <t:${Math.floor(Date.now() / 1000)}:R>`
+        `- İsteyen Yetkili: **${interaction.user.tag}**`
       ].join('\n');
 
       await interaction.reply({
@@ -206,18 +203,10 @@ export class DiscordBotService {
       const result = await ChannelManager.deleteAllChannels(interaction.guild);
 
       const deletedContent = [
-        `## ${EmojiResolver.YES} System Channels Purged Successfully`,
-        `> *Sistem Kanalları Başarıyla Silindi*`,
+        `## ${EmojiResolver.YES} Tüm Log Kanalları Başarıyla Silindi`,
+        `> Toplam **${result.deletedCount}** adet \`vweb-*\` kanalı kaldırıldı ve veritabanı sıfırlandı.`,
         '',
-        `>>> **Deleted ${result.deletedCount} dedicated \`vweb-*\` channels and cleared database mappings.**`,
-        `*${result.deletedCount} adet özel \`vweb-*\` kanalı silindi ve veritabanı temizlendi.*`,
-        '',
-        '```ansi',
-        `\u001b[1;32m[PURGE COMPLETE]\u001b[0m ${result.deletedCount} Channels Deleted`,
-        `\u001b[0;36m[DATABASE]\u001b[0m MongoDB Channel Pointers Reset`,
-        '```',
-        '',
-        `- Performed by: **${interaction.user.tag}** • Time: <t:${Math.floor(Date.now() / 1000)}:R>`
+        `- İşlemi Yapan: **${interaction.user.tag}**`
       ].join('\n');
 
       await interaction.editReply({
@@ -226,11 +215,8 @@ export class DiscordBotService {
       });
     } else if (id === 'btn_delete_cancel') {
       const cancelContent = [
-        `## ${EmojiResolver.YES} Operation Cancelled`,
-        `> *İşlem İptal Edildi*`,
-        '',
-        `>>> **Channel deletion was cancelled. All channels remain active.**`,
-        `*Kanal silme işlemi iptal edildi. Tüm kanallar aktif kalmaya devam ediyor.*`
+        `## ${EmojiResolver.YES} İşlem İptal Edildi`,
+        `> Kanal silme işlemi iptal edildi, log kanalları aktif kalmaya devam ediyor.`
       ].join('\n');
 
       await interaction.update({
@@ -250,8 +236,8 @@ export class DiscordBotService {
 
     if (action === 'action_create_all') {
       const res = await ChannelManager.createAllChannels(interaction.guild);
-      const createdCount = res.channels.filter(c => c.status === 'CREATED').length;
-      const existingCount = res.channels.filter(c => c.status === 'EXISTING').length;
+      const createdCount = res.channels.filter(c => c.status === 'OLUŞTURULDU').length;
+      const existingCount = res.channels.filter(c => c.status === 'MEVCUT').length;
 
       const treeLines = res.channels.map((c, i) => {
         const isLast = i === res.channels.length - 1;
@@ -260,23 +246,20 @@ export class DiscordBotService {
       }).join('\n');
 
       const installContent = [
-        `## ${EmojiResolver.YES} Automated Channel Installation Complete`,
-        `> *Otomatik Kanal Kurulumu Tamamlandı*`,
-        '',
-        `>>> **Category:** \`${res.categoryName}\``,
-        `*Kategori:* \`${res.categoryName}\``,
+        `## ${EmojiResolver.YES} Otomatik Log Kanalları Kurulumu Tamamlandı`,
+        `> Kategori: **${res.categoryName}** *(Sadece Bot ve Yöneticilere Özel)*`,
         '',
         '```ansi',
-        `\u001b[1;32m[SETUP RESULT]\u001b[0m SUCCESS • ${CHANNEL_DEFINITIONS.length} Channels Verified`,
-        `\u001b[0;36m[CREATED]\u001b[0m ${createdCount} New vweb-* Channels`,
-        `\u001b[0;37m[EXISTING / SYNCED]\u001b[0m ${existingCount} Channels`,
-        `\u001b[0;35m[DATABASE]\u001b[0m MongoDB Mappings Synchronized`,
+        `\u001b[1;32m[BAŞARILI]\u001b[0m ${CHANNEL_DEFINITIONS.length} Kanal Doğrulandı`,
+        `\u001b[0;36m[YENİ AÇILAN]\u001b[0m ${createdCount} Adet Log Kanalı`,
+        `\u001b[0;37m[MEVCUT/SENKRON]\u001b[0m ${existingCount} Adet Kanal`,
+        `\u001b[0;35m[GİZLİLİK]\u001b[0m @everyone için Görünmez`,
         '```',
         '',
-        `### Channel Inventory / Kanal Envanteri`,
+        `### 📂 Açılan Kanallar Listesi`,
         treeLines,
         '',
-        `- Actor: **${interaction.user.tag}** • Time: <t:${nowTs}:F> (<t:${nowTs}:R>)`
+        `- Yetkili: **${interaction.user.tag}** • <t:${nowTs}:R>`
       ].join('\n');
 
       await interaction.editReply({ content: installContent });
@@ -292,22 +275,19 @@ export class DiscordBotService {
       }).join('\n');
 
       const repairContent = [
-        `## ${repairedCount > 0 ? EmojiResolver.YES : EmojiResolver.STATS} Channel Self-Repair & Sync Complete`,
-        `> *Kanal Otomatik Tamir ve Senkronizasyonu Tamamlandı*`,
-        '',
-        `>>> **Verified all 14 \`vweb-*\` channels against database state.**`,
-        `*Veritabanı durumuna göre tüm 14 adet \`vweb-*\` kanalı doğrulandı.*`,
+        `## ${repairedCount > 0 ? EmojiResolver.YES : EmojiResolver.STATS} Kanalları Kontrol ve Tamir Etme Tamamlandı`,
+        `> 14 adet \`vweb-*\` kanalı veritabanı durumuna göre tarandı ve senkronize edildi.`,
         '',
         '```ansi',
-        `\u001b[1;${repairedCount > 0 ? '33' : '32'}m[REPAIR RESULT]\u001b[0m ${repairedCount > 0 ? `Restored ${repairedCount} Missing Channels` : 'All 14 Channels Healthy & Intact'}`,
-        `\u001b[0;36m[CATEGORY]\u001b[0m Active Category ID: ${res.categoryId}`,
-        `\u001b[0;35m[SYNC]\u001b[0m MongoDB Channel Pointers Updated`,
+        `\u001b[1;${repairedCount > 0 ? '33' : '32'}m[SONUÇ]\u001b[0m ${repairedCount > 0 ? `${repairedCount} Eksik Kanal Yeniden Oluşturuldu` : 'Tüm 14 Kanal Eksiksiz ve Aktif'}`,
+        `\u001b[0;36m[KATEGORİ]\u001b[0m Aktif Kategori ID: ${res.categoryId}`,
+        `\u001b[0;35m[GİZLİLİK]\u001b[0m @everyone İzinleri Kapatıldı`,
         '```',
         '',
-        `### Channel Audit List / Kanal Denetim Listesi`,
+        `### 🔍 Kanal Denetim Durumu`,
         treeLines,
         '',
-        `- Inspector: **${interaction.user.tag}** • Time: <t:${nowTs}:F> (<t:${nowTs}:R>)`
+        `- Denetleyen: **${interaction.user.tag}** • <t:${nowTs}:R>`
       ].join('\n');
 
       await interaction.editReply({ content: repairContent });
@@ -322,21 +302,18 @@ export class DiscordBotService {
       }).join('\n');
 
       const recreateContent = [
-        `## ${EmojiResolver.YES} Channels Recreated & Re-initialized`,
-        `> *Kanallar Sıfırdan Baştan Kuruldu*`,
-        '',
-        `>>> **Clean slate setup complete. 14 fresh dedicated streams created.**`,
-        `*Sıfırdan kurulum tamamlandı. 14 adet temiz özel kanal oluşturuldu.*`,
+        `## ${EmojiResolver.YES} Kanallar Sıfırdan Baştan Kuruldu`,
+        `> Eski kanallar temizlendi ve 14 adet yeni temiz log kanalı oluşturuldu.`,
         '',
         '```ansi',
-        `\u001b[1;32m[REBUILD]\u001b[0m 14 Clean Channels Reconstructed`,
-        `\u001b[0;36m[CATEGORY]\u001b[0m ${res.categoryName}`,
+        `\u001b[1;32m[YENİDEN KURULUM]\u001b[0m 14 Yeni Kanal Açıldı`,
+        `\u001b[0;36m[KATEGORİ]\u001b[0m ${res.categoryName}`,
         '```',
         '',
-        `### Recreated Streams / Yeniden Oluşturulan Akışlar`,
+        `### 📂 Yeni Kanallar`,
         treeLines,
         '',
-        `- Executed by: **${interaction.user.tag}** • Time: <t:${nowTs}:F> (<t:${nowTs}:R>)`
+        `- Yetkili: **${interaction.user.tag}** • <t:${nowTs}:R>`
       ].join('\n');
 
       await interaction.editReply({ content: recreateContent });
@@ -350,26 +327,23 @@ export class DiscordBotService {
         const prefix = isLast ? '`└─`' : '`├─`';
         const chId = currentChannels[def.key];
         const exists = chId && interaction.guild.channels.cache.has(chId);
-        const linkStr = exists ? `<#${chId}> \`[OK]\`` : `\`NOT LINKED\``;
+        const linkStr = exists ? `<#${chId}> \`[BAĞLI]\`` : `\`BAĞLI DEĞİL\``;
         return `${prefix} **#${def.name}** *(${def.key})*: ${linkStr}`;
       }).join('\n');
 
       const mapContent = [
-        `## ${EmojiResolver.STATS} Vintage Web — Active Channel Map`,
-        `> *Vintage Web — Aktif Kanal Haritası*`,
-        '',
-        `>>> **Dedicated \`vweb-*\` Telemetry Mapping.**`,
-        `*Ayrılmış \`vweb-*\` Telemetri Eşleşmesi.*`,
+        `## ${EmojiResolver.STATS} Vintage Web — Aktif Kanal Haritası`,
+        `> Web sitesi fonksiyonlarının hangi Discord kanalına loglandığı aşağıda listelenmiştir.`,
         '',
         '```ansi',
-        `\u001b[1;36m[CATEGORY ID]\u001b[0m ${botSettings.logCategoryId || 'NOT CONFIGURED'}`,
-        `\u001b[0;32m[TOTAL STREAMS]\u001b[0m ${CHANNEL_DEFINITIONS.length} Dedicated Endpoints`,
+        `\u001b[1;36m[KATEGORİ ID]\u001b[0m ${botSettings.logCategoryId || 'AYARLANMAMIŞ'}`,
+        `\u001b[0;32m[TOPLAM AKIŞ]\u001b[0m ${CHANNEL_DEFINITIONS.length} Özel Kanal`,
         '```',
         '',
-        `### Live Stream Routing / Canlı Akış Yönlendirmesi`,
+        `### 🗺️ Kanal Eşleşmeleri`,
         treeLines,
         '',
-        `- Queried by: **${interaction.user.tag}** • Time: <t:${nowTs}:F> (<t:${nowTs}:R>)`
+        `- Sorgulayan: **${interaction.user.tag}** • <t:${nowTs}:R>`
       ].join('\n');
 
       await interaction.editReply({ content: mapContent });
@@ -378,18 +352,10 @@ export class DiscordBotService {
       const res = await ChannelManager.deleteAllChannels(interaction.guild);
 
       const deleteContent = [
-        `## ${EmojiResolver.YES} Channels Deleted Successfully`,
-        `> *Kanallar Başarıyla Silindi*`,
+        `## ${EmojiResolver.YES} Tüm Log Kanalları Silindi`,
+        `> Toplam **${res.deletedCount}** adet kanal ve kategori silinerek veritabanı sıfırlandı.`,
         '',
-        `>>> **Removed ${res.deletedCount} channels and reset MongoDB pointers.**`,
-        `*${res.deletedCount} adet kanal kaldırıldı ve veritabanı sıfırlandı.*`,
-        '',
-        '```ansi',
-        `\u001b[1;31m[DELETED]\u001b[0m ${res.deletedCount} Channels Removed`,
-        `\u001b[0;32m[DATABASE]\u001b[0m Settings Reset`,
-        '```',
-        '',
-        `- Executed by: **${interaction.user.tag}** • Time: <t:${nowTs}:F> (<t:${nowTs}:R>)`
+        `- Yetkili: **${interaction.user.tag}** • <t:${nowTs}:R>`
       ].join('\n');
 
       await interaction.editReply({ content: deleteContent });

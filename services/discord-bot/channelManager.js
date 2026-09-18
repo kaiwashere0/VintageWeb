@@ -126,6 +126,8 @@ export class ChannelManager {
       );
     }
 
+    const botMemberId = guild.members.me?.id || guild.client.user.id;
+
     if (!category) {
       category = await guild.channels.create({
         name: CATEGORY_NAME,
@@ -133,11 +135,27 @@ export class ChannelManager {
         permissionOverwrites: [
           {
             id: guild.roles.everyone.id,
-            deny: [PermissionFlagsBits.SendMessages]
+            deny: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages]
+          },
+          {
+            id: botMemberId,
+            allow: [
+              PermissionFlagsBits.ViewChannel,
+              PermissionFlagsBits.SendMessages,
+              PermissionFlagsBits.EmbedLinks,
+              PermissionFlagsBits.AttachFiles,
+              PermissionFlagsBits.ManageChannels
+            ]
           }
         ]
       });
-      console.log(`\x1b[32m✔\x1b[0m \x1b[1m[Discord Bot]\x1b[0m Yeni Log Kategorisi Oluşturuldu: \x1b[36m${category.name}\x1b[0m`);
+      console.log(`\x1b[32m✔\x1b[0m \x1b[1m[Discord Bot]\x1b[0m Yeni Gizli Log Kategorisi Oluşturuldu: \x1b[36m${category.name}\x1b[0m`);
+    } else {
+      // Ensure existing category denies @everyone ViewChannel
+      await category.permissionOverwrites.edit(guild.roles.everyone.id, {
+        ViewChannel: false,
+        SendMessages: false
+      }).catch(() => null);
     }
 
     return category;
@@ -150,6 +168,7 @@ export class ChannelManager {
     if (!guild) throw new Error('Guild not provided.');
 
     const category = await this.getOrCreateCategory(guild);
+    const botMemberId = guild.members.me?.id || guild.client.user.id;
     const createdMap = {};
     const createdList = [];
 
@@ -168,7 +187,16 @@ export class ChannelManager {
           permissionOverwrites: [
             {
               id: guild.roles.everyone.id,
-              deny: [PermissionFlagsBits.SendMessages]
+              deny: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages]
+            },
+            {
+              id: botMemberId,
+              allow: [
+                PermissionFlagsBits.ViewChannel,
+                PermissionFlagsBits.SendMessages,
+                PermissionFlagsBits.EmbedLinks,
+                PermissionFlagsBits.AttachFiles
+              ]
             }
           ]
         });
@@ -177,30 +205,33 @@ export class ChannelManager {
         const yesEmoji = EmojiResolver.YES;
         const nowTs = Math.floor(Date.now() / 1000);
         const welcomeContent = [
-          `## ${yesEmoji} Dedicated Channel Initialized: #${def.name}`,
-          `> *Özel Kanal Başlatıldı: #${def.name}*`,
-          '',
-          `>>> **${def.enDesc}**`,
-          `*${def.trDesc}*`,
+          `## ${yesEmoji} Özel Log Kanalı Başlatıldı: #${def.name}`,
+          `> *${def.trDesc}*`,
           '',
           '```ansi',
-          `\u001b[1;32m[ENGINE]\u001b[0m Vintage Web 2026 Telemetry Stream`,
-          `\u001b[0;36m[CHANNEL]\u001b[0m #${def.name}`,
-          `\u001b[0;35m[STATUS]\u001b[0m Dedicated Pipeline Active & Listening`,
+          `\u001b[1;32m[DURUM]\u001b[0m Kanal Aktif ve Dinlemede`,
+          `\u001b[0;36m[KANAL]\u001b[0m #${def.name}`,
+          `\u001b[0;33m[ERİŞİM]\u001b[0m @everyone Kapalı (Gizli Kanal)`,
           '```',
           '',
-          `### Stream Parameters / Akış Parametreleri`,
-          `\`├─\` **Endpoint Key** *(Uç Nokta Anahtarı)*: \`${def.key}\``,
-          `\`├─\` **Topic** *(Kanal Açıklaması)*: \`${def.topic}\``,
-          `\`└─\` **Permissions** *(İzinler)*: \`Read Only (Public) • Send Denied (Bot Only)\``,
+          `### Kanal Bilgileri`,
+          `\`├─\` **Anahtar**: \`${def.key}\``,
+          `\`├─\` **Açıklama**: \`${def.trDesc}\``,
+          `\`└─\` **Gizlilik**: \`@everyone için Görünmez / Sadece Bot ve Yetkililer\``,
           '',
-          `- Started: <t:${nowTs}:F> (<t:${nowTs}:R>) • Engine: **Vintage System Core**`
+          `- Başlatılma: <t:${nowTs}:F> (<t:${nowTs}:R>)`
         ].join('\n');
 
         await channel.send({ content: welcomeContent }).catch(() => null);
-        createdList.push({ name: def.name, id: channel.id, status: 'CREATED' });
+        createdList.push({ name: def.name, id: channel.id, status: 'OLUŞTURULDU' });
       } else {
-        createdList.push({ name: def.name, id: channel.id, status: 'EXISTING' });
+        // Ensure existing channel also has private permissions
+        await channel.permissionOverwrites.edit(guild.roles.everyone.id, {
+          ViewChannel: false,
+          SendMessages: false
+        }).catch(() => null);
+
+        createdList.push({ name: def.name, id: channel.id, status: 'MEVCUT' });
       }
 
       createdMap[def.key] = channel.id;
@@ -225,6 +256,7 @@ export class ChannelManager {
     if (!guild) throw new Error('Guild not provided.');
 
     const category = await this.getOrCreateCategory(guild);
+    const botMemberId = guild.members.me?.id || guild.client.user.id;
     const botSettings = await DatabaseService.getBotSettings();
     const currentChannels = botSettings.channels || {};
     const updatedMap = { ...currentChannels };
@@ -251,7 +283,16 @@ export class ChannelManager {
           permissionOverwrites: [
             {
               id: guild.roles.everyone.id,
-              deny: [PermissionFlagsBits.SendMessages]
+              deny: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages]
+            },
+            {
+              id: botMemberId,
+              allow: [
+                PermissionFlagsBits.ViewChannel,
+                PermissionFlagsBits.SendMessages,
+                PermissionFlagsBits.EmbedLinks,
+                PermissionFlagsBits.AttachFiles
+              ]
             }
           ]
         });
@@ -259,25 +300,28 @@ export class ChannelManager {
         const yesEmoji = EmojiResolver.YES;
         const nowTs = Math.floor(Date.now() / 1000);
         const repairContent = [
-          `## ${yesEmoji} Channel Repaired & Restored: #${def.name}`,
-          `> *Kanal Tamir Edildi ve Yeniden Oluşturuldu: #${def.name}*`,
-          '',
-          `>>> **${def.enDesc}**`,
-          `*${def.trDesc}*`,
+          `## ${yesEmoji} Kanal Tamir Edildi ve Yeniden Oluşturuldu: #${def.name}`,
+          `> *${def.trDesc}*`,
           '',
           '```ansi',
-          `\u001b[1;33m[REPAIR STATUS]\u001b[0m RESTORED & RELINKED`,
-          `\u001b[0;36m[CHANNEL]\u001b[0m #${def.name}`,
-          `\u001b[0;32m[SYNC]\u001b[0m MongoDB Configuration Updated`,
+          `\u001b[1;33m[TAMİR]\u001b[0m Kanal Onarıldı ve Bağlandı`,
+          `\u001b[0;36m[KANAL]\u001b[0m #${def.name}`,
+          `\u001b[0;32m[SENKRON]\u001b[0m Veritabanı Eşleşmesi Güncellendi`,
           '```',
           '',
-          `- Repaired: <t:${nowTs}:F> (<t:${nowTs}:R>) • Engine: **Vintage System Repair Engine**`
+          `- Onarılma: <t:${nowTs}:F> (<t:${nowTs}:R>)`
         ].join('\n');
 
         await channel.send({ content: repairContent }).catch(() => null);
-        repairedList.push({ name: def.name, id: channel.id, status: 'REPAIRED' });
+        repairedList.push({ name: def.name, id: channel.id, status: 'TAMİR_EDİLDİ' });
       } else {
-        repairedList.push({ name: def.name, id: channel.id, status: 'HEALTHY' });
+        // Ensure private
+        await channel.permissionOverwrites.edit(guild.roles.everyone.id, {
+          ViewChannel: false,
+          SendMessages: false
+        }).catch(() => null);
+
+        repairedList.push({ name: def.name, id: channel.id, status: 'SAĞLIKLI' });
       }
 
       updatedMap[def.key] = channel.id;
