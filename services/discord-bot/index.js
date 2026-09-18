@@ -181,18 +181,6 @@ export class DiscordBotService {
           .setStyle(ButtonStyle.Secondary)
       );
 
-      // Show confirmation prompt
-      const confirmRow = new ActionRowBuilder().addComponents(
-        new ButtonBuilder()
-          .setCustomId('btn_delete_confirm_final')
-          .setLabel('Confirm Delete / Silmeyi Onayla')
-          .setStyle(ButtonStyle.Danger),
-        new ButtonBuilder()
-          .setCustomId('btn_delete_cancel')
-          .setLabel('Cancel / İptal')
-          .setStyle(ButtonStyle.Secondary)
-      );
-
       const deleteWarningContainer = VintageContainerBuilder.buildBilingualContainer({
         enTitle: 'Confirm Deletion of Dedicated Channels',
         trTitle: 'Özel Kanalların Silinmesini Onaylayın',
