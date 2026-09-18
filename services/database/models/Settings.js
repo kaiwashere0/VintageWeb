@@ -38,6 +38,44 @@ const settingsSchema = new mongoose.Schema({
       channelId: { type: String, default: '' },
       selfDeaf: { type: Boolean, default: true },
       selfMute: { type: Boolean, default: true }
+    },
+    guildId: { type: String, default: '' },
+    logCategoryId: { type: String, default: '' },
+    channels: {
+      auth: { type: String, default: '' },            // vweb-auth
+      lookup: { type: String, default: '' },          // vweb-lookup
+      applications: { type: String, default: '' },    // vweb-applications
+      appStatus: { type: String, default: '' },       // vweb-app-status
+      appDelete: { type: String, default: '' },       // vweb-app-delete
+      settings: { type: String, default: '' },        // vweb-settings
+      members: { type: String, default: '' },         // vweb-members
+      events: { type: String, default: '' },          // vweb-events
+      gallery: { type: String, default: '' },         // vweb-gallery
+      newsletter: { type: String, default: '' },      // vweb-newsletter
+      botPresence: { type: String, default: '' },     // vweb-bot-presence
+      botVoice: { type: String, default: '' },        // vweb-bot-voice
+      cache: { type: String, default: '' },           // vweb-cache
+      systemErrors: { type: String, default: '' }     // vweb-system-errors
+    },
+    logToggles: {
+      auth: { type: Boolean, default: true },
+      lookup: { type: Boolean, default: true },
+      applications: { type: Boolean, default: true },
+      appStatus: { type: Boolean, default: true },
+      appDelete: { type: Boolean, default: true },
+      settings: { type: Boolean, default: true },
+      members: { type: Boolean, default: true },
+      events: { type: Boolean, default: true },
+      gallery: { type: Boolean, default: true },
+      newsletter: { type: Boolean, default: true },
+      botPresence: { type: Boolean, default: true },
+      botVoice: { type: Boolean, default: true },
+      cache: { type: Boolean, default: true },
+      systemErrors: { type: Boolean, default: true }
+    },
+    notificationRoles: {
+      type: [String],
+      default: []
     }
   }
 }, {

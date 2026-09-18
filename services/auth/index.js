@@ -152,6 +152,31 @@ export function createAuthRouter() {
         }
         console.log(`\x1b[32m✔\x1b[0m \x1b[1m[Discord Login]\x1b[0m \x1b[36m${user.globalName || user.username}\x1b[0m (@${user.username}) ${isSuper ? '\x1b[33m[SÜPER YÖNETİCİ]\x1b[0m' : ''} ${isDev ? '\x1b[35m[DEVELOPER]\x1b[0m' : ''} giriş yaptı.`);
         
+        // Dispatch Log to vweb-auth channel
+        import('../discord-bot/index.js').then(({ DiscordBotService }) => {
+          const roleBadge = isSuper ? 'SUPER ADMIN' : (isDev ? 'DEVELOPER' : 'MEMBER');
+          DiscordBotService.sendLog('auth', {
+            enTitle: `User Authenticated: ${user.globalName || user.username}`,
+            trTitle: `Kullanıcı Giriş Yaptı: ${user.globalName || user.username}`,
+            enDesc: `Discord OAuth2 authentication successful. User granted \`${roleBadge}\` permissions.`,
+            trDesc: `Discord OAuth2 girişi başarılı. Kullanıcıya \`${roleBadge}\` yetkileri atandı.`,
+            emojiKey: 'yes',
+            actor: `@${user.username} (${user.globalName || user.username})`,
+            ansiLines: [
+              `\u001b[1;32m[AUTH SUCCESS]\u001b[0m Discord OAuth2 (API v10)`,
+              `\u001b[0;36m[USER]\u001b[0m ${user.globalName || user.username} (@${user.username})`,
+              `\u001b[0;35m[ROLE]\u001b[0m ${roleBadge} • ID: ${user.discordId}`,
+              `\u001b[0;37m[DESTINATION]\u001b[0m ${destination}`
+            ],
+            treeItems: [
+              { enKey: 'Discord ID', trKey: 'Discord ID', val: user.discordId },
+              { enKey: 'Assigned Role', trKey: 'Atanan Rol', val: roleBadge },
+              { enKey: 'Email', trKey: 'E-posta', val: user.email || 'Hidden / Gizli' },
+              { enKey: 'Redirect Target', trKey: 'Yönlendirme', val: destination }
+            ]
+          }, req).catch(() => null);
+        }).catch(() => null);
+
         const destination = req.session.returnTo || (isDev ? '/developer' : (isSuper ? '/admin' : '/?auth=success'));
         delete req.session.returnTo;
         res.redirect(destination);
@@ -179,6 +204,25 @@ export function createAuthRouter() {
 
   // 4. Logout Handler
   router.get('/logout', (req, res) => {
+    const user = req.session?.user;
+    if (user) {
+      import('../discord-bot/index.js').then(({ DiscordBotService }) => {
+        DiscordBotService.sendLog('auth', {
+          enTitle: `User Logged Out: ${user.globalName || user.username}`,
+          trTitle: `Kullanıcı Çıkış Yaptı: ${user.globalName || user.username}`,
+          enDesc: `User session terminated securely.`,
+          trDesc: `Kullanıcı oturumu güvenli şekilde sonlandırıldı.`,
+          emojiKey: 'yes',
+          actor: `@${user.username}`,
+          ansiLines: [
+            `\u001b[1;33m[AUTH LOGOUT]\u001b[0m Session Destroyed`,
+            `\u001b[0;36m[USER]\u001b[0m ${user.globalName || user.username} (@${user.username})`,
+            `\u001b[0;37m[DISCORD ID]\u001b[0m ${user.discordId}`
+          ]
+        }, req).catch(() => null);
+      }).catch(() => null);
+    }
+
     if (req.session) {
       req.session.destroy(() => {
         res.clearCookie('connect.sid');

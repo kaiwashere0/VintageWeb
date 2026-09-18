@@ -199,6 +199,29 @@ export function createDeveloperRouter() {
       const DiscordBotService = (await import('../discord-bot/index.js')).default;
       await DiscordBotService.reloadPresence();
 
+      // Dispatch to vweb-bot-presence
+      const devName = req.session.user?.globalName || req.session.user?.username || 'Developer';
+      DiscordBotService.sendLog('botPresence', {
+        enTitle: `Bot Presence & Streaming Updated by ${devName}`,
+        trTitle: `Bot Canlı Yayın & Durum Ayarları Güncellendi (Geliştirici: ${devName})`,
+        enDesc: `Discord bot live status mode set to \`${botPayload.statusMode}\` with activity \`${botPayload.statusType}\`.`,
+        trDesc: `Discord bot canlı durum modu \`${botPayload.statusMode}\` ve aktivite türü \`${botPayload.statusType}\` olarak güncellendi.`,
+        emojiKey: 'yes',
+        actor: devName,
+        ansiLines: [
+          `\u001b[1;35m[BOT PRESENCE]\u001b[0m Hot Reload Applied`,
+          `\u001b[0;36m[ACTIVITY]\u001b[0m ${botPayload.statusType} (${botPayload.statusMode})`,
+          `\u001b[0;32m[ONLINE STATUS]\u001b[0m ${botPayload.onlineStatus.toUpperCase()}`,
+          `\u001b[0;33m[ROTATION INTERVAL]\u001b[0m ${botPayload.rotationIntervalSeconds}s`
+        ],
+        treeItems: [
+          { enKey: 'Activity Type', trKey: 'Aktivite Türü', val: botPayload.statusType },
+          { enKey: 'Streaming URL', trKey: 'Yayın Linki', val: botPayload.streamingUrl || 'N/A' },
+          { enKey: 'Status Mode', trKey: 'Durum Modu', val: botPayload.statusMode },
+          { enKey: 'Total Rotations', trKey: 'Toplam Durum Metni', val: `${botPayload.statuses.length} items` }
+        ]
+      }, req).catch(() => null);
+
       res.json({
         success: true,
         message: 'Discord Bot presence settings updated and live stream broadcasted successfully!',
@@ -238,6 +261,31 @@ export function createDeveloperRouter() {
       } else {
         voiceResult = DiscordBotService.disconnectVoiceChannel();
       }
+
+      const devName = req.session.user?.globalName || req.session.user?.username || 'Developer';
+      // Dispatch to vweb-bot-voice
+      DiscordBotService.sendLog('botVoice', {
+        enTitle: `24/7 Voice Channel State: ${voiceConfig.enabled ? 'CONNECTED' : 'DISCONNECTED'}`,
+        trTitle: `7/24 Ses Kanalı Durumu: ${voiceConfig.enabled ? 'BAĞLANDI' : 'AYRILDI'}`,
+        enDesc: voiceConfig.enabled
+          ? `Bot connected to voice channel #${voiceResult?.channelName || voiceConfig.channelId} in guild ${voiceResult?.guildName || voiceConfig.guildId}.`
+          : `Bot disconnected from voice channel upon request by ${devName}.`,
+        trDesc: voiceConfig.enabled
+          ? `Bot ${voiceResult?.guildName || voiceConfig.guildId} sunucusundaki #${voiceResult?.channelName || voiceConfig.channelId} ses kanalına başarıyla bağlandı.`
+          : `Bot ${devName} isteği üzerine ses kanalından ayrıldı.`,
+        emojiKey: voiceConfig.enabled ? 'yes' : 'no',
+        actor: devName,
+        ansiLines: [
+          voiceConfig.enabled ? `\u001b[1;32m[VOICE CONNECTED]\u001b[0m 24/7 Engine Active` : `\u001b[1;33m[VOICE DISCONNECTED]\u001b[0m Offline`,
+          `\u001b[0;36m[TARGET CHANNEL]\u001b[0m #${voiceResult?.channelName || voiceConfig.channelId || 'N/A'}`,
+          `\u001b[0;35m[GUILD ID]\u001b[0m ${voiceConfig.guildId || 'N/A'}`
+        ],
+        treeItems: [
+          { enKey: 'Voice Channel', trKey: 'Ses Kanalı', val: voiceResult?.channelName || voiceConfig.channelId || 'N/A' },
+          { enKey: 'Server Name', trKey: 'Sunucu Adı', val: voiceResult?.guildName || voiceConfig.guildId || 'N/A' },
+          { enKey: 'Self Mute / Deaf', trKey: 'Sağırlaştır / Sustur', val: `Mute: ${voiceConfig.selfMute}, Deaf: ${voiceConfig.selfDeaf}` }
+        ]
+      }, req).catch(() => null);
 
       res.json({
         success: true,
@@ -306,6 +354,24 @@ export function createDeveloperRouter() {
           return res.status(400).json({ success: false, error: 'Unknown API endpoint specified.' });
       }
 
+      // Dispatch to vweb-lookup
+      const devName = req.session.user?.globalName || req.session.user?.username || 'Developer';
+      import('../discord-bot/index.js').then(({ DiscordBotService }) => {
+        DiscordBotService.sendLog('lookup', {
+          enTitle: `Developer API Sandbox Query: /${endpoint}`,
+          trTitle: `Geliştirici API Test Sorgusu: /${endpoint}`,
+          enDesc: `Interactive query executed against TruckersMP Web API v2.`,
+          trDesc: `TruckersMP Web API v2 üzerinde etkileşimli test sorgusu çalıştırıldı.`,
+          emojiKey: result?.error ? 'no' : 'yes',
+          actor: devName,
+          ansiLines: [
+            result?.error ? `\u001b[1;31m[API TEST FAILED]\u001b[0m` : `\u001b[1;34m[API TEST SUCCESS]\u001b[0m`,
+            `\u001b[0;36m[ENDPOINT]\u001b[0m /${endpoint} ${id ? `(ID: ${id})` : ''}`,
+            `\u001b[0;35m[DEVELOPER]\u001b[0m ${devName}`
+          ]
+        }, req).catch(() => null);
+      }).catch(() => null);
+
       res.json({
         success: !result.error,
         endpoint,
@@ -335,7 +401,26 @@ export function createDeveloperRouter() {
   // Microservice Action: Flush Cache
   router.post('/api/microservices/flush-cache', (req, res) => {
     try {
+      const devName = req.session.user?.globalName || req.session.user?.username || 'Developer';
       const tmpFlush = TruckersMPService.flushCache();
+
+      // Dispatch to vweb-cache
+      import('../discord-bot/index.js').then(({ DiscordBotService }) => {
+        DiscordBotService.sendLog('cache', {
+          enTitle: `In-Memory API Cache Flushed by ${devName}`,
+          trTitle: `Bellek İçi API Önbelleği Temizlendi (${devName})`,
+          enDesc: `All cached TruckersMP API requests and temporary entries cleared.`,
+          trDesc: `Tüm önbelleğe alınmış TruckersMP API yanıtları ve geçici girdiler temizlendi.`,
+          emojiKey: 'yes',
+          actor: devName,
+          ansiLines: [
+            `\u001b[1;33m[CACHE FLUSHED]\u001b[0m In-Memory Storage Reset`,
+            `\u001b[0;36m[CLEARED ENTRIES]\u001b[0m ${tmpFlush.clearedEntries} Cached Items`,
+            `\u001b[0;35m[DEVELOPER]\u001b[0m ${devName}`
+          ]
+        }, req).catch(() => null);
+      }).catch(() => null);
+
       res.json({ success: true, message: 'TruckersMP & System In-Memory caches flushed successfully.', details: tmpFlush });
     } catch (err) {
       res.status(500).json({ success: false, error: err.message });
@@ -345,7 +430,25 @@ export function createDeveloperRouter() {
   // Telemetry Action: Clear Error Logs
   router.delete('/api/telemetry/logs', (req, res) => {
     try {
+      const devName = req.session.user?.globalName || req.session.user?.username || 'Developer';
       const result = TelemetryService.clearErrorLogs();
+
+      // Dispatch to vweb-cache
+      import('../discord-bot/index.js').then(({ DiscordBotService }) => {
+        DiscordBotService.sendLog('cache', {
+          enTitle: `Telemetry Error Logs Cleared by ${devName}`,
+          trTitle: `Telemetri Hata Günlükleri Sıfırlandı (${devName})`,
+          enDesc: `System error buffer has been purged.`,
+          trDesc: `Sistem hata tamponu tamamen temizlendi.`,
+          emojiKey: 'yes',
+          actor: devName,
+          ansiLines: [
+            `\u001b[1;33m[LOGS PURGED]\u001b[0m Error Telemetry Cleared`,
+            `\u001b[0;35m[DEVELOPER]\u001b[0m ${devName}`
+          ]
+        }, req).catch(() => null);
+      }).catch(() => null);
+
       res.json(result);
     } catch (err) {
       res.status(500).json({ success: false, error: err.message });

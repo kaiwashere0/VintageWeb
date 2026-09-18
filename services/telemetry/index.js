@@ -109,6 +109,31 @@ class TelemetryEngine {
     if (this.errorLogs.length > this.maxErrors) {
       this.errorLogs.pop();
     }
+
+    // Dispatch to vweb-system-errors channel
+    if (['ERROR', 'CRITICAL'].includes(severity.toUpperCase())) {
+      import('../discord-bot/index.js').then(({ DiscordBotService }) => {
+        DiscordBotService.sendLog('systemErrors', {
+          enTitle: `System Error Alert: [${service}]`,
+          trTitle: `Sistem Hata Bildirimi: [${service}]`,
+          enDesc: `An unexpected backend exception or error code was captured by telemetry.`,
+          trDesc: `Telemetri tarafından yakalanan beklenmeyen bir sunucu hatası gerçekleşti.`,
+          emojiKey: 'no',
+          actor: service,
+          ansiLines: [
+            `\u001b[1;31m[SEVERITY: ${severity.toUpperCase()}]\u001b[0m ${service}`,
+            `\u001b[0;37m[MESSAGE]\u001b[0m ${message}`,
+            `\u001b[0;36m[ERROR ID]\u001b[0m ${errorEntry.id}`
+          ],
+          treeItems: [
+            { enKey: 'Service Source', trKey: 'Kaynak Servis', val: service },
+            { enKey: 'Severity Level', trKey: 'Önem Derecesi', val: severity.toUpperCase() },
+            { enKey: 'Error Message', trKey: 'Hata Mesajı', val: message }
+          ]
+        }).catch(() => null);
+      }).catch(() => null);
+    }
+
     return errorEntry;
   }
 

@@ -213,7 +213,7 @@ export function createApiRouter() {
 
       // Discord Bot / Webhook Notification
       try {
-        await DiscordBotService.notifyNewApplication(application);
+        await DiscordBotService.notifyNewApplication(application, req);
       } catch (botErr) {
         console.warn('[DiscordBotService] Notification warning:', botErr.message);
       }
@@ -239,6 +239,25 @@ export function createApiRouter() {
 
       const clientIp = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip || '').split(',')[0].trim();
       const result = await DatabaseService.addSubscriber(email, clientIp);
+
+      // Dispatch to vweb-newsletter
+      DiscordBotService.sendLog('newsletter', {
+        enTitle: result.alreadySubscribed ? `Existing Subscriber Re-entered: ${email}` : `New Newsletter Subscriber: ${email}`,
+        trTitle: result.alreadySubscribed ? `Mevcut Abone Tekrar Girdi: ${email}` : `Yeni Bülten Abonesi: ${email}`,
+        enDesc: result.alreadySubscribed ? `An already subscribed email address was submitted.` : `A new reader joined the Vintage Club newsletter list.`,
+        trDesc: result.alreadySubscribed ? `Zaten kayıtlı olan bir e-posta adresi tekrar gönderildi.` : `Vintage Club bülten listesine yeni bir okur katıldı.`,
+        emojiKey: 'yes',
+        actor: email,
+        ansiLines: [
+          `\u001b[1;32m[NEWSLETTER]\u001b[0m ${result.alreadySubscribed ? 'ALREADY SUBSCRIBED' : 'NEW SUBSCRIBER'}`,
+          `\u001b[0;36m[EMAIL]\u001b[0m ${email}`,
+          `\u001b[0;37m[IP]\u001b[0m ${clientIp}`
+        ],
+        treeItems: [
+          { enKey: 'Subscriber Email', trKey: 'E-posta', val: email },
+          { enKey: 'Status', trKey: 'Durum', val: result.alreadySubscribed ? 'Already Registered' : 'Subscribed' }
+        ]
+      }, req).catch(() => null);
 
       if (result.alreadySubscribed) {
         return res.status(200).json({

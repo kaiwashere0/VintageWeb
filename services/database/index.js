@@ -123,7 +123,12 @@ export class DatabaseService {
         channelId: '',
         selfDeaf: true,
         selfMute: true
-      }
+      },
+      guildId: '',
+      logCategoryId: '',
+      channels: {},
+      logToggles: {},
+      notificationRoles: []
     };
   }
 
@@ -132,13 +137,56 @@ export class DatabaseService {
     if (!doc) {
       doc = new Settings({ discordBot: botUpdates });
     } else {
+      const current = doc.discordBot?.toObject ? doc.discordBot.toObject() : (doc.discordBot || {});
       doc.discordBot = {
-        ...(doc.discordBot?.toObject ? doc.discordBot.toObject() : doc.discordBot),
-        ...botUpdates
+        ...current,
+        ...botUpdates,
+        voiceChannel: {
+          ...(current.voiceChannel || {}),
+          ...(botUpdates.voiceChannel || {})
+        },
+        channels: {
+          ...(current.channels || {}),
+          ...(botUpdates.channels || {})
+        },
+        logToggles: {
+          ...(current.logToggles || {}),
+          ...(botUpdates.logToggles || {})
+        }
       };
     }
     await doc.save();
     return doc.toObject().discordBot;
+  }
+
+  static async saveBotChannels(guildId, categoryId, channelsMap) {
+    return await this.updateBotSettings({
+      guildId,
+      logCategoryId: categoryId,
+      channels: channelsMap
+    });
+  }
+
+  static async clearBotChannels() {
+    return await this.updateBotSettings({
+      logCategoryId: '',
+      channels: {
+        auth: '',
+        lookup: '',
+        applications: '',
+        appStatus: '',
+        appDelete: '',
+        settings: '',
+        members: '',
+        events: '',
+        gallery: '',
+        newsletter: '',
+        botPresence: '',
+        botVoice: '',
+        cache: '',
+        systemErrors: ''
+      }
+    });
   }
 
   static async setSiteMode(mode) {
