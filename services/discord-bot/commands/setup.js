@@ -20,21 +20,28 @@ export const setupCommand = {
     .setDMPermission(false),
 
   async execute(interaction) {
+    // 1. Immediately defer reply to prevent 3-second Discord interaction timeout
+    await interaction.deferReply().catch(() => null);
+
     // Administrator check
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
-      return interaction.reply({
+      return interaction.editReply({
         content: [
           MarkdownBuilder.header('Access Denied: Administrator Required', 'Erişim Reddedildi: Yönetici Yetkisi Gerekir', 'no'),
           MarkdownBuilder.bilingual(
             'You do not have permission to execute the system setup command.',
             'Sistem kurulum komutunu çalıştırmak için yetkiniz bulunmamaktadır.'
           )
-        ].join('\n'),
-        ephemeral: true
+        ].join('\n')
       });
     }
 
-    const botSettings = await DatabaseService.getBotSettings();
+    let botSettings = {};
+    try {
+      botSettings = await DatabaseService.getBotSettings();
+    } catch (dbErr) {
+      botSettings = {};
+    }
     const configuredChannels = botSettings.channels || {};
     const configuredCount = Object.values(configuredChannels).filter(Boolean).length;
 
@@ -119,10 +126,9 @@ export const setupCommand = {
         .setStyle(ButtonStyle.Danger)
     );
 
-    await interaction.reply({
+    await interaction.editReply({
       content: lines.join('\n'),
-      components: [selectRow, buttonRow],
-      ephemeral: false
+      components: [selectRow, buttonRow]
     });
   }
 };

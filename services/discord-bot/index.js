@@ -56,7 +56,7 @@ export class DiscordBotService {
 
       EmojiResolver.setClient(this.client);
 
-      this.client.once('ready', async (c) => {
+      this.client.once('clientReady', async (c) => {
         console.log(`\x1b[32m✔\x1b[0m \x1b[1m[Discord Bot]\x1b[0m Bot başarıyla bağlandı: \x1b[36m${c.user.tag}\x1b[0m`);
         
         // 1. Register Application Slash Commands
@@ -83,13 +83,11 @@ export class DiscordBotService {
           console.error('[DiscordBot] Interaction error:', err);
           if (interaction.replied || interaction.deferred) {
             await interaction.followUp({
-              content: `${EmojiResolver.NO} **An error occurred / Bir hata oluştu:** \`${err.message}\``,
-              ephemeral: true
+              content: `${EmojiResolver.NO} **An error occurred / Bir hata oluştu:** \`${err.message}\``
             }).catch(() => null);
           } else {
             await interaction.reply({
-              content: `${EmojiResolver.NO} **An error occurred / Bir hata oluştu:** \`${err.message}\``,
-              ephemeral: true
+              content: `${EmojiResolver.NO} **An error occurred / Bir hata oluştu:** \`${err.message}\``
             }).catch(() => null);
           }
         }
