@@ -32,7 +32,7 @@ export const driverCommand = {
         accentColor: VINTAGE_COLORS.ERROR,
         meta: { user: interaction.user.tag, time: new Date() }
       });
-      return interaction.editReply({ components: [notFoundContainer] });
+      return interaction.editReply(notFoundContainer);
     }
 
     const p = playerRes.response;
@@ -65,7 +65,7 @@ export const driverCommand = {
       meta: { user: interaction.user.tag, time: new Date() }
     });
 
-    await interaction.editReply({ components: [driverContainer] });
+    await interaction.editReply(driverContainer);
   }
 };
 

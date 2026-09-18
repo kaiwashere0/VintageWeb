@@ -191,7 +191,8 @@ export class DiscordBotService {
       });
 
       await interaction.reply({
-        components: [deleteWarningContainer, confirmRow],
+        content: deleteWarningContainer.content,
+        components: [...(deleteWarningContainer.components || []), confirmRow],
         ephemeral: true
       });
     } else if (id === 'btn_delete_confirm_final') {
@@ -208,9 +209,7 @@ export class DiscordBotService {
         meta: { user: interaction.user.tag, time: new Date() }
       });
 
-      await interaction.editReply({
-        components: [deletedContainer]
-      });
+      await interaction.editReply(deletedContainer);
     } else if (id === 'btn_delete_cancel') {
       const cancelContainer = VintageContainerBuilder.buildBilingualContainer({
         enTitle: 'Operation Cancelled',
@@ -221,9 +220,7 @@ export class DiscordBotService {
         accentColor: VINTAGE_COLORS.INFO
       });
 
-      await interaction.update({
-        components: [cancelContainer]
-      });
+      await interaction.update(cancelContainer);
     }
   }
 
@@ -259,7 +256,7 @@ export class DiscordBotService {
         meta: { user: interaction.user.tag, time: new Date() }
       });
 
-      await interaction.editReply({ components: [installContainer] });
+      await interaction.editReply(installContainer);
 
     } else if (action === 'action_repair') {
       const res = await ChannelManager.repairChannels(interaction.guild);
@@ -285,7 +282,7 @@ export class DiscordBotService {
         meta: { user: interaction.user.tag, time: new Date() }
       });
 
-      await interaction.editReply({ components: [repairContainer] });
+      await interaction.editReply(repairContainer);
 
     } else if (action === 'action_recreate') {
       const res = await ChannelManager.recreateAllChannels(interaction.guild);
@@ -305,7 +302,7 @@ export class DiscordBotService {
         meta: { user: interaction.user.tag, time: new Date() }
       });
 
-      await interaction.editReply({ components: [recreateContainer] });
+      await interaction.editReply(recreateContainer);
 
     } else if (action === 'action_view_map') {
       const botSettings = await DatabaseService.getBotSettings();
@@ -334,7 +331,7 @@ export class DiscordBotService {
         meta: { user: interaction.user.tag, time: new Date() }
       });
 
-      await interaction.editReply({ components: [mapContainer] });
+      await interaction.editReply(mapContainer);
 
     } else if (action === 'action_delete_all') {
       const res = await ChannelManager.deleteAllChannels(interaction.guild);
@@ -349,7 +346,7 @@ export class DiscordBotService {
         meta: { user: interaction.user.tag, time: new Date() }
       });
 
-      await interaction.editReply({ components: [deleteResContainer] });
+      await interaction.editReply(deleteResContainer);
     }
   }
 
@@ -405,7 +402,7 @@ export class DiscordBotService {
         meta
       });
 
-      await targetChannel.send({ components: [logContainer] });
+      await targetChannel.send(logContainer);
       return true;
     } catch (err) {
       console.error(`[DiscordBot sendLog:${logType}] Error:`, err.message);

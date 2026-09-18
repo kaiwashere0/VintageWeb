@@ -45,7 +45,7 @@ export const statusCommand = {
       meta: { user: interaction.user.tag, time: new Date() }
     });
 
-    await interaction.editReply({ components: [statusContainer] });
+    await interaction.editReply(statusContainer);
   }
 };
 
@@ -88,7 +88,7 @@ export const statsCommand = {
       meta: { user: interaction.user.tag, time: new Date() }
     });
 
-    await interaction.editReply({ components: [statsContainer] });
+    await interaction.editReply(statsContainer);
   }
 };
 

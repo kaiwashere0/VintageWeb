@@ -32,7 +32,7 @@ export const setupCommand = {
         emojiKey: 'no',
         accentColor: VINTAGE_COLORS.ERROR
       });
-      return interaction.editReply({ components: [errorContainer] });
+      return interaction.editReply(errorContainer);
     }
 
     let botSettings = {};
@@ -129,7 +129,8 @@ export const setupCommand = {
     );
 
     await interaction.editReply({
-      components: [mainContainer, selectRow, buttonRow]
+      content: mainContainer.content,
+      components: [...(mainContainer.components || []), selectRow, buttonRow]
     });
   }
 };

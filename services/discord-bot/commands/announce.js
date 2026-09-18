@@ -58,7 +58,7 @@ export const announceCommand = {
       meta: { user: interaction.user.tag, time: new Date() }
     });
 
-    await targetChannel.send({ components: [announceContainer] });
+    await targetChannel.send(announceContainer);
 
     const confirmationContainer = VintageContainerBuilder.buildBilingualContainer({
       enTitle: 'Announcement Published Successfully',
@@ -69,7 +69,7 @@ export const announceCommand = {
       accentColor: VINTAGE_COLORS.SUCCESS
     });
 
-    await interaction.editReply({ components: [confirmationContainer] });
+    await interaction.editReply(confirmationContainer);
   }
 };
 

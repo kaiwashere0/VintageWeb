@@ -189,7 +189,7 @@ export class ChannelManager {
           meta: { time: new Date(), user: 'Vintage System Engine' }
         });
 
-        await channel.send({ components: [welcomeContainer] }).catch(() => null);
+        await channel.send(welcomeContainer).catch(() => null);
         createdList.push({ name: def.name, id: channel.id, status: 'CREATED' });
       } else {
         createdList.push({ name: def.name, id: channel.id, status: 'EXISTING' });
@@ -263,7 +263,7 @@ export class ChannelManager {
           meta: { time: new Date(), user: 'Vintage System Repair Engine' }
         });
 
-        await channel.send({ components: [repairContainer] }).catch(() => null);
+        await channel.send(repairContainer).catch(() => null);
         repairedList.push({ name: def.name, id: channel.id, status: 'REPAIRED' });
       } else {
         repairedList.push({ name: def.name, id: channel.id, status: 'HEALTHY' });
