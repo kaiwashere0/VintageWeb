@@ -1,7 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
 import TruckersMPService from '../../truckersmp/index.js';
-import MarkdownBuilder from '../markdownBuilder.js';
-import EmojiResolver from '../emojiResolver.js';
+import VintageContainerBuilder, { VINTAGE_COLORS } from '../containerBuilder.js';
 
 export const driverCommand = {
   data: new SlashCommandBuilder()
@@ -16,7 +15,7 @@ export const driverCommand = {
 
   async execute(interaction) {
     const targetId = interaction.options.getString('id');
-    await interaction.deferReply();
+    await interaction.deferReply().catch(() => null);
 
     const [playerRes, bansRes] = await Promise.all([
       TruckersMPService.getPlayer(targetId),
@@ -24,16 +23,16 @@ export const driverCommand = {
     ]);
 
     if (playerRes.error || !playerRes.response) {
-      return interaction.editReply({
-        content: [
-          MarkdownBuilder.header(`Driver Lookup Failed: #${targetId}`, `Sürücü Sorgusu Başarısız: #${targetId}`, 'no'),
-          MarkdownBuilder.bilingual(
-            `No TruckersMP account found matching identifier \`${targetId}\`.`,
-            `\`${targetId}\` kimliğiyle eşleşen TruckersMP hesabı bulunamadı.`
-          ),
-          MarkdownBuilder.metaFooter({ user: interaction.user.tag, time: new Date() })
-        ].join('\n')
+      const notFoundContainer = VintageContainerBuilder.buildBilingualContainer({
+        enTitle: `Driver Lookup Failed: #${targetId}`,
+        trTitle: `Sürücü Sorgusu Başarısız: #${targetId}`,
+        enDesc: `No TruckersMP account found matching identifier \`${targetId}\`.`,
+        trDesc: `\`${targetId}\` kimliğiyle eşleşen TruckersMP hesabı bulunamadı.`,
+        emojiKey: 'no',
+        accentColor: VINTAGE_COLORS.ERROR,
+        meta: { user: interaction.user.tag, time: new Date() }
       });
+      return interaction.editReply({ components: [notFoundContainer] });
     }
 
     const p = playerRes.response;
@@ -43,34 +42,30 @@ export const driverCommand = {
     const isBanned = activeBans.length > 0;
     const banStatusStr = isBanned ? `BANNED (${activeBans.length} Active)` : 'CLEAN (0 Active Bans)';
 
-    const lines = [
-      MarkdownBuilder.header(`TruckersMP Driver Profile: ${p.name}`, `TruckersMP Sürücü Profili: ${p.name}`, isBanned ? 'no' : 'yes'),
-      '',
-      `>>> **Verified TruckersMP Simulation Profile**`,
-      `*Doğrulanmış TruckersMP Simülasyon Profili*`,
-      '',
-      MarkdownBuilder.ansiBlock([
-        MarkdownBuilder.ansi(`[DRIVER] ${p.name} (TMP ID: #${p.id})`, '36', true),
-        MarkdownBuilder.ansi(`[STATUS] Ban Record: ${banStatusStr}`, isBanned ? '31' : '32', true),
-        MarkdownBuilder.ansi(`[STEAM ID] ${p.steamID64 || 'N/A'}`, '37'),
-        MarkdownBuilder.ansi(`[VTC] ${p.vtc?.name ? `${p.vtc.name} (Role: ${p.vtc.role || 'Member'})` : 'None / Bağımsız Sürücü'}`, '33'),
-        MarkdownBuilder.ansi(`[JOIN DATE] ${p.joinDate || 'N/A'}`, '37')
-      ]),
-      '',
-      `### Driver Details / Sürücü Detayları`,
-      `*-# Official TruckersMP community records.*`,
-      '',
-      MarkdownBuilder.tree([
+    const driverContainer = VintageContainerBuilder.buildBilingualContainer({
+      enTitle: `TruckersMP Driver Profile: ${p.name}`,
+      trTitle: `TruckersMP Sürücü Profili: ${p.name}`,
+      enDesc: 'Verified TruckersMP Simulation Profile.',
+      trDesc: 'Doğrulanmış TruckersMP Simülasyon Profili.',
+      emojiKey: isBanned ? 'no' : 'yes',
+      accentColor: isBanned ? VINTAGE_COLORS.ERROR : VINTAGE_COLORS.INFO,
+      ansiLines: [
+        `\u001b[1;36m[DRIVER]\u001b[0m ${p.name} (TMP ID: #${p.id})`,
+        `\u001b[0;${isBanned ? '31' : '32'}m[STATUS]\u001b[0m Ban Record: ${banStatusStr}`,
+        `\u001b[0;37m[STEAM ID]\u001b[0m ${p.steamID64 || 'N/A'}`,
+        `\u001b[0;33m[VTC]\u001b[0m ${p.vtc?.name ? `${p.vtc.name} (Role: ${p.vtc.role || 'Member'})` : 'None / Bağımsız Sürücü'}`,
+        `\u001b[0;37m[JOIN DATE]\u001b[0m ${p.joinDate || 'N/A'}`
+      ],
+      treeItems: [
         { enKey: 'TruckersMP Profile', trKey: 'TMP Profili', val: `https://truckersmp.com/user/${p.id}` },
         { enKey: 'Steam Community', trKey: 'Steam Sayfası', val: p.steamID64 ? `https://steamcommunity.com/profiles/${p.steamID64}` : 'N/A' },
         { enKey: 'Total Bans Recorded', trKey: 'Toplam Ban Sayısı', val: `${bans.length} Bans Recorded` },
         { enKey: 'Group / Role', trKey: 'Grup / Rol', val: p.groupName || 'Player' }
-      ]),
-      '',
-      MarkdownBuilder.metaFooter({ user: interaction.user.tag, time: new Date() })
-    ];
+      ],
+      meta: { user: interaction.user.tag, time: new Date() }
+    });
 
-    await interaction.editReply({ content: lines.join('\n') });
+    await interaction.editReply({ components: [driverContainer] });
   }
 };
 

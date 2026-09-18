@@ -173,22 +173,23 @@ export class ChannelManager {
           ]
         });
 
-        // Send initial welcoming component message
-        const welcomeText = [
-          MarkdownBuilder.header(`Dedicated Channel Initialized: ${def.name}`, `Özel Kanal Başlatıldı: ${def.name}`, 'yes'),
-          '',
-          `>>> **${def.enDesc}**`,
-          `*${def.trDesc}*`,
-          '',
-          MarkdownBuilder.ansiBlock([
-            MarkdownBuilder.ansi(`[STATUS] READY • 2026 ENGINE`, '32', true),
-            MarkdownBuilder.ansi(`[CHANNEL] #${def.name}`, '36'),
-            MarkdownBuilder.ansi(`[PURPOSE] ${def.enDesc}`, '37')
-          ]),
-          MarkdownBuilder.metaFooter({ time: new Date(), user: 'Vintage System Engine' })
-        ].join('\n');
+        // Send initial welcoming Container message
+        const welcomeContainer = VintageContainerBuilder.buildBilingualContainer({
+          enTitle: `Dedicated Channel Initialized: ${def.name}`,
+          trTitle: `Özel Kanal Başlatıldı: ${def.name}`,
+          enDesc: def.enDesc,
+          trDesc: def.trDesc,
+          emojiKey: 'yes',
+          accentColor: VINTAGE_COLORS.GOLD,
+          ansiLines: [
+            `\u001b[1;32m[STATUS]\u001b[0m READY • 2026 ENGINE`,
+            `\u001b[0;36m[CHANNEL]\u001b[0m #${def.name}`,
+            `\u001b[0;37m[PURPOSE]\u001b[0m ${def.enDesc}`
+          ],
+          meta: { time: new Date(), user: 'Vintage System Engine' }
+        });
 
-        await channel.send({ content: welcomeText }).catch(() => null);
+        await channel.send({ components: [welcomeContainer] }).catch(() => null);
         createdList.push({ name: def.name, id: channel.id, status: 'CREATED' });
       } else {
         createdList.push({ name: def.name, id: channel.id, status: 'EXISTING' });
@@ -247,21 +248,22 @@ export class ChannelManager {
           ]
         });
 
-        const repairNotice = [
-          MarkdownBuilder.header(`Channel Repaired & Restored: ${def.name}`, `Kanal Tamir Edildi ve Yeniden Oluşturuldu: ${def.name}`, 'yes'),
-          '',
-          `>>> **${def.enDesc}**`,
-          `*${def.trDesc}*`,
-          '',
-          MarkdownBuilder.ansiBlock([
-            MarkdownBuilder.ansi(`[REPAIR STATUS] RESTORED & LINKED`, '33', true),
-            MarkdownBuilder.ansi(`[CHANNEL] #${def.name}`, '36'),
-            MarkdownBuilder.ansi(`[SYNC] MongoDB Configuration Updated`, '32')
-          ]),
-          MarkdownBuilder.metaFooter({ time: new Date(), user: 'Vintage System Repair Engine' })
-        ].join('\n');
+        const repairContainer = VintageContainerBuilder.buildBilingualContainer({
+          enTitle: `Channel Repaired & Restored: ${def.name}`,
+          trTitle: `Kanal Tamir Edildi ve Yeniden Oluşturuldu: ${def.name}`,
+          enDesc: def.enDesc,
+          trDesc: def.trDesc,
+          emojiKey: 'yes',
+          accentColor: VINTAGE_COLORS.WARNING,
+          ansiLines: [
+            `\u001b[1;33m[REPAIR STATUS]\u001b[0m RESTORED & LINKED`,
+            `\u001b[0;36m[CHANNEL]\u001b[0m #${def.name}`,
+            `\u001b[0;32m[SYNC]\u001b[0m MongoDB Configuration Updated`
+          ],
+          meta: { time: new Date(), user: 'Vintage System Repair Engine' }
+        });
 
-        await channel.send({ content: repairNotice }).catch(() => null);
+        await channel.send({ components: [repairContainer] }).catch(() => null);
         repairedList.push({ name: def.name, id: channel.id, status: 'REPAIRED' });
       } else {
         repairedList.push({ name: def.name, id: channel.id, status: 'HEALTHY' });

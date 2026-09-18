@@ -4,13 +4,12 @@ import {
   ActionRowBuilder,
   StringSelectMenuBuilder,
   ButtonBuilder,
-  ButtonStyle,
-  ComponentType
+  ButtonStyle
 } from 'discord.js';
 import DatabaseService from '../../database/index.js';
-import ChannelManager, { CHANNEL_DEFINITIONS } from '../channelManager.js';
+import { CHANNEL_DEFINITIONS } from '../channelManager.js';
+import VintageContainerBuilder, { VINTAGE_COLORS } from '../containerBuilder.js';
 import MarkdownBuilder from '../markdownBuilder.js';
-import EmojiResolver from '../emojiResolver.js';
 
 export const setupCommand = {
   data: new SlashCommandBuilder()
@@ -25,15 +24,15 @@ export const setupCommand = {
 
     // Administrator check
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
-      return interaction.editReply({
-        content: [
-          MarkdownBuilder.header('Access Denied: Administrator Required', 'Erişim Reddedildi: Yönetici Yetkisi Gerekir', 'no'),
-          MarkdownBuilder.bilingual(
-            'You do not have permission to execute the system setup command.',
-            'Sistem kurulum komutunu çalıştırmak için yetkiniz bulunmamaktadır.'
-          )
-        ].join('\n')
+      const errorContainer = VintageContainerBuilder.buildBilingualContainer({
+        enTitle: 'Access Denied: Administrator Required',
+        trTitle: 'Erişim Reddedildi: Yönetici Yetkisi Gerekir',
+        enDesc: 'You do not have permission to execute the system setup command.',
+        trDesc: 'Sistem kurulum komutunu çalıştırmak için yetkiniz bulunmamaktadır.',
+        emojiKey: 'no',
+        accentColor: VINTAGE_COLORS.ERROR
       });
+      return interaction.editReply({ components: [errorContainer] });
     }
 
     let botSettings = {};
@@ -45,32 +44,35 @@ export const setupCommand = {
     const configuredChannels = botSettings.channels || {};
     const configuredCount = Object.values(configuredChannels).filter(Boolean).length;
 
-    // Build main setup panel message
-    const lines = [
-      MarkdownBuilder.header('Vintage Web Platform — System Control Hub', 'Vintage Web Platformu — Sistem Kontrol Merkezi', 'stats'),
-      '',
-      `>>> **Autonomous Channel Manager & Granular Telemetry Engine**`,
-      `*Otonom Kanal Yöneticisi ve Detaylı Telemetri Motoru*`,
-      '',
-      MarkdownBuilder.ansiBlock([
-        MarkdownBuilder.ansi(`[ENGINE] Vintage Web 2026 Platform Controller`, '36', true),
-        MarkdownBuilder.ansi(`[STATUS] Active • Guild: ${interaction.guild.name}`, '32'),
-        MarkdownBuilder.ansi(`[CHANNELS] Configured: ${configuredCount} / ${CHANNEL_DEFINITIONS.length} Dedicated Streams`, configuredCount === CHANNEL_DEFINITIONS.length ? '32' : '33'),
-        MarkdownBuilder.ansi(`[VOICE 24/7] ${botSettings.voiceChannel?.enabled ? 'ENABLED' : 'DISABLED'} • Status: ${botSettings.onlineStatus?.toUpperCase() || 'ONLINE'}`, '35')
-      ]),
-      '',
-      `### Select an Operation / Bir İşlem Seçin`,
-      `*-# Use the menu or quick action buttons below to manage your dedicated vweb-* log channels.*`,
-      '',
-      MarkdownBuilder.tree([
+    // Quick Action Accessory Button
+    const quickInstallAccessory = new ButtonBuilder()
+      .setCustomId('btn_setup_quick_create')
+      .setLabel('Quick Install / Hızlı Kur')
+      .setStyle(ButtonStyle.Success);
+
+    // Build Discord Container Component V2
+    const mainContainer = VintageContainerBuilder.buildBilingualContainer({
+      enTitle: 'Vintage Web Platform — System Control Hub',
+      trTitle: 'Vintage Web Platformu — Sistem Kontrol Merkezi',
+      enDesc: 'Autonomous Channel Manager & Granular Telemetry Engine for Vintage Club.',
+      trDesc: 'Vintage Club için Otonom Kanal Yöneticisi ve Detaylı Telemetri Motoru.',
+      emojiKey: 'stats',
+      accentColor: VINTAGE_COLORS.GOLD,
+      accessoryButton: quickInstallAccessory,
+      ansiLines: [
+        `\u001b[1;36m[ENGINE]\u001b[0m Vintage Web 2026 Platform Controller`,
+        `\u001b[0;32m[STATUS]\u001b[0m Active • Guild: ${interaction.guild.name}`,
+        `\u001b[0;${configuredCount === CHANNEL_DEFINITIONS.length ? '32' : '33'}m[CHANNELS]\u001b[0m Configured: ${configuredCount} / ${CHANNEL_DEFINITIONS.length} Dedicated Streams`,
+        `\u001b[0;35m[VOICE 24/7]\u001b[0m ${botSettings.voiceChannel?.enabled ? 'ENABLED' : 'DISABLED'} • Status: ${botSettings.onlineStatus?.toUpperCase() || 'ONLINE'}`
+      ],
+      treeItems: [
         { enKey: 'Auto-Install', trKey: 'Otomatik Kurulum', val: 'Creates category & 14 vweb-* channels' },
         { enKey: 'Self-Repair', trKey: 'Otomatik Tamir', val: 'Detects and restores missing channels' },
         { enKey: 'Recreate', trKey: 'Yeniden Kurulum', val: 'Cleans up and rebuilds fresh channels' },
         { enKey: 'Purge / Delete', trKey: 'Kanalları Temizle', val: 'Safely removes system channels & resets DB' }
-      ]),
-      '',
-      MarkdownBuilder.metaFooter({ user: interaction.user.tag, time: new Date(), reqId: 'setup_panel' })
-    ];
+      ],
+      meta: { user: interaction.user.tag, time: new Date(), reqId: 'setup_console' }
+    });
 
     // Select Menu Row
     const selectRow = new ActionRowBuilder().addComponents(
@@ -127,8 +129,7 @@ export const setupCommand = {
     );
 
     await interaction.editReply({
-      content: lines.join('\n'),
-      components: [selectRow, buttonRow]
+      components: [mainContainer, selectRow, buttonRow]
     });
   }
 };

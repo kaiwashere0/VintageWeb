@@ -1,11 +1,10 @@
 import { SlashCommandBuilder, PermissionFlagsBits, ChannelType } from 'discord.js';
-import MarkdownBuilder from '../markdownBuilder.js';
-import EmojiResolver from '../emojiResolver.js';
+import VintageContainerBuilder, { VINTAGE_COLORS } from '../containerBuilder.js';
 
 export const announceCommand = {
   data: new SlashCommandBuilder()
     .setName('duyuru')
-    .setDescription('Publish a structured bilingual announcement with modern section layout')
+    .setDescription('Publish a structured bilingual announcement with Discord Container layout')
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
     .addStringOption(option =>
       option.setName('title_en')
@@ -36,38 +35,41 @@ export const announceCommand = {
     .setDMPermission(false),
 
   async execute(interaction) {
+    await interaction.deferReply({ ephemeral: true }).catch(() => null);
+
     const titleEn = interaction.options.getString('title_en');
     const titleTr = interaction.options.getString('title_tr');
     const contentEn = interaction.options.getString('content_en');
     const contentTr = interaction.options.getString('content_tr');
     const targetChannel = interaction.options.getChannel('target_channel') || interaction.channel;
 
-    const messageContent = [
-      MarkdownBuilder.header(titleEn, titleTr, 'yes'),
-      '',
-      `>>> **${contentEn}**`,
-      `*${contentTr}*`,
-      '',
-      MarkdownBuilder.ansiBlock([
-        MarkdownBuilder.ansi(`[OFFICIAL ANNOUNCEMENT] Vintage Club Management`, '35', true),
-        MarkdownBuilder.ansi(`[PUBLISHED BY] ${interaction.user.tag}`, '36'),
-        MarkdownBuilder.ansi(`[DATE] ${new Date().toUTCString()}`, '37')
-      ]),
-      MarkdownBuilder.metaFooter({ user: interaction.user.tag, time: new Date() })
-    ].join('\n');
-
-    await targetChannel.send({ content: messageContent });
-
-    await interaction.reply({
-      content: [
-        MarkdownBuilder.header('Announcement Published Successfully', 'Duyuru Başarıyla Yayınlandı', 'yes'),
-        MarkdownBuilder.bilingual(
-          `Announcement sent to ${targetChannel}.`,
-          `Duyuru ${targetChannel} kanalına iletildi.`
-        )
-      ].join('\n'),
-      ephemeral: true
+    const announceContainer = VintageContainerBuilder.buildBilingualContainer({
+      enTitle: titleEn,
+      trTitle: titleTr,
+      enDesc: contentEn,
+      trDesc: contentTr,
+      emojiKey: 'yes',
+      accentColor: VINTAGE_COLORS.GOLD,
+      ansiLines: [
+        `\u001b[1;35m[OFFICIAL ANNOUNCEMENT]\u001b[0m Vintage Club Management`,
+        `\u001b[0;36m[PUBLISHED BY]\u001b[0m ${interaction.user.tag}`,
+        `\u001b[0;37m[DATE]\u001b[0m ${new Date().toUTCString()}`
+      ],
+      meta: { user: interaction.user.tag, time: new Date() }
     });
+
+    await targetChannel.send({ components: [announceContainer] });
+
+    const confirmationContainer = VintageContainerBuilder.buildBilingualContainer({
+      enTitle: 'Announcement Published Successfully',
+      trTitle: 'Duyuru Başarıyla Yayınlandı',
+      enDesc: `Announcement broadcasted to ${targetChannel}.`,
+      trDesc: `Duyuru ${targetChannel} kanalına başarıyla iletildi.`,
+      emojiKey: 'yes',
+      accentColor: VINTAGE_COLORS.SUCCESS
+    });
+
+    await interaction.editReply({ components: [confirmationContainer] });
   }
 };
 
