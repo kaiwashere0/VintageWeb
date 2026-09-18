@@ -173,23 +173,31 @@ export class ChannelManager {
           ]
         });
 
-        // Send initial welcoming Container message
-        const welcomeContainer = VintageContainerBuilder.buildBilingualContainer({
-          enTitle: `Dedicated Channel Initialized: ${def.name}`,
-          trTitle: `Özel Kanal Başlatıldı: ${def.name}`,
-          enDesc: def.enDesc,
-          trDesc: def.trDesc,
-          emojiKey: 'yes',
-          accentColor: VINTAGE_COLORS.GOLD,
-          ansiLines: [
-            `\u001b[1;32m[STATUS]\u001b[0m READY • 2026 ENGINE`,
-            `\u001b[0;36m[CHANNEL]\u001b[0m #${def.name}`,
-            `\u001b[0;37m[PURPOSE]\u001b[0m ${def.enDesc}`
-          ],
-          meta: { time: new Date(), user: 'Vintage System Engine' }
-        });
+        // Send initial dedicated channel welcoming message built directly
+        const yesEmoji = EmojiResolver.YES;
+        const nowTs = Math.floor(Date.now() / 1000);
+        const welcomeContent = [
+          `## ${yesEmoji} Dedicated Channel Initialized: #${def.name}`,
+          `> *Özel Kanal Başlatıldı: #${def.name}*`,
+          '',
+          `>>> **${def.enDesc}**`,
+          `*${def.trDesc}*`,
+          '',
+          '```ansi',
+          `\u001b[1;32m[ENGINE]\u001b[0m Vintage Web 2026 Telemetry Stream`,
+          `\u001b[0;36m[CHANNEL]\u001b[0m #${def.name}`,
+          `\u001b[0;35m[STATUS]\u001b[0m Dedicated Pipeline Active & Listening`,
+          '```',
+          '',
+          `### Stream Parameters / Akış Parametreleri`,
+          `\`├─\` **Endpoint Key** *(Uç Nokta Anahtarı)*: \`${def.key}\``,
+          `\`├─\` **Topic** *(Kanal Açıklaması)*: \`${def.topic}\``,
+          `\`└─\` **Permissions** *(İzinler)*: \`Read Only (Public) • Send Denied (Bot Only)\``,
+          '',
+          `- Started: <t:${nowTs}:F> (<t:${nowTs}:R>) • Engine: **Vintage System Core**`
+        ].join('\n');
 
-        await channel.send(welcomeContainer).catch(() => null);
+        await channel.send({ content: welcomeContent }).catch(() => null);
         createdList.push({ name: def.name, id: channel.id, status: 'CREATED' });
       } else {
         createdList.push({ name: def.name, id: channel.id, status: 'EXISTING' });
@@ -248,22 +256,25 @@ export class ChannelManager {
           ]
         });
 
-        const repairContainer = VintageContainerBuilder.buildBilingualContainer({
-          enTitle: `Channel Repaired & Restored: ${def.name}`,
-          trTitle: `Kanal Tamir Edildi ve Yeniden Oluşturuldu: ${def.name}`,
-          enDesc: def.enDesc,
-          trDesc: def.trDesc,
-          emojiKey: 'yes',
-          accentColor: VINTAGE_COLORS.WARNING,
-          ansiLines: [
-            `\u001b[1;33m[REPAIR STATUS]\u001b[0m RESTORED & LINKED`,
-            `\u001b[0;36m[CHANNEL]\u001b[0m #${def.name}`,
-            `\u001b[0;32m[SYNC]\u001b[0m MongoDB Configuration Updated`
-          ],
-          meta: { time: new Date(), user: 'Vintage System Repair Engine' }
-        });
+        const yesEmoji = EmojiResolver.YES;
+        const nowTs = Math.floor(Date.now() / 1000);
+        const repairContent = [
+          `## ${yesEmoji} Channel Repaired & Restored: #${def.name}`,
+          `> *Kanal Tamir Edildi ve Yeniden Oluşturuldu: #${def.name}*`,
+          '',
+          `>>> **${def.enDesc}**`,
+          `*${def.trDesc}*`,
+          '',
+          '```ansi',
+          `\u001b[1;33m[REPAIR STATUS]\u001b[0m RESTORED & RELINKED`,
+          `\u001b[0;36m[CHANNEL]\u001b[0m #${def.name}`,
+          `\u001b[0;32m[SYNC]\u001b[0m MongoDB Configuration Updated`,
+          '```',
+          '',
+          `- Repaired: <t:${nowTs}:F> (<t:${nowTs}:R>) • Engine: **Vintage System Repair Engine**`
+        ].join('\n');
 
-        await channel.send(repairContainer).catch(() => null);
+        await channel.send({ content: repairContent }).catch(() => null);
         repairedList.push({ name: def.name, id: channel.id, status: 'REPAIRED' });
       } else {
         repairedList.push({ name: def.name, id: channel.id, status: 'HEALTHY' });

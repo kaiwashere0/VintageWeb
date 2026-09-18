@@ -169,7 +169,6 @@ export class DiscordBotService {
     } else if (id === 'btn_setup_view_map') {
       await this.processSetupAction(interaction, 'action_view_map');
     } else if (id === 'btn_setup_delete') {
-      // Show confirmation prompt
       const confirmRow = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
           .setCustomId('btn_delete_confirm_final')
@@ -181,46 +180,63 @@ export class DiscordBotService {
           .setStyle(ButtonStyle.Secondary)
       );
 
-      const deleteWarningContainer = VintageContainerBuilder.buildBilingualContainer({
-        enTitle: 'Confirm Deletion of Dedicated Channels',
-        trTitle: 'Özel Kanalların Silinmesini Onaylayın',
-        enDesc: 'Are you sure you want to delete all 14 `vweb-*` channels and their category? This action is irreversible.',
-        trDesc: 'Tüm 14 adet `vweb-*` kanalını ve kategorisini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.',
-        emojiKey: 'no',
-        accentColor: VINTAGE_COLORS.ERROR
-      });
+      const deleteWarningContent = [
+        `## ${EmojiResolver.NO} Confirm Deletion of Dedicated Channels`,
+        `> *Özel Kanalların Silinmesini Onaylayın*`,
+        '',
+        `>>> **Are you sure you want to delete all 14 \`vweb-*\` channels and their category? This action is irreversible.**`,
+        `*Tüm 14 adet \`vweb-*\` kanalını ve kategorisini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.*`,
+        '',
+        '```ansi',
+        `\u001b[1;31m[WARNING]\u001b[0m High Impact Administrative Action`,
+        `\u001b[0;33m[TARGET]\u001b[0m 14 Dedicated vweb-* Channels & Parent Category`,
+        `\u001b[0;37m[EFFECT]\u001b[0m Live telemetry logging will be halted until re-installation`,
+        '```',
+        '',
+        `- Requested by: **${interaction.user.tag}** • Time: <t:${Math.floor(Date.now() / 1000)}:R>`
+      ].join('\n');
 
       await interaction.reply({
-        content: deleteWarningContainer.content,
-        components: [...(deleteWarningContainer.components || []), confirmRow],
+        content: deleteWarningContent,
+        components: [confirmRow],
         ephemeral: true
       });
     } else if (id === 'btn_delete_confirm_final') {
       await interaction.deferUpdate();
       const result = await ChannelManager.deleteAllChannels(interaction.guild);
 
-      const deletedContainer = VintageContainerBuilder.buildBilingualContainer({
-        enTitle: 'System Channels Purged Successfully',
-        trTitle: 'Sistem Kanalları Başarıyla Silindi',
-        enDesc: `Deleted ${result.deletedCount} dedicated \`vweb-*\` channels and cleared database mappings.`,
-        trDesc: `${result.deletedCount} adet özel \`vweb-*\` kanalı silindi ve veritabanı temizlendi.`,
-        emojiKey: 'yes',
-        accentColor: VINTAGE_COLORS.SUCCESS,
-        meta: { user: interaction.user.tag, time: new Date() }
-      });
+      const deletedContent = [
+        `## ${EmojiResolver.YES} System Channels Purged Successfully`,
+        `> *Sistem Kanalları Başarıyla Silindi*`,
+        '',
+        `>>> **Deleted ${result.deletedCount} dedicated \`vweb-*\` channels and cleared database mappings.**`,
+        `*${result.deletedCount} adet özel \`vweb-*\` kanalı silindi ve veritabanı temizlendi.*`,
+        '',
+        '```ansi',
+        `\u001b[1;32m[PURGE COMPLETE]\u001b[0m ${result.deletedCount} Channels Deleted`,
+        `\u001b[0;36m[DATABASE]\u001b[0m MongoDB Channel Pointers Reset`,
+        '```',
+        '',
+        `- Performed by: **${interaction.user.tag}** • Time: <t:${Math.floor(Date.now() / 1000)}:R>`
+      ].join('\n');
 
-      await interaction.editReply(deletedContainer);
+      await interaction.editReply({
+        content: deletedContent,
+        components: []
+      });
     } else if (id === 'btn_delete_cancel') {
-      const cancelContainer = VintageContainerBuilder.buildBilingualContainer({
-        enTitle: 'Operation Cancelled',
-        trTitle: 'İşlem İptal Edildi',
-        enDesc: 'Channel deletion was cancelled.',
-        trDesc: 'Kanal silme işlemi iptal edildi.',
-        emojiKey: 'yes',
-        accentColor: VINTAGE_COLORS.INFO
-      });
+      const cancelContent = [
+        `## ${EmojiResolver.YES} Operation Cancelled`,
+        `> *İşlem İptal Edildi*`,
+        '',
+        `>>> **Channel deletion was cancelled. All channels remain active.**`,
+        `*Kanal silme işlemi iptal edildi. Tüm kanallar aktif kalmaya devam ediyor.*`
+      ].join('\n');
 
-      await interaction.update(cancelContainer);
+      await interaction.update({
+        content: cancelContent,
+        components: []
+      });
     }
   }
 
@@ -230,129 +246,159 @@ export class DiscordBotService {
   static async processSetupAction(interaction, action) {
     await interaction.deferReply().catch(() => null);
 
+    const nowTs = Math.floor(Date.now() / 1000);
+
     if (action === 'action_create_all') {
       const res = await ChannelManager.createAllChannels(interaction.guild);
       const createdCount = res.channels.filter(c => c.status === 'CREATED').length;
       const existingCount = res.channels.filter(c => c.status === 'EXISTING').length;
 
-      const installContainer = VintageContainerBuilder.buildBilingualContainer({
-        enTitle: 'Automated Channel Installation Complete',
-        trTitle: 'Otomatik Kanal Kurulumu Tamamlandı',
-        enDesc: `Category: \`${res.categoryName}\``,
-        trDesc: `Kategori: \`${res.categoryName}\``,
-        emojiKey: 'yes',
-        accentColor: VINTAGE_COLORS.SUCCESS,
-        ansiLines: [
-          `\u001b[1;32m[SETUP RESULT]\u001b[0m SUCCESS • ${CHANNEL_DEFINITIONS.length} Channels Verified`,
-          `\u001b[0;36m[CREATED]\u001b[0m ${createdCount} New vweb-* Channels`,
-          `\u001b[0;37m[EXISTING / SYNCED]\u001b[0m ${existingCount} Channels`,
-          `\u001b[0;35m[DATABASE]\u001b[0m MongoDB Mappings Synchronized`
-        ],
-        treeItems: res.channels.map(c => ({
-          enKey: `#${c.name}`,
-          trKey: c.status,
-          val: c.id
-        })),
-        meta: { user: interaction.user.tag, time: new Date() }
-      });
+      const treeLines = res.channels.map((c, i) => {
+        const isLast = i === res.channels.length - 1;
+        const prefix = isLast ? '`└─`' : '`├─`';
+        return `${prefix} **#${c.name}** *(${c.status})*: <#${c.id}>`;
+      }).join('\n');
 
-      await interaction.editReply(installContainer);
+      const installContent = [
+        `## ${EmojiResolver.YES} Automated Channel Installation Complete`,
+        `> *Otomatik Kanal Kurulumu Tamamlandı*`,
+        '',
+        `>>> **Category:** \`${res.categoryName}\``,
+        `*Kategori:* \`${res.categoryName}\``,
+        '',
+        '```ansi',
+        `\u001b[1;32m[SETUP RESULT]\u001b[0m SUCCESS • ${CHANNEL_DEFINITIONS.length} Channels Verified`,
+        `\u001b[0;36m[CREATED]\u001b[0m ${createdCount} New vweb-* Channels`,
+        `\u001b[0;37m[EXISTING / SYNCED]\u001b[0m ${existingCount} Channels`,
+        `\u001b[0;35m[DATABASE]\u001b[0m MongoDB Mappings Synchronized`,
+        '```',
+        '',
+        `### Channel Inventory / Kanal Envanteri`,
+        treeLines,
+        '',
+        `- Actor: **${interaction.user.tag}** • Time: <t:${nowTs}:F> (<t:${nowTs}:R>)`
+      ].join('\n');
+
+      await interaction.editReply({ content: installContent });
 
     } else if (action === 'action_repair') {
       const res = await ChannelManager.repairChannels(interaction.guild);
       const repairedCount = res.repairedCount;
 
-      const repairContainer = VintageContainerBuilder.buildBilingualContainer({
-        enTitle: 'Channel Self-Repair & Sync Complete',
-        trTitle: 'Kanal Otomatik Tamir ve Senkronizasyonu Tamamlandı',
-        enDesc: 'Verified all 14 `vweb-*` channels against database state.',
-        trDesc: 'Veritabanı durumuna göre tüm 14 adet `vweb-*` kanalı doğrulandı.',
-        emojiKey: 'yes',
-        accentColor: repairedCount > 0 ? VINTAGE_COLORS.WARNING : VINTAGE_COLORS.SUCCESS,
-        ansiLines: [
-          `\u001b[1;${repairedCount > 0 ? '33' : '32'}m[REPAIR RESULT]\u001b[0m ${repairedCount > 0 ? `Restored ${repairedCount} Missing Channels` : 'All 14 Channels Healthy & Intact'}`,
-          `\u001b[0;36m[CATEGORY]\u001b[0m Active Category ID: ${res.categoryId}`,
-          `\u001b[0;35m[SYNC]\u001b[0m MongoDB Channel Pointers Updated`
-        ],
-        treeItems: res.channels.map(c => ({
-          enKey: `#${c.name}`,
-          trKey: 'Durum',
-          val: c.status
-        })),
-        meta: { user: interaction.user.tag, time: new Date() }
-      });
+      const treeLines = res.channels.map((c, i) => {
+        const isLast = i === res.channels.length - 1;
+        const prefix = isLast ? '`└─`' : '`├─`';
+        return `${prefix} **#${c.name}**: \`${c.status}\``;
+      }).join('\n');
 
-      await interaction.editReply(repairContainer);
+      const repairContent = [
+        `## ${repairedCount > 0 ? EmojiResolver.YES : EmojiResolver.STATS} Channel Self-Repair & Sync Complete`,
+        `> *Kanal Otomatik Tamir ve Senkronizasyonu Tamamlandı*`,
+        '',
+        `>>> **Verified all 14 \`vweb-*\` channels against database state.**`,
+        `*Veritabanı durumuna göre tüm 14 adet \`vweb-*\` kanalı doğrulandı.*`,
+        '',
+        '```ansi',
+        `\u001b[1;${repairedCount > 0 ? '33' : '32'}m[REPAIR RESULT]\u001b[0m ${repairedCount > 0 ? `Restored ${repairedCount} Missing Channels` : 'All 14 Channels Healthy & Intact'}`,
+        `\u001b[0;36m[CATEGORY]\u001b[0m Active Category ID: ${res.categoryId}`,
+        `\u001b[0;35m[SYNC]\u001b[0m MongoDB Channel Pointers Updated`,
+        '```',
+        '',
+        `### Channel Audit List / Kanal Denetim Listesi`,
+        treeLines,
+        '',
+        `- Inspector: **${interaction.user.tag}** • Time: <t:${nowTs}:F> (<t:${nowTs}:R>)`
+      ].join('\n');
+
+      await interaction.editReply({ content: repairContent });
 
     } else if (action === 'action_recreate') {
       const res = await ChannelManager.recreateAllChannels(interaction.guild);
 
-      const recreateContainer = VintageContainerBuilder.buildBilingualContainer({
-        enTitle: 'Channels Recreated & Re-initialized',
-        trTitle: 'Kanallar Sıfırdan Baştan Kuruldu',
-        enDesc: 'Clean slate setup complete. 14 fresh dedicated streams created.',
-        trDesc: 'Sıfırdan kurulum tamamlandı. 14 adet temiz özel kanal oluşturuldu.',
-        emojiKey: 'yes',
-        accentColor: VINTAGE_COLORS.GOLD,
-        treeItems: res.channels.map(c => ({
-          enKey: `#${c.name}`,
-          trKey: 'Kanal ID',
-          val: c.id
-        })),
-        meta: { user: interaction.user.tag, time: new Date() }
-      });
+      const treeLines = res.channels.map((c, i) => {
+        const isLast = i === res.channels.length - 1;
+        const prefix = isLast ? '`└─`' : '`├─`';
+        return `${prefix} **#${c.name}**: <#${c.id}>`;
+      }).join('\n');
 
-      await interaction.editReply(recreateContainer);
+      const recreateContent = [
+        `## ${EmojiResolver.YES} Channels Recreated & Re-initialized`,
+        `> *Kanallar Sıfırdan Baştan Kuruldu*`,
+        '',
+        `>>> **Clean slate setup complete. 14 fresh dedicated streams created.**`,
+        `*Sıfırdan kurulum tamamlandı. 14 adet temiz özel kanal oluşturuldu.*`,
+        '',
+        '```ansi',
+        `\u001b[1;32m[REBUILD]\u001b[0m 14 Clean Channels Reconstructed`,
+        `\u001b[0;36m[CATEGORY]\u001b[0m ${res.categoryName}`,
+        '```',
+        '',
+        `### Recreated Streams / Yeniden Oluşturulan Akışlar`,
+        treeLines,
+        '',
+        `- Executed by: **${interaction.user.tag}** • Time: <t:${nowTs}:F> (<t:${nowTs}:R>)`
+      ].join('\n');
+
+      await interaction.editReply({ content: recreateContent });
 
     } else if (action === 'action_view_map') {
       const botSettings = await DatabaseService.getBotSettings();
       const currentChannels = botSettings.channels || {};
 
-      const mapContainer = VintageContainerBuilder.buildBilingualContainer({
-        enTitle: 'Vintage Web — Active Channel Map',
-        trTitle: 'Vintage Web — Aktif Kanal Haritası',
-        enDesc: 'Dedicated `vweb-*` Telemetry Mapping.',
-        trDesc: 'Ayrılmış `vweb-*` Telemetri Eşleşmesi.',
-        emojiKey: 'stats',
-        accentColor: VINTAGE_COLORS.INFO,
-        ansiLines: [
-          `\u001b[1;36m[CATEGORY ID]\u001b[0m ${botSettings.logCategoryId || 'NOT CONFIGURED'}`,
-          `\u001b[0;32m[TOTAL STREAMS]\u001b[0m ${CHANNEL_DEFINITIONS.length} Dedicated Endpoints`
-        ],
-        treeItems: CHANNEL_DEFINITIONS.map(def => {
-          const chId = currentChannels[def.key];
-          const exists = chId && interaction.guild.channels.cache.has(chId);
-          return {
-            enKey: `#${def.name}`,
-            trKey: def.key,
-            val: exists ? `${chId} (LINKED)` : 'NOT LINKED'
-          };
-        }),
-        meta: { user: interaction.user.tag, time: new Date() }
-      });
+      const treeLines = CHANNEL_DEFINITIONS.map((def, i) => {
+        const isLast = i === CHANNEL_DEFINITIONS.length - 1;
+        const prefix = isLast ? '`└─`' : '`├─`';
+        const chId = currentChannels[def.key];
+        const exists = chId && interaction.guild.channels.cache.has(chId);
+        const linkStr = exists ? `<#${chId}> \`[OK]\`` : `\`NOT LINKED\``;
+        return `${prefix} **#${def.name}** *(${def.key})*: ${linkStr}`;
+      }).join('\n');
 
-      await interaction.editReply(mapContainer);
+      const mapContent = [
+        `## ${EmojiResolver.STATS} Vintage Web — Active Channel Map`,
+        `> *Vintage Web — Aktif Kanal Haritası*`,
+        '',
+        `>>> **Dedicated \`vweb-*\` Telemetry Mapping.**`,
+        `*Ayrılmış \`vweb-*\` Telemetri Eşleşmesi.*`,
+        '',
+        '```ansi',
+        `\u001b[1;36m[CATEGORY ID]\u001b[0m ${botSettings.logCategoryId || 'NOT CONFIGURED'}`,
+        `\u001b[0;32m[TOTAL STREAMS]\u001b[0m ${CHANNEL_DEFINITIONS.length} Dedicated Endpoints`,
+        '```',
+        '',
+        `### Live Stream Routing / Canlı Akış Yönlendirmesi`,
+        treeLines,
+        '',
+        `- Queried by: **${interaction.user.tag}** • Time: <t:${nowTs}:F> (<t:${nowTs}:R>)`
+      ].join('\n');
+
+      await interaction.editReply({ content: mapContent });
 
     } else if (action === 'action_delete_all') {
       const res = await ChannelManager.deleteAllChannels(interaction.guild);
 
-      const deleteResContainer = VintageContainerBuilder.buildBilingualContainer({
-        enTitle: 'Channels Deleted Successfully',
-        trTitle: 'Kanallar Başarıyla Silindi',
-        enDesc: `Removed ${res.deletedCount} channels and reset MongoDB pointers.`,
-        trDesc: `${res.deletedCount} adet kanal kaldırıldı ve veritabanı sıfırlandı.`,
-        emojiKey: 'yes',
-        accentColor: VINTAGE_COLORS.ERROR,
-        meta: { user: interaction.user.tag, time: new Date() }
-      });
+      const deleteContent = [
+        `## ${EmojiResolver.YES} Channels Deleted Successfully`,
+        `> *Kanallar Başarıyla Silindi*`,
+        '',
+        `>>> **Removed ${res.deletedCount} channels and reset MongoDB pointers.**`,
+        `*${res.deletedCount} adet kanal kaldırıldı ve veritabanı sıfırlandı.*`,
+        '',
+        '```ansi',
+        `\u001b[1;31m[DELETED]\u001b[0m ${res.deletedCount} Channels Removed`,
+        `\u001b[0;32m[DATABASE]\u001b[0m Settings Reset`,
+        '```',
+        '',
+        `- Executed by: **${interaction.user.tag}** • Time: <t:${nowTs}:F> (<t:${nowTs}:R>)`
+      ].join('\n');
 
-      await interaction.editReply(deleteResContainer);
+      await interaction.editReply({ content: deleteContent });
     }
   }
 
   /**
    * Central Logging Dispatcher
-   * Routes log events to specific dedicated vweb-* channels as Discord Containers V2
+   * Routes log events to specific dedicated vweb-* channels
    * 
    * @param {'auth' | 'lookup' | 'applications' | 'appStatus' | 'appDelete' | 'settings' | 'members' | 'events' | 'gallery' | 'newsletter' | 'botPresence' | 'botVoice' | 'cache' | 'systemErrors'} logType
    * @param {Object} payload 
@@ -372,37 +418,55 @@ export class DiscordBotService {
       if (!targetChannel) return false;
 
       // Extract metadata from Express Request
-      const meta = {
-        ip: payload.ip || (req ? (req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.socket?.remoteAddress || req.ip || '').split(',')[0].trim() : '127.0.0.1'),
-        country: payload.country || (req?.currentLang ? req.currentLang.toUpperCase() : 'Global'),
-        user: payload.actor || (req?.session?.user ? `${req.session.user.globalName || req.session.user.username} (@${req.session.user.username})` : 'System / Guest'),
-        time: payload.time || new Date(),
-        reqId: payload.reqId || (req ? req.id || 'web_req_' + Math.random().toString(36).substring(2, 7) : 'internal')
-      };
+      const ip = payload.ip || (req ? (req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.socket?.remoteAddress || req.ip || '').split(',')[0].trim() : '127.0.0.1');
+      const country = payload.country || (req?.currentLang ? req.currentLang.toUpperCase() : 'Global');
+      const actor = payload.actor || (req?.session?.user ? `${req.session.user.globalName || req.session.user.username} (@${req.session.user.username})` : 'System / Guest');
+      const time = payload.time ? new Date(payload.time) : new Date();
+      const reqId = payload.reqId || (req ? req.id || 'web_req_' + Math.random().toString(36).substring(2, 7) : 'internal');
+      const nowTs = Math.floor(time.getTime() / 1000);
 
+      const emojiStr = EmojiResolver.get(payload.emojiKey || 'yes');
       const enTitle = payload.enTitle || `System Event: ${logType.toUpperCase()}`;
       const trTitle = payload.trTitle || `Sistem Olayı: ${logType.toUpperCase()}`;
       const enDesc = payload.enDesc || 'A web platform action occurred.';
       const trDesc = payload.trDesc || 'Bir web platformu işlemi gerçekleşti.';
-      const emojiKey = payload.emojiKey || 'yes';
       const ansiLines = payload.ansiLines || [];
       const treeItems = payload.treeItems || [];
-      const accentColor = payload.accentColor || (emojiKey === 'no' ? VINTAGE_COLORS.ERROR : VINTAGE_COLORS.GOLD);
 
-      // Build Discord Components V2 Container
-      const logContainer = VintageContainerBuilder.buildBilingualContainer({
-        enTitle,
-        trTitle,
-        enDesc,
-        trDesc,
-        emojiKey,
-        accentColor,
-        ansiLines,
-        treeItems,
-        meta
-      });
+      const parts = [
+        `## ${emojiStr} ${enTitle}`,
+        `> *${trTitle}*`,
+        '',
+        `>>> **${enDesc}**`,
+        `*${trDesc}*`
+      ];
 
-      await targetChannel.send(logContainer);
+      if (ansiLines.length > 0) {
+        parts.push('', '```ansi', ...ansiLines, '```');
+      }
+
+      if (treeItems.length > 0) {
+        const treeStr = treeItems.map((item, idx) => {
+          const isLast = idx === treeItems.length - 1;
+          const prefix = isLast ? '`└─`' : '`├─`';
+          return `${prefix} **${item.enKey}** *(${item.trKey})*: \`${item.val}\``;
+        }).join('\n');
+
+        parts.push(
+          '',
+          `### Parameters & State / Parametreler ve Durum`,
+          `*-# Live payload properties and contextual variables.*`,
+          '',
+          treeStr
+        );
+      }
+
+      parts.push(
+        '',
+        `- Actor: **${actor}** • IP: \`${ip}\` (${country}) • Time: <t:${nowTs}:F> (<t:${nowTs}:R>) • ReqID: \`${reqId}\``
+      );
+
+      await targetChannel.send({ content: parts.join('\n') });
       return true;
     } catch (err) {
       console.error(`[DiscordBot sendLog:${logType}] Error:`, err.message);

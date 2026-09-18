@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, PermissionFlagsBits, ChannelType } from 'discord.js';
-import VintageContainerBuilder, { VINTAGE_COLORS } from '../containerBuilder.js';
+import EmojiResolver from '../emojiResolver.js';
 
 export const announceCommand = {
   data: new SlashCommandBuilder()
@@ -42,34 +42,35 @@ export const announceCommand = {
     const contentEn = interaction.options.getString('content_en');
     const contentTr = interaction.options.getString('content_tr');
     const targetChannel = interaction.options.getChannel('target_channel') || interaction.channel;
+    const nowTs = Math.floor(Date.now() / 1000);
 
-    const announceContainer = VintageContainerBuilder.buildBilingualContainer({
-      enTitle: titleEn,
-      trTitle: titleTr,
-      enDesc: contentEn,
-      trDesc: contentTr,
-      emojiKey: 'yes',
-      accentColor: VINTAGE_COLORS.GOLD,
-      ansiLines: [
-        `\u001b[1;35m[OFFICIAL ANNOUNCEMENT]\u001b[0m Vintage Club Management`,
-        `\u001b[0;36m[PUBLISHED BY]\u001b[0m ${interaction.user.tag}`,
-        `\u001b[0;37m[DATE]\u001b[0m ${new Date().toUTCString()}`
-      ],
-      meta: { user: interaction.user.tag, time: new Date() }
-    });
+    const announceContent = [
+      `## ${EmojiResolver.YES} ${titleEn}`,
+      `> *${titleTr}*`,
+      '',
+      `>>> **${contentEn}**`,
+      `*${contentTr}*`,
+      '',
+      '```ansi',
+      `\u001b[1;35m[OFFICIAL ANNOUNCEMENT]\u001b[0m Vintage Club Management`,
+      `\u001b[0;36m[PUBLISHED BY]\u001b[0m ${interaction.user.tag}`,
+      `\u001b[0;37m[DATE]\u001b[0m ${new Date().toUTCString()}`,
+      '```',
+      '',
+      `- Published by: **${interaction.user.tag}** • Time: <t:${nowTs}:F> (<t:${nowTs}:R>)`
+    ].join('\n');
 
-    await targetChannel.send(announceContainer);
+    await targetChannel.send({ content: announceContent });
 
-    const confirmationContainer = VintageContainerBuilder.buildBilingualContainer({
-      enTitle: 'Announcement Published Successfully',
-      trTitle: 'Duyuru Başarıyla Yayınlandı',
-      enDesc: `Announcement broadcasted to ${targetChannel}.`,
-      trDesc: `Duyuru ${targetChannel} kanalına başarıyla iletildi.`,
-      emojiKey: 'yes',
-      accentColor: VINTAGE_COLORS.SUCCESS
-    });
+    const confirmationContent = [
+      `## ${EmojiResolver.YES} Announcement Published Successfully`,
+      `> *Duyuru Başarıyla Yayınlandı*`,
+      '',
+      `>>> **Announcement broadcasted to ${targetChannel}.**`,
+      `*Duyuru ${targetChannel} kanalına başarıyla iletildi.*`
+    ].join('\n');
 
-    await interaction.editReply(confirmationContainer);
+    await interaction.editReply({ content: confirmationContent, components: [] });
   }
 };
 
